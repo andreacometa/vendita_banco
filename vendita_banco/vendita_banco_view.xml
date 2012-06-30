@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+		<!--========================================================-->
+		<!--					PUNTO VENDITA - TREE				-->
+		<!--========================================================-->
+		<record model="ir.ui.view" id="view_vendita_banco_tree">
+			<field name="name">vendita_banco.tree</field>
+			<field name="model">vendita_banco</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Vendite" colors="blue:state=='draft';orange:invoice_id != False">
+					<field name="causale" />
+					<field name="name"/>
+					<field name="data_ordine"/>
+					<field name="partner_id" />
+					<field name="imponibile" sum="Totale Imponibile"/>
+					<field name="totale" sum="Totale"/>
+					<field name="invoice_id" invisible="1" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+		
+		<!--========================================================-->
+		<!--					PUNTO VENDITA - FORM				-->
+		<!--========================================================-->
+		<record model="ir.ui.view" id="view_vendita_banco_form">
+			<field name="name">vendita_banco.form</field>
+			<field name="model">vendita_banco</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Punto Vendita">
+					<group col="6" colspan="4">
+						<field name="name" readonly="1"/>
+						<field name="causale" on_change="onchange_causale(causale)" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
+						<field name="data_ordine" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}"/>
+						<field name="ddt" invisible="1" />
+					</group>
+					<group col="6" colspan="4">
+						<field name="partner_id" on_change="onchange_cliente_id(partner_id, causale)" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}"/>
+						<field name="partner_invoice_id" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
+						<field name="partner_shipping_id" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
+					</group>
+					<group col="4" colspan="4">
+						<field name="pricelist_id" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
+						<field name="modalita_pagamento_id" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
+					</group>
+					<group col="6" colspan="4">
+						<field name="goods_description_id" attrs="{'required':[('ddt','=',True)], 'invisible':[('ddt','=',False)], 'readonly':[('state','in',['done', 'invoiced'])]}"/>
+						<field name="carriage_condition_id" attrs="{'required':[('ddt','=',True)], 'invisible':[('ddt','=',False)], 'readonly':[('state','in',['done', 'invoiced'])]}" />
+						<field name="transportation_reason_id" attrs="{'required':[('ddt','=',True)], 'invisible':[('ddt','=',False)], 'readonly':[('state','in',['done', 'invoiced'])]}" />
+					</group>
+					<group col="4" colspan="4">
+						<field name="number_of_packages" attrs="{'required':[('ddt','=',True)], 'invisible':[('ddt','=',False)], 'readonly':[('state','in',['done', 'invoiced'])]}" />
+						<field name="trasportatore_id" attrs="{'invisible':[('ddt','=',False)], 'readonly':[('state','in',['done', 'invoiced'])]}" />
+					</group>
+					<notebook colspan="4">
+						<page string="Vendita">
+							<field colspan="4" mode="tree,form,graph" name="vendita_banco_dettaglio_ids" nolabel="1" widget="one2many_list" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}">
+								<form string="Dettagli">
+									<field name="product_id"/>
+									<field name="product_qty"/>
+									<field name="product_uom"/>
+									<field name="price_unit"/>
+									<field name="discount"/>
+									<field name="tax_id"/>
+									<field name="imponibile"/>
+									<field name="importo"/>
+								</form>
+								<tree string="Dettagli" editable="bottom">
+									<field name="product_id" on_change="onchange_product(product_id, product_qty, parent.data_ordine, parent.partner_id, parent.pricelist_id)"/>
+									<field name="product_qty"/>
+									<field name="product_uom"/>
+									<field name="price_unit"/>
+									<field name="discount"/>
+									<field name="tax_id"/>
+									<field name="imponibile"/>
+									<field name="importo"/>
+								</tree>
+							</field>
+						</page>
+						<page string="Altro">
+							<separator string="Note" />
+							<field name="note" colspan="4" nolabel="1" />
+						</page>
+					</notebook>
+					<group col="10" colspan="4">
+						<field name="acconto"  />
+						<field name="imponibile" />
+						<field name="totale" />
+						<field name="state" />
+						<group col="4" colspan="1">
+							<button name="conferma_vendita" type="object" states="draft" string="Conferma" icon="gtk-apply"/>
+							<button name="riapri_vendita" type="object" states="done,invoiced" string="Riapri Vendita" icon="gtk-cancel"/>
+							<button name="crea_fattura" type="object" 
+								attrs="{'invisible':['|', ('fatturabile','=',False), ('state', 'in', ['draft', 'invoiced'] )]}" string="Crea Fattura" icon="terp-dolar_ok!"/>
+							<button name="stampa" type="object" states="done,invoiced" 
+								attrs="{'invisible':[('report','=',False)]}" string="Stampa" icon="gtk-print"/>
+						</group>
+						<field name="fatturabile" invisible="1" />
+						<field name="report" invisible="1"/>
+					</group>
+				</form>
+			</field>
+		</record>
+
+		<!-- ====================================================== -->
+		<!-- 					PUNTO VENDITA - FILTRI 				-->
+		<!-- ====================================================== -->
+        <record id="vendita_banco_filtri" model="ir.ui.view">
+            <field name="name">vendita_banco.filtri</field>
+            <field name="model">vendita_banco</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Filtri Punto Vendita">
+                    <filter icon="terp-document-new" string="Preventivi" domain="[('state','=','draft')]" help="Preventivi"/>
+                    <filter icon="terp-check" string="Confermati" domain="[('state','in',['done', 'invoiced'])]" help="BC Confermati"/>
+                    <!--filter icon="terp-check" string="DDT" domain="[('ddt','=',True)]" help="DDT Confermati"/-->
+                    <filter icon="terp-dolar_ok!" string="Fatturati" domain="[('state','=','invoiced')]" help="Fatturati"/>
+                    <separator orientation="vertical"/>
+                    <field name="name" select="1"/>
+                    <field name="data_ordine" />
+                    <field name="partner_id" />
+                    <field name="causale" />
+                    <newline/>
+               </search>
+            </field>
+        </record>
+
+		<!-- ====================================================== -->
+		<!-- 					PUNTO VENDITA - ACTION 				-->
+		<!-- ====================================================== -->
+		<record model="ir.actions.act_window" id="action_vendita_banco">
+				<field name="name">Punto Vendita</field>
+				<field name="type">ir.actions.act_window</field>
+				<field name="res_model">vendita_banco</field>
+				<field name="view_type">form</field>
+				<field name="view_mode">tree,form</field>
+				<field name="view_id" ref="view_vendita_banco_tree"/>
+				<field name="search_view_id" ref="vendita_banco_filtri"/>
+		</record>
+		
+		<!-- ====================================================== -->
+		<!-- 					PUNTO VENDITA - MENU 				-->
+		<!-- ====================================================== -->
+		<menuitem icon="terp-partner" id="menu_vendita_banco_main" name="Vendita al Banco" web_icon="static/vendita.png" web_icon_hover="static/vendita-hover.png"/>
+		<menuitem icon="STOCK_OPEN" parent="menu_vendita_banco_main" id="menu_vendita_banco" name="Vendita al Banco"/>
+		<menuitem action="action_vendita_banco" parent="menu_vendita_banco" id="menu_vendita_banco_vendita" name="Vendita al Banco" sequence="1"/>
+
+	</data>
+</openerp>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+	<data>
+		
+		<!-- ====================================================== -->
+		<!-- 				MODIFICA CAUSALE WIZARD				-->
+		<!-- ====================================================== -->
+		<record id="vb_modifica_causale_wizard" model="ir.ui.view">
+			<field name="name">vb.modifica_causale.wizard</field>
+			<field name="model">vb.modifica_causale</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Modifica Causale">
+					<separator string="Nuova Causale" colspan="4"/>
+					<field name="nuova_causale" colspan="4" nolabel="1" required="1" widget="selection" on_change="onchange_causale(nuova_causale, context)"/>
+					<separator string="Dati DDT (Impostare solo se si necessita la modifica della causale su DDT)" colspan="4"/>
+					<group colspan="4" col="4">
+						<field name="goods_description_id" colspan="2" widget="selection" attrs="{'required':[('ddt','=',True)]}"/>
+						<field name="carriage_condition_id" colspan="2" widget="selection"/>
+					</group>
+					<group colspan="4" col="6">
+						<field name="transportation_reason_id" colspan="2" widget="selection"/>
+						<field name="number_of_packages" colspan="2"/>
+						<field name="trasportatore_id" colspan="2" widget="selection"/>
+					</group>
+					<separator string="" colspan="4"/>
+					<group colspan="4" col="6">
+						<button string="Annulla" special="cancel" icon="gtk-cancel" colspan="2"/>
+						<button string="Modifica" name="modifica_causale" 
+							type="object" icon="gtk-ok"  colspan="2"/>
+					</group>
+				</form>
+			</field>
+		</record>
+	
+		<!-- ====================================================== -->
+		<!-- 				RAGGRUPPA FATTURE ACTION				-->
+		<!-- ====================================================== -->
+		<record id="action_vb_modifica_causale" model="ir.actions.act_window">
+			<field name="name">Modifica Causale</field>
+			<field name="res_model">vb.modifica_causale</field>
+			<field name="src_model">vendita_banco</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+			<field name="view_id" ref="vb_modifica_causale_wizard"/>
+		</record>
+		
+		<!-- ====================================================== -->
+		<!-- 				RAGGRUPPA FATTURE AZIONE				-->
+		<!-- ====================================================== -->
+		<record model="ir.values" id="act_vb_modifica_causale">
+			<field name="model_id" ref="vendita_banco.model_vendita_banco" />
+			<field name="object" eval="1" />
+			<field name="name">Modifica Causale</field>
+			<field name="key2">client_action_multi</field>
+			<field name="value" eval="'ir.actions.act_window,' + str(ref('action_vb_modifica_causale'))" />
+			<field name="key">action</field>
+			<field name="model">vendita_banco</field>
+		</record>
+
+	</data>
+</openerp>

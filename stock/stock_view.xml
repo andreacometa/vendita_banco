@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+		<!--========================================================-->
+		<!--					STOCK.WAREHOUSE - FORM				-->
+		<!--========================================================-->
+		<record id="view_warehouse_vendita_banco" model="ir.ui.view">
+			<field name="name">stock.warehouse.form.vendita_banco</field>
+			<field name="model">stock.warehouse</field>
+			<field name="inherit_id" ref="stock.view_warehouse"/>
+			<field name="arch" type="xml">
+				<field name="partner_address_id" position="after">
+					<field name="location_vendita_banco_id" domain="[('usage', '=', 'customer')]"/>
+				</field>
+			</field>
+		</record>
+		
+		<!--========================================================-->
+		<!--					STOCK.MOVE - FORM				-->
+		<!--========================================================-->
+		<record id="view_move_tree" model="ir.ui.view">
+			<field name="name">stock.move.tree.vendita_banco</field>
+			<field name="model">stock.move</field>
+			<field name="inherit_id" ref="stock.view_move_tree"/>
+			<field name="arch" type="xml">
+				<field name="origin" position="after">
+					<field name="sorgente_id"/>
+				</field>
+			</field>
+		</record>
+
+	</data>
+</openerp>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+	<data>
+		
+		<!-- ====================================================== -->
+		<!-- 				RAGGRUPPA FATTURE WIZARD				-->
+		<!-- ====================================================== -->
+		<record id="vb_raggruppa_fatture_wizard" model="ir.ui.view">
+			<field name="name">vb.raggruppa_fatture.wizard</field>
+			<field name="model">vb.raggruppa_fatture</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Crea fatture raggruppate">
+					<field name="filtrato" colspan="4" invisible="1"/>
+					<group colspan="4" col="4">
+						<field name="cliente" colspan="2" attrs="{'invisible':[('filtrato','=',True)]}" domain="[('customer', '=', True)]"/>
+						<field name="modalita_pagamento_id" colspan="2" attrs="{'invisible':[('filtrato','=',True)]}" widget="selection"/>
+					</group>
+					<group colspan="4" col="4">
+						<field name="filtro_data_inizio" colspan="2" attrs="{'invisible':[('filtrato','=',True)]}"/>
+						<field name="filtro_data_fine" colspan="2" attrs="{'invisible':[('filtrato','=',True)]}" />
+					</group>
+					<field name="raggruppa" colspan="2"  attrs="{'invisible':[('filtrato','=',False)]}"/>
+					<field name="data_fattura" colspan="2"  attrs="{'invisible':[('filtrato','=',False)]}"/>
+					<label string="__________________________________________________________________________________________________________" colspan="4"/>
+					<field name="ordini_ids" colspan="4" nolabel="1"/>
+					<separator string="" colspan="4"/>
+					<group colspan="4" col="6">
+						<button string="Annulla" special="cancel" icon="gtk-cancel" colspan="2"/>
+						<button string="Estrai" name="filtra_ordini" 
+							type="object" icon="gtk-ok"  attrs="{'invisible':[('filtrato','=',True)]}" colspan="2"/>
+						<button string="Continua" name="crea_fatture" 
+							type="object" icon="gtk-ok"  attrs="{'invisible':[('filtrato','=',False)]}" colspan="2"/>
+					</group>
+				</form>
+			</field>
+		</record>
+		
+		<!-- ====================================================== -->
+		<!-- 				ORDINI DA FATTURARE TREE				-->
+		<!-- ====================================================== -->
+		<record id="vb_ordini_da_fatturare_wizard" model="ir.ui.view">
+			<field name="name">vb.ordini_da_fatturare.wizard</field>
+			<field name="model">vb.ordini_da_fatturare</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Ordini da fatturare">
+					<field name="name"/>
+					<field name="modalita_pagamento_id"/>
+					<field name="partner_id"/>
+					<field name="totale"/>
+					<field name="imponibile"/>
+				</tree>
+			</field>
+		</record>
+	
+		<!-- ====================================================== -->
+		<!-- 				RAGGRUPPA FATTURE ACTION				-->
+		<!-- ====================================================== -->
+		<record id="action_vb_raggruppa_fatture" model="ir.actions.act_window">
+			<field name="name">Crea fatture raggruppate</field>
+			<field name="res_model">vb.raggruppa_fatture</field>
+			<field name="src_model">vendita_banco</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+			<field name="view_id" ref="vb_raggruppa_fatture_wizard"/>
+		</record>
+		
+		<!-- ====================================================== -->
+		<!-- 				RAGGRUPPA FATTURE AZIONE				-->
+		<!-- ====================================================== -->
+		<record model="ir.values" id="act_vb_raggruppa_fatture">
+			<field name="model_id" ref="vendita_banco.model_vendita_banco" />
+			<field name="object" eval="1" />
+			<field name="name">Crea fatture raggruppate</field>
+			<field name="key2">client_action_multi</field>
+			<field name="value" eval="'ir.actions.act_window,' + str(ref('action_vb_raggruppa_fatture'))" />
+			<field name="key">action</field>
+			<field name="model">vendita_banco</field>
+		</record>
+
+	</data>
+</openerp>

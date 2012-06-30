@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+		<!--========================================================-->
+		<!--					CAUSALI - TREE				-->
+		<!--========================================================-->
+		<record model="ir.ui.view" id="view_causali_tree">
+			<field name="name">causali.tree</field>
+			<field name="model">vendita.causali</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Causali">
+					<field name="name" select="1" />
+					<field name="descrizione" select="1" />
+					<field name="tipo" />
+					<field name="protocollo" />
+					<field name="fatturabile" />
+					<field name="ddt" />
+					<field name="fattura" />
+					<field name="report" />
+				</tree>
+			</field>
+		</record>
+		
+		<!--========================================================-->
+		<!--					CAUSALI - FORM						-->
+		<!--========================================================-->
+		<record model="ir.ui.view" id="view_causali_form">
+			<field name="name">causali.form</field>
+			<field name="model">vendita.causali</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Causali">
+					<group colspan="4">
+						<field name="name"/>
+						<field name="descrizione" />
+					</group>
+					<group colspan="4">
+						<field name="tipo"  />
+						<field name="protocollo" />
+					</group>
+					<group col="10" colspan="4">
+						<field name="fattura" on_change="onchange_fattura(fattura)"
+							attrs="{'readonly':[('tipo','=','carico')]}" />
+						<field name="fatturabile" attrs="{'readonly':[('tipo','in',['carico', 'nessuno'])]}"/>
+						<field name="riga_raggruppa" />
+						<field name="ddt" />
+						<field name="segno"/>
+						<field name="report" />
+					</group>
+				</form>
+			</field>
+		</record>
+
+		<!-- ====================================================== -->
+		<!-- 					CAUSALI - ACTION 					-->
+		<!-- ====================================================== -->
+		<record model="ir.actions.act_window" id="action_causali">
+				<field name="name">Causali</field>
+				<field name="type">ir.actions.act_window</field>
+				<field name="res_model">vendita.causali</field>
+				<field name="view_type">form</field>
+				<field name="view_mode">tree,form</field>
+				<field name="view_id" ref="view_causali_tree"/>
+		</record>
+		
+		<!-- ====================================================== -->
+		<!-- 					CAUSALI - MENU 				-->
+		<!-- ====================================================== -->
+		<menuitem action="action_causali" parent="menu_vendita_banco" id="menu_causale" name="Causali" string="Causali"/>
+
+	</data>
+</openerp>

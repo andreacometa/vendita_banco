@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp><data>
+
+    <record id="group_vendita_banco" model="res.groups">
+        <field name="name">Vendita Banco/Banco</field>
+    </record>
+    
+    <record id="group_vendita_banco_management" model="res.groups">
+        <field name="name">Vendita Banco/Management</field>
+    </record>
+    
+</data></openerp>
