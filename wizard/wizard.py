@@ -22,6 +22,7 @@ class vb_modifica_causale(osv.osv_memory):
 	_columns = {
 		'nuova_causale' : fields.many2one('vendita.causali', 'Causale', required=True),
 		# ----- Dati DDT
+		'ddt' : fields.boolean('DDT'),
 		'goods_description_id' : fields.many2one('stock.picking.goods_description','Aspetto dei beni'),
 		'carriage_condition_id' : fields.many2one('stock.picking.carriage_condition','Resa merce'),
 		'transportation_reason_id' : fields.many2one('stock.picking.transportation_reason','Causale Trasporto'),
@@ -34,11 +35,13 @@ class vb_modifica_causale(osv.osv_memory):
 			vb = self.pool.get('vendita_banco').browse(cr, uid, context['active_id'])
 			return {'value' : {'goods_description_id' : vb.partner_id.goods_description_id and vb.partner_id.goods_description_id.id or False,
 				'transportation_reason_id' : vb.partner_id.transportation_reason_id and vb.partner_id.transportation_reason_id.id or False ,
-				'carriage_condition_id': vb.partner_id.transportation_reason_id and vb.partner_id.transportation_reason_id.id or False,}}
+				'carriage_condition_id': vb.partner_id.transportation_reason_id and vb.partner_id.transportation_reason_id.id or False,
+				'ddt' : True,}}
 		else:
 			return {'value' : {'goods_description_id' : False,
 				'transportation_reason_id' : False ,
-				'carriage_condition_id': False,}}
+				'carriage_condition_id': False,
+				'ddt': False,}}
 
 	def modifica_causale(self, cr, uid, ids, context={}):
 		if 'active_id' in context:

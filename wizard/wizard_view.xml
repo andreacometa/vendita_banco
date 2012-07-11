@@ -12,16 +12,17 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Modifica Causale">
+					<field name="ddt" colspan="4" invisible="1"/>
 					<separator string="Nuova Causale" colspan="4"/>
 					<field name="nuova_causale" colspan="4" nolabel="1" required="1" widget="selection" on_change="onchange_causale(nuova_causale, context)"/>
 					<separator string="Dati DDT (Impostare solo se si necessita la modifica della causale su DDT)" colspan="4"/>
 					<group colspan="4" col="4">
 						<field name="goods_description_id" colspan="2" widget="selection" attrs="{'required':[('ddt','=',True)]}"/>
-						<field name="carriage_condition_id" colspan="2" widget="selection"/>
+						<field name="carriage_condition_id" colspan="2" widget="selection" attrs="{'required':[('ddt','=',True)]}"/>
 					</group>
 					<group colspan="4" col="6">
-						<field name="transportation_reason_id" colspan="2" widget="selection"/>
-						<field name="number_of_packages" colspan="2"/>
+						<field name="transportation_reason_id" colspan="2" widget="selection" attrs="{'required':[('ddt','=',True)]}"/>
+						<field name="number_of_packages" colspan="2" attrs="{'required':[('ddt','=',True)]}"/>
 						<field name="trasportatore_id" colspan="2" widget="selection"/>
 					</group>
 					<separator string="" colspan="4"/>
