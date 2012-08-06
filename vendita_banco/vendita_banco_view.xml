@@ -142,12 +142,46 @@
 				<field name="search_view_id" ref="vendita_banco_filtri"/>
 		</record>
 		
+		
+		<!--========================================================-->
+		<!--			PUNTO VENDITA DETTAGLIO - TREE				-->
+		<!--========================================================-->
+		<record id="view_vendita_banco_dettaglio_tree" model="ir.ui.view">
+			<field name="name">vendita.banco.dettaglio.tree</field>
+			<field name="model">vendita_banco.dettaglio</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Dettagli Vendite">
+					<field name="name"/>
+					<field name="product_id"/>
+					<field name="product_qty"/>
+					<field name="price_unit"/>
+					<field name="importo"/>
+					<field name="imponibile"/>
+				</tree>
+			</field>
+		</record>
+		
+		<!-- ====================================================== -->
+		<!-- 			PUNTO VENDITA DETTAGLIO - ACTION 			-->
+		<!-- ====================================================== -->
+		<record model="ir.actions.act_window" id="action_vendita_banco_dettaglio">
+				<field name="name">Punto Vendita Dettaglio</field>
+				<field name="type">ir.actions.act_window</field>
+				<field name="res_model">vendita_banco.dettaglio</field>
+				<field name="view_type">form</field>
+				<field name="view_mode">tree,form</field>
+				<field name="view_id" ref="view_vendita_banco_dettaglio_tree"/>
+				<!--field name="search_view_id" ref="vendita_banco_filtri"/-->
+		</record>
+		
 		<!-- ====================================================== -->
 		<!-- 					PUNTO VENDITA - MENU 				-->
 		<!-- ====================================================== -->
 		<menuitem icon="terp-partner" id="menu_vendita_banco_main" name="Vendita al Banco" web_icon="static/vendita.png" web_icon_hover="static/vendita-hover.png"/>
 		<menuitem icon="STOCK_OPEN" parent="menu_vendita_banco_main" id="menu_vendita_banco" name="Vendita al Banco"/>
 		<menuitem action="action_vendita_banco" parent="menu_vendita_banco" id="menu_vendita_banco_vendita" name="Vendita al Banco" sequence="1"/>
+		<menuitem action="action_vendita_banco_dettaglio" parent="menu_vendita_banco" id="menu_vendita_banco_dettaglio" name="Dettagli Vendite" sequence="2"/>
 
 	</data>
 </openerp>
