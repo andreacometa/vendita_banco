@@ -163,6 +163,21 @@
 		</record>
 		
 		<!-- ====================================================== -->
+		<!-- 					PUNTO VENDITA - FILTRI 				-->
+		<!-- ====================================================== -->
+		<record id="vendita_banco_dettaglio_filtri" model="ir.ui.view">
+			<field name="name">vendita_banco.dettaglio.filtri</field>
+			<field name="model">vendita_banco.dettaglio</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Filtri Dettaglio Vendita">
+					<field name="product_id" select="1"/>
+					<newline/>
+			   </search>
+			</field>
+		</record>
+		
+		<!-- ====================================================== -->
 		<!-- 			PUNTO VENDITA DETTAGLIO - ACTION 			-->
 		<!-- ====================================================== -->
 		<record model="ir.actions.act_window" id="action_vendita_banco_dettaglio">
@@ -172,7 +187,7 @@
 				<field name="view_type">form</field>
 				<field name="view_mode">tree,form</field>
 				<field name="view_id" ref="view_vendita_banco_dettaglio_tree"/>
-				<!--field name="search_view_id" ref="vendita_banco_filtri"/-->
+				<field name="search_view_id" ref="vendita_banco_dettaglio_filtri"/>
 		</record>
 		
 		<!-- ====================================================== -->
