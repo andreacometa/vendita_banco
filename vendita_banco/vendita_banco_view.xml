@@ -152,6 +152,7 @@
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Dettagli Vendite">
+					<field name="vendita_banco_id"/>
 					<field name="name"/>
 					<field name="product_id"/>
 					<field name="product_qty"/>
@@ -197,6 +198,16 @@
 		<menuitem icon="STOCK_OPEN" parent="menu_vendita_banco_main" id="menu_vendita_banco" name="Vendita al Banco"/>
 		<menuitem action="action_vendita_banco" parent="menu_vendita_banco" id="menu_vendita_banco_vendita" name="Vendita al Banco" sequence="1"/>
 		<menuitem action="action_vendita_banco_dettaglio" parent="menu_vendita_banco" id="menu_vendita_banco_dettaglio" name="Dettagli Vendite" sequence="2"/>
+
+		<!-- ====================================================== -->
+		<!-- 		PUNTO VENDITA DETTAGLIO DA PRODUCT- ACTION 		-->
+		<!-- ====================================================== -->
+		<act_window
+			context="{'search_default_product_id': [active_id], 'default_product_id': active_id}"
+			id="action_vendita_banco_dettaglio_product_tree"
+			name="Movimenti Vendita"
+			res_model="vendita_banco.dettaglio"
+			src_model="product.product"/>
 
 	</data>
 </openerp>
