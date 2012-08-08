@@ -131,12 +131,6 @@ class vendita_banco(osv.osv):
 				if not order_obj.vendita_banco_dettaglio_ids:
 					raise osv.except_osv(_('Azione non valida!'), _('Non esistono righe di vendita per questo ordine!'))
 					return False
-				# ----- SCRIVE IL NUMERO DI PROTOCOLLO NUOVO O LO RECUPERA
-				res = {}
-				res['name'] = order_obj.name or order_obj.causale.get_protocollo()
-				# ----- SCRIVE LO STATO
-				res['state'] = 'done'
-				self.write(cr, uid, order_obj.id, res)
 				# ----- CREA UN MOVIMENTO DI MAGAZZINO PER OGNI RIGA DI VENDITA
 				# imposta il verso della merce
 				if order_obj.causale.tipo == 'scarico':
@@ -161,6 +155,12 @@ class vendita_banco(osv.osv):
 					}
 					move_id = move_obj.create(cr, uid, move_valori)
 					self.pool.get('vendita_banco.dettaglio').write(cr, uid, line.id, {'move_id':move_id})
+			# ----- SCRIVE IL NUMERO DI PROTOCOLLO NUOVO O LO RECUPERA
+			res = {}
+			res['name'] = order_obj.name or order_obj.causale.get_protocollo()
+			# ----- SCRIVE LO STATO
+			res['state'] = 'done'
+			self.write(cr, uid, order_obj.id, res)
 			if order_obj.causale.fattura:
 				return self.crea_fatture_raggruppate(cr, uid, ids, order_obj.data_ordine, order_obj.causale.name, args[0])
 		return True
@@ -260,8 +260,9 @@ class vendita_banco(osv.osv):
 		# ----- Cancello i movimenti collegati
 		for line in order_obj.vendita_banco_dettaglio_ids:
 			#print '-------------', line, line.move_id.id
-			move_obj.write(cr, uid, [line.move_id.id], {'state':'draft'})
-			move_obj.unlink(cr, uid, [line.move_id.id])
+			if line.move_id:
+				move_obj.write(cr, uid, [line.move_id.id], {'state':'draft'})
+				move_obj.unlink(cr, uid, [line.move_id.id])
 		# ----- Cambio lo stato
 		res = {}
 		res['state'] = 'draft'
