@@ -71,13 +71,13 @@
 								</form>
 								<tree string="Dettagli" editable="bottom">
 									<field name="product_id" on_change="onchange_product(product_id, product_qty, parent.data_ordine, parent.partner_id, parent.pricelist_id)"/>
-									<field name="product_qty"/>
+									<field name="product_qty" sum="Quantità"/>
 									<field name="product_uom"/>
 									<field name="price_unit"/>
 									<field name="discount"/>
 									<field name="tax_id"/>
-									<field name="imponibile"/>
-									<field name="importo"/>
+									<field name="importo" sum="Importo"/>
+									<field name="imponibile" sum="Impnibile"/>
 								</tree>
 							</field>
 						</page>
@@ -155,10 +155,10 @@
 					<field name="vendita_banco_id"/>
 					<field name="name"/>
 					<field name="product_id"/>
-					<field name="product_qty"/>
+					<field name="product_qty" sum="Quantità"/>
 					<field name="price_unit"/>
-					<field name="importo"/>
-					<field name="imponibile"/>
+					<field name="importo" sum="Importo"/>
+					<field name="imponibile" sum="Impnibile"/>
 				</tree>
 			</field>
 		</record>
