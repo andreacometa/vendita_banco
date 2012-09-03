@@ -3,7 +3,7 @@
     <data>
 
 		<!--========================================================-->
-		<!--					PUNTO VENDITA - TREE				-->
+		<!--					VENDITA BANCO - TREE				-->
 		<!--========================================================-->
 		<record model="ir.ui.view" id="view_vendita_banco_tree">
 			<field name="name">vendita_banco.tree</field>
@@ -24,14 +24,14 @@
 		</record>
 		
 		<!--========================================================-->
-		<!--					PUNTO VENDITA - FORM				-->
+		<!--					VENDITA BANCO - FORM				-->
 		<!--========================================================-->
 		<record model="ir.ui.view" id="view_vendita_banco_form">
 			<field name="name">vendita_banco.form</field>
 			<field name="model">vendita_banco</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Punto Vendita">
+				<form string="Vendita Banco">
 					<group col="6" colspan="4">
 						<field name="name" readonly="1"/>
 						<field name="causale" on_change="onchange_causale(causale)" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
@@ -107,14 +107,14 @@
 		</record>
 
 		<!-- ====================================================== -->
-		<!-- 					PUNTO VENDITA - FILTRI 				-->
+		<!-- 					VENDITA BANCO - FILTRI 				-->
 		<!-- ====================================================== -->
         <record id="vendita_banco_filtri" model="ir.ui.view">
             <field name="name">vendita_banco.filtri</field>
             <field name="model">vendita_banco</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Filtri Punto Vendita">
+                <search string="Filtri Vendita Banco">
                     <filter icon="terp-document-new" string="Preventivi" domain="[('state','=','draft')]" help="Preventivi"/>
                     <filter icon="terp-check" string="Confermati" domain="[('state','in',['done', 'invoiced'])]" help="BC Confermati"/>
                     <!--filter icon="terp-check" string="DDT" domain="[('ddt','=',True)]" help="DDT Confermati"/-->
@@ -130,10 +130,10 @@
         </record>
 
 		<!-- ====================================================== -->
-		<!-- 					PUNTO VENDITA - ACTION 				-->
+		<!-- 					VENDITA BANCO - ACTION 				-->
 		<!-- ====================================================== -->
 		<record model="ir.actions.act_window" id="action_vendita_banco">
-				<field name="name">Punto Vendita</field>
+				<field name="name">Vendita Banco</field>
 				<field name="type">ir.actions.act_window</field>
 				<field name="res_model">vendita_banco</field>
 				<field name="view_type">form</field>
@@ -144,7 +144,7 @@
 		
 		
 		<!--========================================================-->
-		<!--			PUNTO VENDITA DETTAGLIO - TREE				-->
+		<!--			VENDITA BANCO DETTAGLIO - TREE				-->
 		<!--========================================================-->
 		<record id="view_vendita_banco_dettaglio_tree" model="ir.ui.view">
 			<field name="name">vendita.banco.dettaglio.tree</field>
@@ -164,7 +164,7 @@
 		</record>
 		
 		<!-- ====================================================== -->
-		<!-- 					PUNTO VENDITA - FILTRI 				-->
+		<!-- 					VENDITA BANCO - FILTRI 				-->
 		<!-- ====================================================== -->
 		<record id="vendita_banco_dettaglio_filtri" model="ir.ui.view">
 			<field name="name">vendita_banco.dettaglio.filtri</field>
@@ -179,10 +179,10 @@
 		</record>
 		
 		<!-- ====================================================== -->
-		<!-- 			PUNTO VENDITA DETTAGLIO - ACTION 			-->
+		<!-- 			VENDITA BANCO DETTAGLIO - ACTION 			-->
 		<!-- ====================================================== -->
 		<record model="ir.actions.act_window" id="action_vendita_banco_dettaglio">
-				<field name="name">Punto Vendita Dettaglio</field>
+				<field name="name">Vendita Banco Dettaglio</field>
 				<field name="type">ir.actions.act_window</field>
 				<field name="res_model">vendita_banco.dettaglio</field>
 				<field name="view_type">form</field>
@@ -192,7 +192,7 @@
 		</record>
 		
 		<!-- ====================================================== -->
-		<!-- 					PUNTO VENDITA - MENU 				-->
+		<!-- 					VENDITA BANCO - MENU 				-->
 		<!-- ====================================================== -->
 		<menuitem icon="terp-partner" id="menu_vendita_banco_main" name="Vendita al Banco" web_icon="static/vendita.png" web_icon_hover="static/vendita-hover.png"/>
 		<menuitem icon="STOCK_OPEN" parent="menu_vendita_banco_main" id="menu_vendita_banco" name="Vendita al Banco"/>
@@ -204,7 +204,7 @@
 			<menuitem action="base.action_partner_supplier_form" parent="menu_vendita_banco_partner" id="menu_vendita_banco_supplier" name="Fornitori" sequence="2"/>
 
 		<!-- ====================================================== -->
-		<!-- 		PUNTO VENDITA DETTAGLIO DA PRODUCT- ACTION 		-->
+		<!-- 		VENDITA BANCO DETTAGLIO DA PRODUCT- ACTION 		-->
 		<!-- ====================================================== -->
 		<act_window
 			context="{'search_default_product_id': [active_id], 'default_product_id': active_id}"
