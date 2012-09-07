@@ -325,7 +325,7 @@ class vendita_banco_dettaglio(osv.osv):
 		'invoice_line_id' : fields.many2one('account.invoice.line', 'Linea di fattura'),
 	}
 
-	def onchange_product(self, cr, uid, ids, product_id, product_qty, data_ordine, partner_id, pricelist):
+	def onchange_product(self, cr, uid, ids, product_id, product_qty, data_ordine, partner_id, pricelist, context={}):
 		if product_id:
 			res = {}
 			product_obj = self.pool.get('product.product').browse(cr, uid, product_id)
