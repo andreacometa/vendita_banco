@@ -41,7 +41,8 @@ class vendita_causali(osv.osv):
 		if causale_id:
 			causale = self.browse(cr, uid, causale_id)[0]
 			if not causale.fattura:
-				return self.pool.get('ir.sequence').get_id(cr,uid,causale.protocollo.id)
+				#return self.pool.get('ir.sequence').get_id(cr,uid,causale.protocollo.id)
+				return self.pool.get('ir.sequence').next_by_id(cr,uid,causale.protocollo.id)
 			else:
 				return "FAT"
 		return False
