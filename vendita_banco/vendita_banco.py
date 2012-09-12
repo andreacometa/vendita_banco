@@ -259,7 +259,6 @@ class vendita_banco(osv.osv):
 			return False
 		# ----- Cancello i movimenti collegati
 		for line in order_obj.vendita_banco_dettaglio_ids:
-			#print '-------------', line, line.move_id.id
 			if line.move_id:
 				move_obj.write(cr, uid, [line.move_id.id], {'state':'draft'})
 				move_obj.unlink(cr, uid, [line.move_id.id])

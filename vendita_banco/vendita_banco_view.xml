@@ -34,8 +34,8 @@
 				<form string="Vendita Banco">
 					<group col="6" colspan="4">
 						<field name="name" readonly="1"/>
-						<field name="causale" on_change="onchange_causale(causale)" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
 						<field name="data_ordine" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}"/>
+						<field name="causale" on_change="onchange_causale(causale)" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
 						<field name="ddt" invisible="1" />
 					</group>
 					<group col="6" colspan="4">

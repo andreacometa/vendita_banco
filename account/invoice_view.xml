@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+	    <record model="ir.ui.view" id="invoice_form_vendita_banco">
+			<field name="name">invoice.form.vendita_banco</field>
+			<field name="model">account.invoice</field>
+			<field name="inherit_id" ref="l10n_it_sale.invoice_form_inherit_contractual_conditions"/>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="transportation_reason_id" position="after">
+					<newline />
+					<field name="packages_number"/>
+				</field>
+			</field>
+        </record>
+	</data>
+</openerp>
+

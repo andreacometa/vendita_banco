@@ -30,5 +30,6 @@
         'vendita_banco/causali.xml',
         'wizard/wizard_genera_fatture_view.xml',
         'wizard/wizard_view.xml',
+        'account/invoice_view.xml',
     ],
 }
