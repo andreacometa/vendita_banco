@@ -63,21 +63,21 @@
 									<field name="product_id"/>
 									<field name="product_qty"/>
 									<field name="product_uom"/>
-									<field name="price_unit"/>
+									<field name="price_unit" groups="vendita_banco.group_vendita_banco_management"/>
 									<field name="discount"/>
 									<field name="tax_id"/>
-									<field name="imponibile"/>
-									<field name="importo"/>
+									<field name="imponibile"  groups="vendita_banco.group_vendita_banco_management"/>
+									<field name="importo"  groups="vendita_banco.group_vendita_banco_management"/>
 								</form>
 								<tree string="Dettagli" editable="bottom">
 									<field name="product_id" on_change="onchange_product(product_id, product_qty, parent.data_ordine, parent.partner_id, parent.pricelist_id)"/>
 									<field name="product_qty" sum="Quantità"/>
 									<field name="product_uom"/>
-									<field name="price_unit"/>
+									<field name="price_unit" groups="vendita_banco.group_vendita_banco_management"/>
 									<field name="discount"/>
 									<field name="tax_id"/>
-									<field name="importo" sum="Importo"/>
-									<field name="imponibile" sum="Impnibile"/>
+									<field name="importo" sum="Importo" groups="vendita_banco.group_vendita_banco_management"/>
+									<field name="imponibile" sum="Imponibile" groups="vendita_banco.group_vendita_banco_management"/>
 								</tree>
 							</field>
 						</page>
@@ -87,7 +87,7 @@
 						</page>
 					</notebook>
 					<group col="10" colspan="4">
-						<field name="acconto"  />
+						<field name="acconto" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
 						<field name="imponibile" />
 						<field name="totale" />
 						<field name="state" />
