@@ -96,8 +96,8 @@
 							<button name="riapri_vendita" type="object" states="done,invoiced" string="Riapri Vendita" icon="gtk-cancel"/>
 							<button name="crea_fattura" type="object" 
 								attrs="{'invisible':['|', ('fatturabile','=',False), ('state', 'in', ['draft', 'invoiced'] )]}" string="Crea Fattura" icon="terp-dolar_ok!"/>
-							<button name="stampa" type="object" states="done,invoiced" 
-								attrs="{'invisible':[('report','=',False)]}" string="Stampa" icon="gtk-print"
+							<button name="stampa" type="object" 
+								attrs="{'invisible':['|', ('report','=',False),('state','=','draft')]}" string="Stampa" icon="gtk-print"
 								groups="vendita_banco.group_vendita_banco_printer"/>
 						</group>
 						<field name="fatturabile" invisible="1" />
