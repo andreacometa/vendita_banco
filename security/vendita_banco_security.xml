@@ -9,4 +9,8 @@
         <field name="name">Vendita Banco/Management</field>
     </record>
     
+    <record id="group_vendita_banco_printer" model="res.groups">
+        <field name="name">Vendita Banco/Printer</field>
+    </record>
+    
 </data></openerp>
