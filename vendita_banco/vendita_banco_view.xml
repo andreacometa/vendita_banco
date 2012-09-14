@@ -102,6 +102,7 @@
 						</group>
 						<field name="fatturabile" invisible="1" />
 						<field name="report" invisible="1"/>
+						<field name="company_id" invisible="1"/>
 					</group>
 				</form>
 			</field>

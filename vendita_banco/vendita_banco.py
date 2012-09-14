@@ -54,6 +54,18 @@ class vendita_banco(osv.osv):
 			else:
 				res[vb.id] = False
 		return res
+		
+	def _get_company(self, cr, uid, ids, name, arg, context=None):
+		res = {}
+		vbs = self.browse(cr, uid, ids, context)
+		company_id = self.pool.get('res.company')._company_default_get(cr, uid, context=context)
+		if not company_id:
+			for vb in vbs:
+				res[vb.id] = False
+		else:
+			for vb in vbs:
+				res[vb.id] = company_id
+		return res
 
 	_columns = {
 		'name' : fields.char('Numero Documento', size=16),
@@ -65,6 +77,7 @@ class vendita_banco(osv.osv):
 		'ddt' : fields.boolean('DDT', help="Se la casella è spuntata verrà generato e stampato un DDT altrimenti verrà crerato un Buono Consegna"),
 		'fatturabile' : fields.related('causale', 'fatturabile', type='boolean', relation='vendita.causali', readonly=True),
 		'report' : fields.function(_get_report,  method=True, type='boolean'),
+		'company_id' : fields.function(_get_company,  method=True, type='many2one', relation='res.company', store=False),
 		'causale' : fields.many2one('vendita.causali', 'Causale', required=True),
 		'invoice_id' : fields.many2one('account.invoice', 'Fattura', ondelete='set null'),
 		'modalita_pagamento_id' : fields.many2one('account.payment.term', 'Modalità di pagamento', required=True),
