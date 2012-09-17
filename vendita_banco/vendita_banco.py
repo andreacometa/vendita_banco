@@ -152,22 +152,22 @@ class vendita_banco(osv.osv):
 				else:
 					location_destinazione = warehouse.lot_stock_id.id
 					location_sorgente = warehouse.location_vendita_banco_id.id
-
 				for line in order_obj.vendita_banco_dettaglio_ids:
-					move_obj = self.pool.get('stock.move')
-					move_valori = {
-						'name' : '[%s] %s' % (line.product_id.default_code, line.product_id.name),
-						'sorgente_id' : line.vendita_banco_id.id,
-						'product_uom' : line.product_uom.id,
-						'price_unit' : line.price_unit,
-						'product_qty' : line.product_qty,
-						'product_id' : line.product_id.id,
-						'location_id' : location_sorgente,
-						'location_dest_id' :location_destinazione,
-						'state' : 'done',
-					}
-					move_id = move_obj.create(cr, uid, move_valori)
-					self.pool.get('vendita_banco.dettaglio').write(cr, uid, line.id, {'move_id':move_id})
+					if line.product_id:
+						move_obj = self.pool.get('stock.move')
+						move_valori = {
+							'name' : '[%s] %s' % (line.product_id.default_code, line.product_id.name),
+							'sorgente_id' : line.vendita_banco_id.id,
+							'product_uom' : line.product_uom.id,
+							'price_unit' : line.price_unit,
+							'product_qty' : line.product_qty,
+							'product_id' : line.product_id.id,
+							'location_id' : location_sorgente,
+							'location_dest_id' :location_destinazione,
+							'state' : 'done',
+						}
+						move_id = move_obj.create(cr, uid, move_valori)
+						self.pool.get('vendita_banco.dettaglio').write(cr, uid, line.id, {'move_id':move_id})
 			# ----- SCRIVE IL NUMERO DI PROTOCOLLO NUOVO O LO RECUPERA
 			res = {}
 			res['name'] = order_obj.name or order_obj.causale.get_protocollo()
@@ -223,9 +223,10 @@ class vendita_banco(osv.osv):
 			for line in order_obj.vendita_banco_dettaglio_ids:
 				invoice_line_tax_id = line.tax_id and [(6,0,[line.tax_id.id])] or False
 				invoice_line_id = self.pool.get('account.invoice.line').create(cr, uid, {
-					'name' : '[%s] %s' % (line.product_id.default_code, line.product_id.name),
+					#'name' : '[%s] %s' % (line.product_id.default_code, line.product_id.name),
+					'name' : line.name,
 					'invoice_id' : account_invoice_id,
-					'product_id' : line.product_id.id,
+					'product_id' : line.product_id and line.product_id.id or False,
 					'quantity' : line.product_qty,
 					'account_id' : account_id,
 					'price_unit' : line.price_unit,
@@ -278,7 +279,6 @@ class vendita_banco(osv.osv):
 		# ----- Cambio lo stato
 		res = {}
 		res['state'] = 'draft'
-		#res['name'] = ''
 		self.write(cr, uid, order_obj.id, res)
 		return True
 
@@ -347,6 +347,7 @@ class vendita_banco_dettaglio(osv.osv):
 			warning = {}
 			res['product_uom'] = product_obj.uom_id.id
 			res['product_qty'] = 1
+			res['name'] = '%s' % (product_obj.name)
 			if not pricelist:
 				warning = {
 					'title' : 'Nessun Listino!',
