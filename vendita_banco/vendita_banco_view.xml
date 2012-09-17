@@ -99,7 +99,7 @@
 							<button name="crea_fattura" type="object" 
 								attrs="{'invisible':['|', ('fatturabile','=',False), ('state', 'in', ['draft', 'invoiced'] )]}" string="Crea Fattura" icon="terp-dolar_ok!"/>
 							<button name="stampa" type="object" 
-								attrs="{'invisible':['|', ('report','=',False),('state','=','draft')]}" string="Stampa" icon="gtk-print"
+								attrs="{'invisible':['|', ('report','=',False),('state','in',['draft', 'invoiced'])]}" string="Stampa" icon="gtk-print"
 								groups="vendita_banco.group_vendita_banco_printer"/>
 						</group>
 						<field name="fatturabile" invisible="1" />
