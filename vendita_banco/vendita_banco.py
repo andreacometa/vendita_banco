@@ -194,11 +194,11 @@ class vendita_banco(osv.osv):
 			# -----
 			# CREAZIONE TESTATA FATTURA
 			# -----
-			#FIXME aggiungere legame payment_terms
 			account_invoice_id = self.pool.get('account.invoice').create(cr, uid, {
 				'name' : order_obj.causale.fattura and order_obj.causale.descrizione or "Fattura Differita",
 				'origin' : order_obj.name,
 				'date_invoice' : data_fattura,
+				'immediate' : order_obj.causale.fattura,
 				'partner_id' : order_obj.partner_id.id,
 				'account_id' : order_obj.partner_id.property_account_receivable.id,
 				'journal_id' : journal_id,
@@ -223,7 +223,6 @@ class vendita_banco(osv.osv):
 			for line in order_obj.vendita_banco_dettaglio_ids:
 				invoice_line_tax_id = line.tax_id and [(6,0,[line.tax_id.id])] or False
 				invoice_line_id = self.pool.get('account.invoice.line').create(cr, uid, {
-					#'name' : '[%s] %s' % (line.product_id.default_code, line.product_id.name),
 					'name' : line.name,
 					'invoice_id' : account_invoice_id,
 					'product_id' : line.product_id and line.product_id.id or False,
@@ -238,7 +237,6 @@ class vendita_banco(osv.osv):
 				self.pool.get('vendita_banco.dettaglio').write(cr, uid, [line.id], {'invoice_line_id':invoice_line_id})
 		# ----- Salva in vendita_banco la fattura appena creata e modifica lo stato
 		self.write(cr, uid, ids, {'invoice_id':account_invoice_id, 'state':'invoiced'})
-		#return account_invoice_id
 		# ----- MOSTRA LA FATTURA APPENA CREATA
 		mod_obj = self.pool.get('ir.model.data')
 		res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
