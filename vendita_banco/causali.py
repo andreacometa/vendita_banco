@@ -29,6 +29,12 @@ class vendita_causali(osv.osv):
 		'segno' : fields.selection((('+1', 'Positivo'), ('-1', 'Negativo')), 'Segno', help="Indicare il segno contabile"),
 		'fattura' : fields.boolean('Fattura', help="Indica se la causale rappresenta un fattura immediata"),
 		'riga_raggruppa' : fields.boolean('Riga Raggruppamento', help="Indica se la generazione della fattura porta le righe descrittive per ogni raggruppamento"),
+		'user_ids': fields.many2many(
+			'res.users',
+			'res_users_causali_rel',
+			'user_id',
+			'causale_id',
+			'Utenti Abilitati'),
 	}
 	
 	_defaults = {

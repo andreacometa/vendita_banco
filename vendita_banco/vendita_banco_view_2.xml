@@ -35,8 +35,7 @@
 					<group col="6" colspan="4">
 						<field name="name" readonly="1"/>
 						<field name="data_ordine" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}"/>
-						<field name="causale" on_change="onchange_causale(causale)"
-							attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
+						<field name="causale" on_change="onchange_causale(causale)" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
 						<field name="ddt" invisible="1" />
 					</group>
 					<group col="6" colspan="4">
@@ -147,6 +146,39 @@
 				<field name="search_view_id" ref="vendita_banco_filtri"/>
 		</record>
 		
+		<!-- ====================================================== -->
+		<!-- 			VENDITA BANCO - FORM [DASHBOARD] 			-->
+		<!-- ====================================================== -->
+		<record id="board_vendita_banco" model="ir.ui.view">
+			<field name="name">board.vendita_banco.form</field>
+			<field name="model">board.board</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Vendita Banco Dashboard">
+					<board style="2-1">
+						<column>
+							<action name="%(view_vendita_banco_tree)d" creatable="true" string="Preventivi" domain="[('state','=','draft')]"/>
+							<action name="%(view_vendita_banco_tree)d" creatable="true" string="Vendita Banco Fatture" domain="[('state','=','invoiced')]"/>
+						</column>
+						<column>
+							<action name="%(view_vendita_banco_tree)d" creatable="true" string="Vendita Banco Confermate" domain="[('state','=','done')]"/>
+						</column>
+					</board>
+				</form>
+			</field>
+		</record>
+		
+		<!-- ====================================================== -->
+		<!-- 			VENDITA BANCO - ACTION [DASHBOARD] 			-->
+		<!-- ====================================================== -->
+		<record id="action_board_vendita_banco" model="ir.actions.act_window">
+			<field name="name">Vendita Banco Dashboard</field>
+			<field name="res_model">board.board</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="usage">menu</field>
+			<field name="view_id" ref="board_vendita_banco"/>
+		</record>
 		
 		<!--========================================================-->
 		<!--			VENDITA BANCO DETTAGLIO - TREE				-->
@@ -199,7 +231,8 @@
 		<!-- ====================================================== -->
 		<!-- 					VENDITA BANCO - MENU 				-->
 		<!-- ====================================================== -->
-		<menuitem icon="terp-partner" id="menu_vendita_banco_main" name="Vendita al Banco" web_icon="static/vendita.png" web_icon_hover="static/vendita-hover.png"/>
+		<menuitem icon="terp-partner" id="menu_vendita_banco_main" name="Vendita al Banco" action="action_board_vendita_banco"
+		web_icon="static/vendita.png" web_icon_hover="static/vendita-hover.png"/>
 		<menuitem icon="STOCK_OPEN" parent="menu_vendita_banco_main" id="menu_vendita_banco" name="Vendita al Banco"/>
 		<menuitem action="action_vendita_banco" parent="menu_vendita_banco" id="menu_vendita_banco_vendita" name="Vendita al Banco" sequence="1"/>
 		<menuitem action="action_vendita_banco_dettaglio" parent="menu_vendita_banco" id="menu_vendita_banco_dettaglio" name="Dettagli Vendite" sequence="2"/>

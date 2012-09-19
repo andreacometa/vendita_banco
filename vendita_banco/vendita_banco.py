@@ -108,8 +108,16 @@ class vendita_banco(osv.osv):
 	# ----- Funzione che aggiorna il flag ddt
 	def onchange_causale(self, cr, uid, ids, causale):
 		if causale:
-			ddt = self.pool.get('vendita.causali').browse(cr,uid,causale).ddt
-			return {'value' : {'ddt' : ddt, 'name':''}}
+			causale_vals = self.pool.get('vendita.causali').browse(cr,uid,causale)
+			warning = {}
+			if not self.pool.get('res.users').browse(cr, uid, uid) in causale_vals.user_ids:
+				warning = {
+					'title' : 'Attenzione!',
+					'message' : 'Non si è abilitati all\'emissione di una vendita con questa causale!'
+					}
+				causale = False
+			ddt = causale_vals.ddt
+			return {'value' : {'ddt' : ddt, 'name':'', 'causale':causale}, 'warning': warning}
 		return False
 	
 	# ----- Funzione che oltre al normale onchange inserisce anche il valore di genera ddt del partner

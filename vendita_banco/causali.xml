@@ -32,23 +32,31 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Causali">
-					<group colspan="4">
-						<field name="name"/>
-						<field name="descrizione" />
-					</group>
-					<group colspan="4">
-						<field name="tipo"  />
-						<field name="protocollo" />
-					</group>
-					<group col="10" colspan="4">
-						<field name="fattura" on_change="onchange_fattura(fattura)"
-							attrs="{'readonly':[('tipo','=','carico')]}" />
-						<field name="fatturabile" attrs="{'readonly':[('tipo','in',['carico', 'nessuno'])]}"/>
-						<field name="riga_raggruppa" />
-						<field name="ddt" />
-						<field name="segno"/>
-						<field name="report" />
-					</group>
+					<notebook>
+						<page string="Dati">
+							<group colspan="4">
+								<field name="name"/>
+								<field name="descrizione" />
+							</group>
+							<group colspan="4">
+								<field name="tipo"  />
+								<field name="protocollo" />
+							</group>
+							<group col="10" colspan="4">
+								<field name="fattura" on_change="onchange_fattura(fattura)"
+									attrs="{'readonly':[('tipo','=','carico')]}" />
+								<field name="fatturabile" attrs="{'readonly':[('tipo','in',['carico', 'nessuno'])]}"/>
+								<field name="riga_raggruppa" />
+								<field name="ddt" />
+								<field name="segno"/>
+								<field name="report" />
+							</group>
+						</page>
+						<page string="Permessi">
+							<separator string="Utenti Abilitati" colspan="4" />
+							<field name="user_ids" nolabel="1" colspan="4"/>
+						</page>
+					</notebook>
 				</form>
 			</field>
 		</record>
