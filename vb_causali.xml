@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        
+        <!-- Sequenze -->
+        <record id="seq_type_ordcli" model="ir.sequence.type">
+            <field name="name">Ordine Cliente</field>
+            <field name="code">vendita.causali</field>
+        </record>
+
+        <record id="seq_ordcli" model="ir.sequence">
+            <field name="name">Ordine Cliente</field>
+            <field name="code">vendita.causali</field>
+            <field name="prefix">OC</field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+        <!-- Causali -->
+        <record forcecreate="1" id="vc_causali_ddt" model="vendita.causali">
+            <field name="name">DDT</field>
+            <field name="descrizione">Documento di Trasporto</field>
+            <field name="tipo">scarico</field>
+            <field name="ddt" eval="True" />
+            <field name="riga_raggruppa" eval="True" />
+            <field name="fatturabile" eval="True" />
+            <field name="protocollo" ref="l10n_it_sale.seq_ddt" />
+        </record>
+        
+        <record forcecreate="1" id="vc_causali_bc" model="vendita.causali">
+            <field name="name">ORDCLI</field>
+            <field name="descrizione">Ordine Cliente</field>
+            <field name="tipo">nessuno</field>
+            <field name="ddt" eval="False" />
+            <field name="riga_raggruppa" eval="False" />
+            <field name="fatturabile" eval="False" />
+            <field name="protocollo" ref="seq_ordcli" />
+        </record>
+        
+        <record forcecreate="1" id="vc_causali_fatt" model="vendita.causali">
+            <field name="name">FATT</field>
+            <field name="descrizione">Fattura Immediata</field>
+            <field name="tipo">scarico</field>
+            <field name="ddt" eval="False" />
+            <field name="riga_raggruppa" eval="False" />
+            <field name="fattura" eval="True" />
+            <field name="fatturabile" eval="False" />
+            <field name="protocollo" ref="account.sequence_sale_journal" />
+        </record>
+         
+    </data>
+</openerp>
