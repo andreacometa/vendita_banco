@@ -51,6 +51,10 @@
 								<field name="segno"/>
 								<field name="report" />
 							</group>
+							<separator string="Causali Raggruppamento" colspan="4" />
+							<field name="raggruppamento_ids" 
+								domain="[('tipo', '!=', tipo)]"
+								nolabel="1" colspan="4"/>
 						</page>
 						<page string="Permessi">
 							<separator string="Utenti Abilitati" colspan="4" />

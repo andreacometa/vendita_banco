@@ -9,5 +9,6 @@
 #
 ##############################################################################
 
+import wizard_raggruppa_documenti
 import wizard_genera_fatture
 import wizard

@@ -13,10 +13,10 @@ from osv import fields, osv
 from tools.translate import _
 
 class vendita_causali(osv.osv):
-	
+
 	_name = "vendita.causali"
 	_description = "Vista Causali"
-	
+
 	_columns = {
 		'name' : fields.char('Codice Causale', size=8, required=True),
 		'descrizione' : fields.char('Descrizione', size=32, required=True),
@@ -35,14 +35,20 @@ class vendita_causali(osv.osv):
 			'user_id',
 			'causale_id',
 			'Utenti Abilitati'),
+		'raggruppamento_ids': fields.many2many(
+			'vendita.causali',
+			'causali_raggruppamento_rel',
+			'causale_raggruppamento_id',
+			'causale_id',
+			'Causali Raggruppamento'),
 	}
-	
+
 	_defaults = {
 		'segno' : '+1',
 		'tipo' : 'nessuno',
 		'riga_raggruppa': False,
 	}
-	
+
 	def get_protocollo(self, cr, uid, causale_id):
 		if causale_id:
 			causale = self.browse(cr, uid, causale_id)[0]
@@ -62,6 +68,6 @@ class vendita_causali(osv.osv):
 	# ----- imposta il flag fatturabile 
 	def onchange_fattura(self, cr, uid, ids, fattura):
 		return  { 'value' : { 'fatturabile' : fattura } }
-		
+
 vendita_causali()
 
