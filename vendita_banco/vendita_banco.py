@@ -95,6 +95,9 @@ class vendita_banco(osv.osv):
 		'state' : fields.selection((('draft', 'Preventivo'),('done', 'Confermato'), ('invoiced', 'Fatturato')), 'Stato', readonly=True, select=True),
 		# ----- Altro
 		'note' : fields.text('Note'),
+		# ----- Wizard
+		# --- Contiene l'id di un eventuale ordine generato da raggruppamento con wizard
+		'vb_raggruppamento_id' : fields.many2one('vendita_banco', 'Ordine Raggruppamento', ondelete="set null"),
 		}
 
 	_defaults = {
@@ -271,21 +274,27 @@ class vendita_banco(osv.osv):
 
 	# ----- Funzione richiamata dal button Conferma Vendita
 	def riapri_vendita(self, cr, uid, ids, *args):
-		order_obj = self.browse(cr, uid, ids)[0]
-		move_obj = self.pool.get('stock.move')
-		if (order_obj.state == 'invoiced') and (order_obj.invoice_id):
-			message = 'La fattura "%s" e\' collegata a questo ordine\nAccertarsi che essa venga eliminata prima di procedere!' % (order_obj.invoice_id.number or order_obj.invoice_id.name)
-			raise osv.except_osv(_('Attenzione!'), _(message))
-			return False
-		# ----- Cancello i movimenti collegati
-		for line in order_obj.vendita_banco_dettaglio_ids:
-			if line.move_id:
-				move_obj.write(cr, uid, [line.move_id.id], {'state':'draft'})
-				move_obj.unlink(cr, uid, [line.move_id.id])
+		for order_obj in self.browse(cr, uid, ids):
+			move_obj = self.pool.get('stock.move')
+			# ----- Controlla che non ci siano fatture generate da questi ordini
+			if (order_obj.state == 'invoiced') and (order_obj.invoice_id):
+				message = 'La fattura "%s" e\' collegata a questo ordine\nAccertarsi che essa venga eliminata prima di procedere!' % (order_obj.invoice_id.number or order_obj.invoice_id.name)
+				raise osv.except_osv(_('Attenzione!'), _(message))
+				return False
+			# ----- Controlla che non ci siano ordini di raggruppamento generati da questi ordini
+			if order_obj.vb_raggruppamento_id:
+				message = 'L\'ordine di raggruppamento "%s" e\' collegata a questo ordine\nAccertarsi che essa venga eliminata prima di procedere!' % (order_obj.vb_raggruppamento_id.name)
+				raise osv.except_osv(_('Attenzione!'), _(message))
+				return False
+			# ----- Cancello i movimenti collegati
+			for line in order_obj.vendita_banco_dettaglio_ids:
+				if line.move_id:
+					move_obj.write(cr, uid, [line.move_id.id], {'state':'draft'})
+					move_obj.unlink(cr, uid, [line.move_id.id])
 		# ----- Cambio lo stato
 		res = {}
 		res['state'] = 'draft'
-		self.write(cr, uid, order_obj.id, res)
+		self.write(cr, uid, ids, res)
 		return True
 
 	# ----- Funzione richiamata dal button Stampa BC o DDT

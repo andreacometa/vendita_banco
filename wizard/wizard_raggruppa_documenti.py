@@ -65,6 +65,8 @@ class vb_raggruppa_documenti(osv.osv_memory):
 				'causale' : wizard.nuova_causale.id,
 			}
 			nuovo_vb_id = vb_obj.create(cr, uid, vb_struttura)
+			# ----- Indica il nuovo ordine in quelli vecchi
+			vb_obj.write(cr, uid, context['active_ids'], {'vb_raggruppamento_id':nuovo_vb_id})
 			# ----- Genera i dettagli del nuovo documento
 			for vb in vbs:
 				# ----- Crea la riga descrittiva di riferimento
