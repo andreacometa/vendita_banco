@@ -17,7 +17,7 @@
         </record>
         
         <!-- Causali -->
-        <record forcecreate="1" id="vc_causali_ddt" model="vendita.causali">
+        <record id="vc_causali_ddt" model="vendita.causali">
             <field name="name">DDT</field>
             <field name="descrizione">Documento di Trasporto</field>
             <field name="tipo">scarico</field>
@@ -27,7 +27,7 @@
             <field name="protocollo" ref="l10n_it_sale.seq_ddt" />
         </record>
         
-        <record forcecreate="1" id="vc_causali_bc" model="vendita.causali">
+        <record id="vc_causali_bc" model="vendita.causali">
             <field name="name">ORDCLI</field>
             <field name="descrizione">Ordine Cliente</field>
             <field name="tipo">nessuno</field>
@@ -37,7 +37,7 @@
             <field name="protocollo" ref="seq_ordcli" />
         </record>
         
-        <record forcecreate="1" id="vc_causali_fatt" model="vendita.causali">
+        <record id="vc_causali_fatt" model="vendita.causali">
             <field name="name">FATT</field>
             <field name="descrizione">Fattura Immediata</field>
             <field name="tipo">scarico</field>
