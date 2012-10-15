@@ -80,7 +80,7 @@
 		<!-- ====================================================== -->
 		<!-- 					CAUSALI - MENU 				-->
 		<!-- ====================================================== -->
-		<menuitem action="action_causali" parent="menu_vendita_banco" id="menu_causale" name="Causali" string="Causali"/>
+		<menuitem action="action_causali" parent="menu_vendita_banco_config" id="menu_causale" name="Causali" string="Causali"  sequence="1"/>
 
 	</data>
 </openerp>

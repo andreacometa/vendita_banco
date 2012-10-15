@@ -200,13 +200,18 @@
 		<!-- 					VENDITA BANCO - MENU 				-->
 		<!-- ====================================================== -->
 		<menuitem icon="terp-partner" id="menu_vendita_banco_main" name="Vendita al Banco" web_icon="static/vendita.png" web_icon_hover="static/vendita-hover.png"/>
-		<menuitem icon="STOCK_OPEN" parent="menu_vendita_banco_main" id="menu_vendita_banco" name="Vendita al Banco"/>
-		<menuitem action="action_vendita_banco" parent="menu_vendita_banco" id="menu_vendita_banco_vendita" name="Vendita al Banco" sequence="1"/>
-		<menuitem action="action_vendita_banco_dettaglio" parent="menu_vendita_banco" id="menu_vendita_banco_dettaglio" name="Dettagli Vendite" sequence="2"/>
-		
-		<menuitem icon="terp-partner" parent="menu_vendita_banco_main" id="menu_vendita_banco_partner" name="Partner" sequence="10"/>
-			<menuitem action="base.action_partner_customer_form" parent="menu_vendita_banco_partner" id="menu_vendita_banco_customer" name="Clienti" sequence="1"/>
-			<menuitem action="base.action_partner_supplier_form" parent="menu_vendita_banco_partner" id="menu_vendita_banco_supplier" name="Fornitori" sequence="2"/>
+			<!-- VENDITA BANCO -->
+			<menuitem icon="STOCK_OPEN" parent="menu_vendita_banco_main" id="menu_vendita_banco" name="Vendita al Banco"/>
+				<menuitem action="action_vendita_banco" parent="menu_vendita_banco" id="menu_vendita_banco_vendita" name="Vendita al Banco" sequence="1"/>
+				<menuitem action="action_vendita_banco_dettaglio" parent="menu_vendita_banco" id="menu_vendita_banco_dettaglio" name="Dettagli Vendite" sequence="2"/>
+			<!-- PARTNER -->
+			<menuitem icon="terp-partner" parent="menu_vendita_banco_main" id="menu_vendita_banco_partner" name="Partner" sequence="10"/>
+				<menuitem action="base.action_partner_customer_form" parent="menu_vendita_banco_partner" id="menu_vendita_banco_customer" name="Clienti" sequence="1"/>
+				<menuitem action="base.action_partner_supplier_form" parent="menu_vendita_banco_partner" id="menu_vendita_banco_supplier" name="Fornitori" sequence="2"/>
+			<!-- CONFIGURAZIONI -->
+			<menuitem icon="terp-partner" parent="menu_vendita_banco_main" id="menu_vendita_banco_config" name="Configurazioni" sequence="20"/>
+				<menuitem action="product.product_pricelist_action" parent="menu_vendita_banco_config" id="menu_vendita_banco_pricelist" name="Listini" sequence="2"/>
+
 
 		<!-- ====================================================== -->
 		<!-- 		VENDITA BANCO DETTAGLIO DA PRODUCT- ACTION 		-->
