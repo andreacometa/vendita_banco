@@ -13,6 +13,9 @@
 				<field name="active" position="after">
 					<field name="causale" />
 				</field>
+				<field name="credit" position="replace">
+					<field name="vb_credit" />
+				</field>
 			</field>
 		</record>
 		
