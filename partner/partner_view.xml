@@ -12,6 +12,7 @@
 			<field name="arch" type="xml">
 				<field name="active" position="after">
 					<field name="causale" />
+					<field name="sconto_fisso" />
 				</field>
 				<field name="credit" position="replace">
 					<field name="vb_credit" />

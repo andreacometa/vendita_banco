@@ -365,6 +365,9 @@ class vendita_banco_dettaglio(osv.osv):
 			res['product_uom'] = product_obj.uom_id.id
 			res['product_qty'] = 1
 			res['name'] = '%s' % (product_obj.name)
+			# ----- richiama lo sconto fisso
+			if partner_id:
+				res['discount'] = self.pool.get('res.partner').browse(cr, uid, partner_id).sconto_fisso
 			if not pricelist:
 				warning = {
 					'title' : 'Nessun Listino!',
