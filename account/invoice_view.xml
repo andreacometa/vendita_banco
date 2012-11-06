@@ -7,6 +7,9 @@
 			<field name="inherit_id" ref="l10n_it_sale.invoice_form_inherit_contractual_conditions"/>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
+				<field name="address_invoice_id" position="after">
+					<field name="partner_shipping_id" domain="[('partner_id', '=', partner_id)]" context="{'default_partner_id':partner_id}"/>
+				</field>
 				<field name="transportation_reason_id" position="after">
 					<newline />
 					<field name="packages_number"/>

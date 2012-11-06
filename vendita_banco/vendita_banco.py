@@ -215,6 +215,7 @@ class vendita_banco(osv.osv):
 				'journal_id' : journal_id,
 				'currency_id' : currency_id,
 				'address_invoice_id' : order_obj.partner_invoice_id.id,
+				'partner_shipping_id' : order_obj.partner_shipping_id and order_obj.partner_shipping_id.id,
 				'state' : 'draft',
 				'type' : 'out_invoice',
 				'reconciled' : False,
