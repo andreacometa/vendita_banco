@@ -220,7 +220,12 @@ class vendita_banco(osv.osv):
 				'type' : 'out_invoice',
 				'reconciled' : False,
 				'fiscal_position' : order_obj.partner_id.property_account_position.id,
-				'payment_term' : order_obj.partner_id.property_payment_term.id,
+				'payment_term' : order_obj.modalita_pagamento_id.id,
+				'comment' : order_obj.note,
+				'carriage_condition_id' : order_obj.carriage_condition_id and order_obj.carriage_condition_id.id or False,
+				'goods_description_id' : order_obj.goods_description_id and order_obj.goods_description_id.id or False,
+				'transportation_reason_id' : order_obj.transportation_reason_id and order_obj.transportation_reason_id.id or False,
+				'packages_number' : order_obj.number_of_packages or 0.0,
 				})
 			# CREA UNA RIGA FITTIZIA COME TESTATA
 			if order_obj.causale.riga_raggruppa:
