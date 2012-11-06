@@ -334,12 +334,15 @@ class vendita_banco_dettaglio(osv.osv):
 		for line in self.browse(cr, uid, ids, context):
 			res[line.id] = {'importo':0.0, 'imponibile':0.0,}
 			imponibile = line.price_unit * line.product_qty
+			# ----- applica lo sconto
+			if line.discount:
+				sconto = imponibile * line.discount
+				imponibile = imponibile - sconto
 			tax_amount = line.tax_id and line.tax_id.amount or 0
 			importo = (imponibile * tax_amount) + imponibile
 			res[line.id]['importo'] = importo
 			res[line.id]['imponibile'] = imponibile
 		return res
-	
 
 	_columns = {
 		'name' : fields.char('Descrizione', size=64),
