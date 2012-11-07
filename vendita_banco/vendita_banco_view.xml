@@ -150,6 +150,30 @@
 		
 		
 		<!--========================================================-->
+		<!--			VENDITA BANCO DETTAGLIO - FORM				-->
+		<!--========================================================-->
+		<record id="view_vendita_banco_dettaglio_form" model="ir.ui.view">
+			<field name="name">vendita.banco.dettaglio.form</field>
+			<field name="model">vendita_banco.dettaglio</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Dettagli Vendite">
+					<group col="6" colspan="4">
+						<field name="causale"/>
+						<field name="vendita_banco_id"/>
+						<field name="partner_id"/>
+					</group>
+					<field name="name" colspan="4"/>
+					<field name="product_id" colspan="2"/>
+					<field name="product_qty" colspan="2"/>
+					<field name="price_unit" colspan="2"/>
+					<field name="importo" colspan="2"/>
+					<field name="imponibile" colspan="2"/>
+				</form>
+			</field>
+		</record>
+		
+		<!--========================================================-->
 		<!--			VENDITA BANCO DETTAGLIO - TREE				-->
 		<!--========================================================-->
 		<record id="view_vendita_banco_dettaglio_tree" model="ir.ui.view">
@@ -200,6 +224,7 @@
 				<field name="view_mode">tree,form</field>
 				<field name="view_id" ref="view_vendita_banco_dettaglio_tree"/>
 				<field name="search_view_id" ref="vendita_banco_dettaglio_filtri"/>
+				<field name="context">{'form_view_ref' : 'vendita_banco.view_vendita_banco_dettaglio_form'}</field>
 		</record>
 		
 		<!-- ====================================================== -->
