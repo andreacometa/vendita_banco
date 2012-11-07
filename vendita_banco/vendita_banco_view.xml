@@ -42,8 +42,8 @@
 					<group col="6" colspan="4">
 						<field name="partner_id" on_change="onchange_cliente_id(partner_id, causale)" 
 							attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" domain="[('customer', '=', True)]"/>
-						<field name="partner_invoice_id" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
-						<field name="partner_shipping_id" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
+						<field name="partner_invoice_id" domain="[('partner_id', '=', partner_id)]" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
+						<field name="partner_shipping_id" domain="[('partner_id', '=', partner_id)]" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
 					</group>
 					<group col="4" colspan="4">
 						<field name="pricelist_id" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
