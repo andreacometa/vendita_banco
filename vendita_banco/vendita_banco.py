@@ -222,6 +222,7 @@ class vendita_banco(osv.osv):
 				'reconciled' : False,
 				'fiscal_position' : order_obj.partner_id.property_account_position.id,
 				'payment_term' : order_obj.modalita_pagamento_id.id,
+				'journal_id' : order_obj.causale and order_obj.causale.journal_id and order_obj.causale.journal_id.id or False,
 				'comment' : order_obj.note,
 				'carriage_condition_id' : order_obj.carriage_condition_id and order_obj.carriage_condition_id.id or False,
 				'goods_description_id' : order_obj.goods_description_id and order_obj.goods_description_id.id or False,

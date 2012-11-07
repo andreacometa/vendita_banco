@@ -28,6 +28,7 @@ class vendita_causali(osv.osv):
 		'report' : fields.many2one('ir.actions.report.xml', 'Report', help="Report di stampa associato"),
 		'segno' : fields.selection((('+1', 'Positivo'), ('-1', 'Negativo')), 'Segno', help="Indicare il segno contabile"),
 		'fattura' : fields.boolean('Fattura', help="Indica se la causale rappresenta un fattura immediata"),
+		'journal_id' : fields.many2one('account.journal', 'Sezionale', help="Imposta un sezionale che verrà automaticamente inserito nella fattura generata"),
 		'riga_raggruppa' : fields.boolean('Riga Raggruppamento', help="Indica se la generazione della fattura porta le righe descrittive per ogni raggruppamento"),
 		'user_ids': fields.many2many(
 			'res.users',
@@ -67,7 +68,11 @@ class vendita_causali(osv.osv):
 
 	# ----- imposta il flag fatturabile 
 	def onchange_fattura(self, cr, uid, ids, fattura):
-		return  { 'value' : { 'fatturabile' : fattura } }
+		res = { 'value' : {}}
+		if not fattura:
+			res['value']['journal_id'] = False
+		res['value']['fatturabile'] = fattura
+		return res
 
 vendita_causali()
 

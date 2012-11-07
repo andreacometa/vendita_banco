@@ -32,25 +32,29 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Causali">
-					<notebook>
-						<page string="Dati">
-							<group colspan="4">
-								<field name="name"/>
-								<field name="descrizione" />
-							</group>
-							<group colspan="4">
-								<field name="tipo"  />
-								<field name="protocollo" />
-							</group>
-							<group col="10" colspan="4">
-								<field name="fattura" on_change="onchange_fattura(fattura)"
-									attrs="{'readonly':[('tipo','=','carico')]}" />
-								<field name="fatturabile" attrs="{'readonly':[('tipo','in',['carico', 'nessuno'])]}"/>
-								<field name="riga_raggruppa" />
-								<field name="ddt" />
-								<field name="segno"/>
-								<field name="report" />
-							</group>
+					<group colspan="4">
+						<field name="name"/>
+						<field name="descrizione" />
+					</group>
+					<group colspan="4">
+						<field name="tipo"  />
+						<field name="protocollo" />
+					</group>
+					<notebook colspan="4">
+						<page string="Magazzino">
+							<field name="ddt" colspan="4"/>
+							<field name="segno" colspan="4"/>
+						</page>
+						<page string="Contabilità">
+							<field name="fattura" on_change="onchange_fattura(fattura)"
+								attrs="{'readonly':[('tipo','=','carico')]}" colspan="4"/>
+							<field name="fatturabile" attrs="{'readonly':[('tipo','in',['carico', 'nessuno'])]}" colspan="4"/>
+							<field name="journal_id" colspan="4"/>
+							<field name="riga_raggruppa" colspan="4"/>
+						</page>
+						<page string="Altro">
+							<separator string="Report" colspan="4" />
+							<field name="report" colspan="4" nolabel="1"/>
 							<separator string="Causali Raggruppamento" colspan="4" />
 							<field name="raggruppamento_ids" 
 								domain="[('tipo', '!=', tipo)]"
