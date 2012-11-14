@@ -29,6 +29,16 @@
 			src_model="res.partner"
 			view_type="form"
 			view_mode="tree,form"/>
+		
+		<!-- Mostra direttamente i dettagli delle vendite del partner -->
+		<act_window
+			id="action_partner_vendita_banco_dettaglio"
+			name="Dettaglio Vendite Effettuate"
+			res_model="vendita_banco.dettaglio"
+			context="{'search_default_partner_id':[active_id], 'default_partner_id': active_id}"
+			src_model="res.partner"
+			view_type="form"
+			view_mode="tree,form"/>
 
 	</data>
 </openerp>
