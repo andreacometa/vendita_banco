@@ -21,8 +21,11 @@
 						<field name="filtro_data_inizio" colspan="2" attrs="{'invisible':[('filtrato','=',True)]}"/>
 						<field name="filtro_data_fine" colspan="2" attrs="{'invisible':[('filtrato','=',True)]}" />
 					</group>
-					<field name="raggruppa" colspan="2"  attrs="{'invisible':[('filtrato','=',False)]}"/>
-					<field name="data_fattura" colspan="2"  attrs="{'invisible':[('filtrato','=',False)]}"/>
+					<group colspan="4" col="6">
+						<field name="raggruppa" colspan="2"  attrs="{'invisible':[('filtrato','=',False)]}"/>
+						<field name="raggruppa_per_termine_pagamento" colspan="2"  attrs="{'invisible':[('filtrato','=',False)]}"/>
+						<field name="data_fattura" colspan="2"  attrs="{'invisible':[('filtrato','=',False)]}"/>
+					</group>
 					<label string="__________________________________________________________________________________________________________" colspan="4"/>
 					<field name="ordini_ids" colspan="4" nolabel="1"/>
 					<separator string="" colspan="4"/>

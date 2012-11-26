@@ -1,11 +1,23 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Personalizzazione realizzata da Andrea Cometa
-#    Compatible with OpenERP release 6.0.0
-#    Copyright (C) 2010 Andrea Cometa. All Rights Reserved.
-#    Email: info@andreacometa.it
-#    Web site: http://www.andreacometa.it
+#    OpenERP, Open Source Management Solution
+#    Copyright (c) 2012 Andrea Cometa All Rights Reserved.
+#                       www.andreacometa.it
+#                       openerp@andreacometa.it
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -31,6 +43,7 @@ class vb_raggruppa_fatture(osv.osv_memory):
 		'filtrato' : fields.boolean('Filtrato'),
 		'cliente' : fields.many2one('res.partner', "Cliente"),
 		'modalita_pagamento_id' : fields.many2one('account.payment.term', 'Modalità di pagamento'),
+		'raggruppa_per_termine_pagamento': fields.boolean('Raggruppa per termini pagamento', help="Raggruppa i documenti in base ai termini di pagamento, \nlasciare libero se si vuole generare un'unica fattura indipendente dai termini di pagamento")
 	}
 	_defaults = {
 		'data_fattura': lambda *a: time.strftime('%Y-%m-%d'),
@@ -93,7 +106,7 @@ class vb_raggruppa_fatture(osv.osv_memory):
 			# CREAZIONE TESTATA FATTURA
 			# -----
 			# controlliamo se cambiare
-			if cliente != order_obj.partner_id.id or modalita != order_obj.modalita_pagamento_id.id:
+			if cliente != order_obj.partner_id.id or (modalita != order_obj.modalita_pagamento_id.id and wizard_obj.raggruppa_per_termine_pagamento) :
 				# nuova fattura
 				account_invoice_id = self.pool.get('account.invoice').create(cr, uid, {
 					'name' : "Fattura Differita",
