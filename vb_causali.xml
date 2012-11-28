@@ -18,12 +18,12 @@
 
         <record id="seq_type_prev" model="ir.sequence.type">
             <field name="name">Preventivi</field>
-            <field name="code">vendita.causali</field>
+            <field name="code">vendita.causali.preventivi</field>
         </record>
 
         <record id="seq_prev" model="ir.sequence">
             <field name="name">Preventivi</field>
-            <field name="code">vendita.causali</field>
+            <field name="code">vendita.causali.preventivi</field>
             <field name="prefix">P</field>
             <field name="padding">5</field>
             <field name="company_id" eval="False"/>
@@ -40,7 +40,7 @@
             <field name="protocollo" ref="l10n_it_sale.seq_ddt" />
         </record>
         
-        <record id="vc_causali_bc" model="vendita.causali">
+        <record id="vc_causali_ordcli" model="vendita.causali">
             <field name="name">ORDCLI</field>
             <field name="descrizione">Ordine Cliente</field>
             <field name="tipo">nessuno</field>
