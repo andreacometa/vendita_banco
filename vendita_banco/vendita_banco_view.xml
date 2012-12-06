@@ -243,6 +243,9 @@
 			<menuitem icon="terp-tools" groups="base.group_extended" parent="menu_vendita_banco_main" 
 				id="menu_vendita_banco_config" name="Configurazioni" sequence="20"/>
 				<menuitem parent="menu_vendita_banco_config" id="product.menu_product_pricelist_main" name="Listini" sequence="2"/>
+			<!-- EXTRA -->
+			<menuitem icon="terp-tools" groups="base.group_extended" parent="menu_vendita_banco_main" 
+				id="menu_vendita_banco_extra" name="Extra" sequence="30"/>
 
 
 		<!-- ====================================================== -->

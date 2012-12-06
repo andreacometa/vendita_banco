@@ -70,19 +70,16 @@
 			<field name="target">new</field>
 			<field name="view_id" ref="vb_raggruppa_fatture_wizard"/>
 		</record>
-		
+	
 		<!-- ====================================================== -->
-		<!-- 				RAGGRUPPA FATTURE AZIONE				-->
+		<!-- 				RAGGRUPPA FATTURE MENU					-->
 		<!-- ====================================================== -->
-		<record model="ir.values" id="act_vb_raggruppa_fatture">
-			<field name="model_id" ref="vendita_banco.model_vendita_banco" />
-			<field name="object" eval="1" />
-			<field name="name">Crea fatture raggruppate</field>
-			<field name="key2">client_action_multi</field>
-			<field name="value" eval="'ir.actions.act_window,' + str(ref('action_vb_raggruppa_fatture'))" />
-			<field name="key">action</field>
-			<field name="model">vendita_banco</field>
-		</record>
+		<menuitem
+			id="menu_genera_fatture_raggruppate"
+			name="Genera Fatture Raggruppate"
+			string="Genera Fatture Raggruppate"
+			action="action_vb_raggruppa_fatture"
+			parent="menu_vendita_banco_extra"/>
 
 	</data>
 </openerp>
