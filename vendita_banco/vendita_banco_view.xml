@@ -121,7 +121,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Filtri Vendita Banco">
-                    <filter icon="terp-document-new" string="Preventivi" domain="[('state','=','draft')]" help="Preventivi"/>
+                    <filter icon="terp-document-new" string="Non Confermati" domain="[('state','=','draft')]" help="Preventivi"/>
                     <filter icon="terp-check" string="Confermati" domain="[('state','in',['done', 'invoiced'])]" help="BC Confermati"/>
                     <!--filter icon="terp-check" string="DDT" domain="[('ddt','=',True)]" help="DDT Confermati"/-->
                     <filter icon="terp-dolar_ok!" string="Fatturati" domain="[('state','=','invoiced')]" help="Fatturati"/>

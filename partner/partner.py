@@ -16,6 +16,12 @@ class res_partner(osv.osv):
 	_name = "res.partner"
 	_inherit = "res.partner"
 
+	def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+		if not args:
+			args = []
+		ids = self.search(cr, uid, ['|',('ref', 'ilike', name), ('name','ilike',name)], limit=limit, context=context)
+		return self.name_get(cr, uid, ids, context)
+
 	def _vb_credit(self, cr, uid, ids, name, arg, context=None):
 		res = {}
 		vb_obj = self.pool.get('vendita_banco')
