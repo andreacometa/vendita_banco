@@ -15,6 +15,19 @@
             <field name="padding">5</field>
             <field name="company_id" eval="False"/>
         </record>
+
+        <record id="seq_type_prev" model="ir.sequence.type">
+            <field name="name">Preventivi</field>
+            <field name="code">vendita.causali.preventivi</field>
+        </record>
+
+        <record id="seq_prev" model="ir.sequence">
+            <field name="name">Preventivi</field>
+            <field name="code">vendita.causali.preventivi</field>
+            <field name="prefix">P</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
         
         <!-- Causali -->
         <record id="vc_causali_ddt" model="vendita.causali">
@@ -27,7 +40,7 @@
             <field name="protocollo" ref="l10n_it_sale.seq_ddt" />
         </record>
         
-        <record id="vc_causali_bc" model="vendita.causali">
+        <record id="vc_causali_ordcli" model="vendita.causali">
             <field name="name">ORDCLI</field>
             <field name="descrizione">Ordine Cliente</field>
             <field name="tipo">nessuno</field>
@@ -46,6 +59,17 @@
             <field name="fattura" eval="True" />
             <field name="fatturabile" eval="False" />
             <field name="protocollo" ref="account.sequence_sale_journal" />
+        </record>
+        
+        <record id="vc_causali_prev" model="vendita.causali">
+            <field name="name">PREV</field>
+            <field name="descrizione">Preventivo</field>
+            <field name="tipo">nessuno</field>
+            <field name="ddt" eval="False" />
+            <field name="riga_raggruppa" eval="False" />
+            <field name="fattura" eval="False" />
+            <field name="fatturabile" eval="False" />
+            <field name="protocollo" ref="seq_prev" />
         </record>
          
     </data>
