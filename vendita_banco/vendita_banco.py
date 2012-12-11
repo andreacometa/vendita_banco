@@ -146,8 +146,8 @@ class vendita_banco(osv.osv):
 		val = {
 			'partner_invoice_id': addr['invoice'],
 			'partner_shipping_id': addr['delivery'],
-			'causale' : part.causale and part.causale.id or causale,
-			'ddt' : part.causale and part.causale.ddt or False,
+			'causale' : causale or part.causale and part.causale.id,
+			'ddt' : causale and self.pool.get('vendita.causali').browse(cr,uid,causale).ddt or False,
 			'goods_description_id' : part.goods_description_id and part.goods_description_id.id or False,
 			'carriage_condition_id' : part.carriage_condition_id and part.carriage_condition_id.id or False,
 			'modalita_pagamento_id' : part.property_payment_term and part.property_payment_term.id or False,
