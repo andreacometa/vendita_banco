@@ -43,6 +43,7 @@ class vb_raggruppa_fatture(osv.osv_memory):
 		'filtrato' : fields.boolean('Filtrato'),
 		'cliente' : fields.many2one('res.partner', "Cliente"),
 		'modalita_pagamento_id' : fields.many2one('account.payment.term', 'Modalità di pagamento'),
+		'causale_id' : fields.many2one('vendita.causali', 'Causale'),
 		'raggruppa_per_termine_pagamento': fields.boolean('Raggruppa per termini pagamento', help="Raggruppa i documenti in base ai termini di pagamento, \nlasciare libero se si vuole generare un'unica fattura indipendente dai termini di pagamento")
 	}
 	_defaults = {
@@ -66,11 +67,13 @@ class vb_raggruppa_fatture(osv.osv_memory):
 		if wizard_obj.modalita_pagamento_id:
 			search_arg.append(('modalita_pagamento_id', '=', wizard_obj.modalita_pagamento_id.id))
 
+		# se presente la causale
+		if wizard_obj.causale_id:
+			search_arg.append(('causale', '=', wizard_obj.causale_id.id))
+
 		vendita_banco_ids = self.pool.get('vendita_banco').search(cr, uid, search_arg, order='partner_id,modalita_pagamento_id')
 		if vendita_banco_ids:
-			#vendita_banco_objs = self.pool.get('vendita_banco').browse(cr, uid, vendita_banco_ids)
 			ordini_da_fatturare_obj = self.pool.get('vb.ordini_da_fatturare')
-			#for vendita_banco_obj in vendita_banco_objs:
 			for vendita_banco_id in vendita_banco_ids:
 				ordini_da_fatturare_obj.create(cr, uid, {'name':vendita_banco_id, 'vb_raggruppa_fatture_id':wizard_obj.id})
 		else:

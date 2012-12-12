@@ -13,9 +13,10 @@
 			<field name="arch" type="xml">
 				<form string="Crea fatture raggruppate">
 					<field name="filtrato" colspan="4" invisible="1"/>
-					<group colspan="4" col="4">
+					<group colspan="4" col="6">
 						<field name="cliente" colspan="2" attrs="{'invisible':[('filtrato','=',True)]}" domain="[('customer', '=', True)]"/>
 						<field name="modalita_pagamento_id" colspan="2" attrs="{'invisible':[('filtrato','=',True)]}" widget="selection"/>
+						<field name="causale_id" colspan="2" attrs="{'invisible':[('filtrato','=',True)]}" widget="selection"/>
 					</group>
 					<group colspan="4" col="4">
 						<field name="filtro_data_inizio" colspan="2" attrs="{'invisible':[('filtrato','=',True)]}"/>
