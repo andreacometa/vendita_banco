@@ -139,14 +139,13 @@ class vendita_banco(osv.osv):
 	def onchange_cliente_id(self, cr, uid, ids, part, causale):
 		if not part:
 			return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'payment_term': False, 'fiscal_position': False}}
-
 		addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['delivery', 'invoice'])
 		part = self.pool.get('res.partner').browse(cr, uid, part)
 		pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
 		val = {
 			'partner_invoice_id': addr['invoice'],
 			'partner_shipping_id': addr['delivery'],
-			'causale' : causale or part.causale and part.causale.id,
+			'causale' : causale or part.causale and part.causale.id or False,
 			'ddt' : causale and self.pool.get('vendita.causali').browse(cr,uid,causale).ddt or False,
 			'goods_description_id' : part.goods_description_id and part.goods_description_id.id or False,
 			'carriage_condition_id' : part.carriage_condition_id and part.carriage_condition_id.id or False,
