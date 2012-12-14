@@ -99,6 +99,7 @@ class vendita_banco(osv.osv):
 		'transportation_reason_id' : fields.many2one('stock.picking.transportation_reason','Causale Trasporto'),
 		'number_of_packages' : fields.integer('Numero Colli'),
 		'trasportatore_id' : fields.many2one('delivery.carrier', 'Trasportatore'),
+		'data_inizio_trasporto' : fields.datetime('Data Inizio Trasporto'),
 		# ----- Dettagli
 		'vendita_banco_dettaglio_ids' : fields.one2many('vendita_banco.dettaglio', 'vendita_banco_id', 'Dettagli', ondelete='cascade', readonly=True, states={'draft': [('readonly', False)]}),
 		'totale' : fields.function(_calcola_importi, method=True, string='Totale', type='float', store=True, multi='sums'),

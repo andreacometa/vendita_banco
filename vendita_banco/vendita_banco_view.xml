@@ -49,10 +49,11 @@
 						<field name="pricelist_id" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
 						<field name="modalita_pagamento_id" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
 					</group>
-					<group col="6" colspan="4">
+					<group col="8" colspan="4">
 						<field name="goods_description_id" attrs="{'required':[('ddt','=',True)], 'invisible':[('ddt','=',False)], 'readonly':[('state','in',['done', 'invoiced'])]}"/>
 						<field name="carriage_condition_id" attrs="{'required':[('ddt','=',True)], 'invisible':[('ddt','=',False)], 'readonly':[('state','in',['done', 'invoiced'])]}" />
 						<field name="transportation_reason_id" attrs="{'required':[('ddt','=',True)], 'invisible':[('ddt','=',False)], 'readonly':[('state','in',['done', 'invoiced'])]}" />
+						<field name="data_inizio_trasporto" attrs="{'required':[('ddt','=',True)], 'invisible':[('ddt','=',False)], 'readonly':[('state','in',['done', 'invoiced'])]}" />
 					</group>
 					<group col="4" colspan="4">
 						<field name="number_of_packages" attrs="{'required':[('ddt','=',True)], 'invisible':[('ddt','=',False)], 'readonly':[('state','in',['done', 'invoiced'])]}" />
