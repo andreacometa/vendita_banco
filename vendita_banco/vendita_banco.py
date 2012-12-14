@@ -117,6 +117,7 @@ class vendita_banco(osv.osv):
 		'state' : 'draft',
 		'name' : '',
 		'data_ordine': lambda *a: time.strftime('%Y-%m-%d'),
+		'data_inizio_trasporto': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
 	}
 	
 	_order = "data_ordine desc, name desc"
