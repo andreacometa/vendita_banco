@@ -231,7 +231,7 @@
 		<!-- ====================================================== -->
 		<!-- 					VENDITA BANCO - MENU 				-->
 		<!-- ====================================================== -->
-		<menuitem icon="terp-partner" id="menu_vendita_banco_main" name="Vendita al Banco" web_icon="static/vendita.png" web_icon_hover="static/vendita-hover.png"/>
+		<menuitem icon="terp-partner" id="menu_vendita_banco_main" name="Vendita al Banco" web_icon="static/vendita.png" web_icon_hover="static/vendita-hover.png" groups="vendita_banco.group_vendita_banco,vendita_banco.group_vendita_banco_management"/>
 			<!-- VENDITA BANCO -->
 			<menuitem icon="STOCK_OPEN" parent="menu_vendita_banco_main" id="menu_vendita_banco" name="Vendita al Banco"/>
 				<menuitem action="action_vendita_banco" parent="menu_vendita_banco" id="menu_vendita_banco_vendita" name="Vendita al Banco" sequence="1"/>
