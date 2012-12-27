@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -21,8 +20,9 @@
 #
 ##############################################################################
 
-import vendita_banco
-import partner
-import stock
-import wizard
-import account
+Sviluppato da 
+Andrea Cometa <info@andreacometa.it>
+Francesco Apruzzese <f.apruzzese@andreacometa.it>
+
+AMiGA rulez
+but Linux is better!!! Developers Developers Developers!

@@ -21,8 +21,5 @@
 #
 ##############################################################################
 
+import causali
 import vendita_banco
-import partner
-import stock
-import wizard
-import account
