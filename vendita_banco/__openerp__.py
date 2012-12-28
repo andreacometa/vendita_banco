@@ -27,7 +27,7 @@
     'category': 'POS',
     'description': """Modulo creato per venire incontro alle esigenze di chi ha bisogno di effettuare rapide vendite al banco.
     Il modulo è pensato in modo particolare per gli utenti italiano ed è perciò provvisto di alcuni automatismi molto utili""",
-    'author': 'Apruzzese Francesco',
+    'author': 'www.andreacometa.it',
     'website': 'http://www.andreacometa.it',
     'license': 'AGPL-3',
     "active": False,
