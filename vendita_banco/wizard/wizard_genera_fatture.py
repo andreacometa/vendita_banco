@@ -56,7 +56,7 @@ class vb_raggruppa_fatture(osv.osv_memory):
 		# cerchiamo anche le causali FATTURABILI oltre ai documenti NON ancora fatturati
 		search_arg = [('data_ordine', '<=', wizard_obj.filtro_data_fine),
 			('data_ordine', '>=', wizard_obj.filtro_data_inizio), 
-			('invoice_id', '=', None), #('state','=','done'),
+			('invoice_id', '=', None), ('state','!=','draft'),
 			('fatturabile', '=', True),]
 
 		# se presente il cliente
