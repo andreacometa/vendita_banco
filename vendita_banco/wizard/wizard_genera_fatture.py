@@ -133,7 +133,7 @@ class vb_raggruppa_fatture(osv.osv_memory):
 			if order_obj.causale.riga_raggruppa:
 				nriga += 1
 				invoice_fake_line_id = self.pool.get('account.invoice.line').create(cr, uid, {
-						'name' : 'Rif. Vs. Doc. Nr. %s' % (order_obj.name,),
+						'name' : 'Rif. Ns. Doc. Nr. %s' % (order_obj.name,),
 						'invoice_id' : account_invoice_id,
 						'quantity' : 1,
 						'account_id' : account_id,
