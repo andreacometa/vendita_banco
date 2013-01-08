@@ -25,6 +25,7 @@ from osv import fields, osv
 from tools.translate import _
 import datetime
 import time
+import decimal_precision as dp
 
 class vendita_banco(osv.osv):
 
@@ -102,9 +103,13 @@ class vendita_banco(osv.osv):
 		'data_inizio_trasporto' : fields.datetime('Data Inizio Trasporto'),
 		# ----- Dettagli
 		'vendita_banco_dettaglio_ids' : fields.one2many('vendita_banco.dettaglio', 'vendita_banco_id', 'Dettagli', ondelete='cascade', readonly=True, states={'draft': [('readonly', False)]}),
-		'totale' : fields.function(_calcola_importi, method=True, string='Totale', type='float', store=True, multi='sums'),
-		'imponibile' : fields.function(_calcola_importi, method=True, string='Totale Imponibile', type='float', store=True, multi='sums'),
-		'acconto' : fields.float('Acconto'),
+		'totale' : fields.function(_calcola_importi, method=True, 
+			digits_compute=dp.get_precision('Account'),
+			string='Totale', type='float', store=True, multi='sums'),
+		'imponibile' : fields.function(_calcola_importi, method=True,
+			digits_compute=dp.get_precision('Account'),
+			string='Totale Imponibile', type='float', store=True, multi='sums'),
+		'acconto' : fields.float('Acconto', digits_compute=dp.get_precision('Account')),
 		'state' : fields.selection((('draft', 'Preventivo'),('done', 'Confermato'), ('invoiced', 'Fatturato')), 'Stato', readonly=True, select=True),
 		# ----- Altro
 		'note' : fields.text('Note'),
@@ -367,12 +372,12 @@ class vendita_banco_dettaglio(osv.osv):
 		'product_id' : fields.many2one('product.product', 'Prodotto'),
 		'product_qty' : fields.float('Quantità'),
 		'product_uom' : fields.many2one('product.uom', 'Unità di misura'),
-		'price_unit' : fields.float('Prezzo Unitario'),
+		'price_unit' : fields.float('Prezzo Unitario', digits_compute=dp.get_precision('Account')),
 		'discount' : fields.float('Sconto (%)'),
 		'tax_id': fields.many2one('account.tax', 'IVA'),
-		'importo' : fields.function(_calcola_importi, method=True, 
+		'importo' : fields.function(_calcola_importi, method=True, digits_compute=dp.get_precision('Account'), 
 			string='Importo', type='float', store=False, multi='sums'),
-		'imponibile' : fields.function(_calcola_importi, method=True, 
+		'imponibile' : fields.function(_calcola_importi, method=True, digits_compute=dp.get_precision('Account'),
 			string='Imponibile', type='float', store=False, multi='sums'),
 		'move_id' : fields.many2one('stock.move', 'Movimento'),
 		'invoice_line_id' : fields.many2one('account.invoice.line', 'Linea di fattura'),
