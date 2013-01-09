@@ -32,7 +32,7 @@
     'license': 'AGPL-3',
     "active": False,
     "installable": True,
-    "depends" : ['account', 'invoice_immediata_differita', 'stock', 'l10n_it', 'l10n_it_sale', 'recupero_protocolli',],
+    "depends" : ['account', 'invoice_immediata_differita', 'stock', 'l10n_it', 'l10n_it_sale', 'recupero_protocolli','account_spesa'],
     "update_xml" : [
         'stock/stock_view.xml',
         'security/vendita_banco_security.xml',

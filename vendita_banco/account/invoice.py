@@ -38,3 +38,14 @@ class account_invoice(osv.osv):
 
 account_invoice()
 
+
+class account_invoice_line(osv.osv):
+
+	_name = "account.invoice.line"
+	_inherit = "account.invoice.line"
+
+	_columns = {
+		'spesa' : fields.boolean('Spesa'),
+		}
+
+account_invoice_line()
