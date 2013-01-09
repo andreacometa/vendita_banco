@@ -197,9 +197,9 @@ class vendita_banco(osv.osv):
 				# imposta il verso della merce
 				if order_obj.causale.tipo == 'scarico':
 					location_sorgente = warehouse.lot_stock_id.id
-					location_destinazione = warehouse.location_vendita_banco_id.id
+					location_destinazione = order_obj.causale.location_id and order_obj.causale.location_id.id or warehouse.location_vendita_banco_id.id
 				else:
-					location_destinazione = warehouse.lot_stock_id.id
+					location_destinazione = order_obj.causale.location_id and order_obj.causale.location_id.id or warehouse.lot_stock_id.id
 					location_sorgente = warehouse.location_vendita_banco_id.id
 				for line in order_obj.vendita_banco_dettaglio_ids:
 					if line.product_id:

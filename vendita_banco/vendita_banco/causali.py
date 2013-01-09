@@ -42,6 +42,7 @@ class vendita_causali(osv.osv):
 		'fattura' : fields.boolean('Fattura', help="Indica se la causale rappresenta un fattura immediata"),
 		'journal_id' : fields.many2one('account.journal', 'Sezionale', help="Imposta un sezionale che verrà automaticamente inserito nella fattura generata"),
 		'riga_raggruppa' : fields.boolean('Riga Raggruppamento', help="Indica se la generazione della fattura porta le righe descrittive per ogni raggruppamento"),
+		'location_id' : fields.many2one('stock.location', 'Location', help="Indica se, usando questa causale, si deve muovere la merce verso una location differente"),
 		'user_ids': fields.many2many(
 			'res.users',
 			'res_users_causali_rel',
