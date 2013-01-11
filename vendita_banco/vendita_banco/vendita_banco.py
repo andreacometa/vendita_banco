@@ -46,6 +46,10 @@ class vendita_banco(osv.osv):
 					vendita.causale.recupera_protocollo(vendita.name, vendita.data_ordine)
 				return super(vendita_banco, self).unlink(cr, uid, vendita.id, context)
 
+	def create(self, cr, uid, vals, context=None):
+		vals.update({'user_id':uid})
+		return super(vendita_banco,self).create(cr, uid, vals, context=context)
+
 	# ----- calcola gli importi per ogni riga dell'ordine
 	def _calcola_importi(self, cr, uid, ids, field_name, arg, context=None):
 		# ----- Calcola il totale della riga di dettaglio
@@ -82,6 +86,7 @@ class vendita_banco(osv.osv):
 
 	_columns = {
 		'name' : fields.char('Numero Documento', size=16),
+		'user_id': fields.many2one('res.users','Utente'),
 		'data_ordine' : fields.date('Data Ordine', required=True),
 		'partner_id' : fields.many2one('res.partner', 'Cliente', required=True),
 		'partner_invoice_id' : fields.many2one('res.partner.address', 'Indirizzo Fatturazione', required=True),

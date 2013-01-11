@@ -19,6 +19,7 @@
 					<field name="totale" sum="Totale"/>
 					<field name="invoice_id" invisible="1" />
 					<field name="state" />
+					<field name="user_id" invisible="1"/>
 				</tree>
 			</field>
 		</record>
@@ -132,6 +133,8 @@
                     <field name="data_ordine" />
                     <field name="partner_id" />
                     <field name="causale" />
+                    <separator orientation="vertical"/>
+                    <field name="user_id"/>
                     <newline/>
                </search>
             </field>
