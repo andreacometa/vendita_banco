@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+	<record id="view_vendita_banco_sconto" model="ir.ui.view">
+		<field name="name">vendita_banco.sconto</field>
+		<field name="model">vendita_causali</field>
+		<field name="inherit_id" ref="vendita_banco.view_vendita_banco_form"/>
+		<field name="arch" type="xml">
+			<field name="modalita_pagamento_id" position="after">
+				<field name="sconto_globale" />
+			</field>
+		</field>
+	</record>
+
+</data>
+</openerp>
