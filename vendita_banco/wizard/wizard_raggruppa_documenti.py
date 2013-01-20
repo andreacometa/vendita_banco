@@ -82,7 +82,7 @@ class vb_raggruppa_documenti(osv.osv_memory):
 			for vb in vbs:
 				# ----- Crea la riga descrittiva di riferimento
 				vb_line_struttura = {
-					'name' : 'Rif. Vs. Doc. Nr. %s' % (vb.name,),
+					'name' : 'Riferimento: %s' % (vb.name,),
 					'vendita_banco_id' : nuovo_vb_id,
 					'product_id' : False,
 					'product_uom' : False,
