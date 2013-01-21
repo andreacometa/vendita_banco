@@ -74,6 +74,11 @@ class vb_raggruppa_documenti(osv.osv_memory):
 				'pricelist_id' : vbs[0].pricelist_id.id,
 				'modalita_pagamento_id' : vbs[0].modalita_pagamento_id.id,
 				'causale' : wizard.nuova_causale.id,
+				'goods_description_id' : wizard.goods_description_id.id,
+				'carriage_condition_id' : wizard.carriage_condition_id.id,
+				'transportation_reason_id' : wizard.transportation_reason_id.id,
+				'number_of_packages' : wizard.number_of_packages,
+				'trasportatore_id' : wizard.trasportatore_id.id,
 			}
 			nuovo_vb_id = vb_obj.create(cr, uid, vb_struttura)
 			# ----- Indica il nuovo ordine in quelli vecchi
