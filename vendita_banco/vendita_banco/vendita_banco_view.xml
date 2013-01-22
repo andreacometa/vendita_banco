@@ -263,5 +263,10 @@
 			res_model="vendita_banco.dettaglio"
 			src_model="product.product"/>
 
+		<record id="dp_vendita_banco_dettaglio" model="decimal.precision">
+			<field name="name">Vendita Banco Dettaglio</field>
+			<field name="digits">4</field>
+		</record>
+
 	</data>
 </openerp>
