@@ -409,12 +409,12 @@ class vendita_banco_dettaglio(osv.osv):
 		'spesa' : fields.boolean('Spesa'),
 	}
 
-	def onchange_product(self, cr, uid, ids, product_id, product_qty, data_ordine, partner_id, pricelist, context={}):
+	def onchange_product(self, cr, uid, ids, product_id, product_qty, data_ordine, partner_id, pricelist, tax_id=False, context={}):
 		if product_id:
 			res = {}
 			product_obj = self.pool.get('product.product').browse(cr, uid, product_id)
 			# ----- Aggiunge eventuale IVA presente nel prodotto
-			if product_obj.taxes_id:
+			if (not tax_id) and (product_obj.taxes_id):
 				res['tax_id'] = product_obj.taxes_id[0].id
 			warning = {}
 			res['product_uom'] = product_obj.uom_id.id
