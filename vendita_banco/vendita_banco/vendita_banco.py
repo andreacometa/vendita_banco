@@ -169,10 +169,12 @@ class vendita_banco(osv.osv):
 			val['pricelist_id'] = pricelist
 		return {'value': val}
 
+	
 	def onchange_modalita_pagamento(self, cr, uid, ids, modalita_pagamento_id):
 		val = {}
 		if not modalita_pagamento_id:
 			return {'value': val}
+		'''
 		val = {'vendita_banco_dettaglio_ids':[]}
 		mod_pag_obj = self.pool.get('account.payment.term')
 		modalita_pagamento = mod_pag_obj.browse(cr, uid, modalita_pagamento_id)
@@ -185,8 +187,10 @@ class vendita_banco(osv.osv):
 					'tax_id':line.spesa_id.tax_id and line.spesa_id.tax_id.id,
 					'product_qty' : 1,
 					})]
-		print val
+		print '============', val
+		'''
 		return {'value': val}
+	
 
 	# ----- Funzione richiamata dal button Conferma Vendita
 	def conferma_vendita(self, cr, uid, ids, *args):
@@ -223,6 +227,18 @@ class vendita_banco(osv.osv):
 						}
 						move_id = move_obj.create(cr, uid, move_valori)
 						self.pool.get('vendita_banco.dettaglio').write(cr, uid, line.id, {'move_id':move_id})
+			# ----- INSERISCE EVENTUALI LINEE DI SPESA
+			for line in order_obj.modalita_pagamento_id.line_ids:
+				if line.spesa_id:
+					vals = {
+						'spesa':True,
+						'name':line.spesa_id.name,
+						'price_unit':line.spesa_id.price,
+						'tax_id':line.spesa_id.tax_id and line.spesa_id.tax_id.id,
+						'product_qty' : 1,
+						'vendita_banco_id' : order_obj.id,
+						}
+					self.pool.get('vendita_banco.dettaglio').create(cr, uid, vals)
 			# ----- SCRIVE IL NUMERO DI PROTOCOLLO NUOVO O LO RECUPERA
 			res = {}
 			res['name'] = order_obj.name or order_obj.causale.get_protocollo()
@@ -342,6 +358,8 @@ class vendita_banco(osv.osv):
 				if line.move_id and move_obj.browse(cr,uid,line.move_id):
 					move_obj.write(cr, uid, [line.move_id.id], {'state':'draft'})
 					move_obj.unlink(cr, uid, [line.move_id.id])
+				if line.spesa:
+					self.pool.get('vendita_banco.dettaglio').unlink(cr, uid, [line.id,])
 		# ----- Cambio lo stato
 		res = {}
 		res['state'] = 'draft'
