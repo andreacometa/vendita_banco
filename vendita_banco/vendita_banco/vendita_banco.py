@@ -27,6 +27,19 @@ import datetime
 import time
 import decimal_precision as dp
 
+
+class vendita_banco_trasporto(osv.osv):
+
+	_name = "vendita_banco.trasporto"
+	_description = "Lista Tipologie Trasporto"
+
+	_columns = {
+		'name' : fields.char('Descrizione', size=64),
+		}
+
+vendita_banco_trasporto()
+
+
 class vendita_banco(osv.osv):
 
 	_name = "vendita_banco"
@@ -106,6 +119,7 @@ class vendita_banco(osv.osv):
 		'transportation_reason_id' : fields.many2one('stock.picking.transportation_reason','Causale Trasporto'),
 		'number_of_packages' : fields.integer('Numero Colli'),
 		'trasportatore_id' : fields.many2one('delivery.carrier', 'Trasportatore'),
+		'tipo_trasporto_id' : fields.many2one('vendita_banco.trasporto', 'Tipo Trasporto'),
 		'data_inizio_trasporto' : fields.datetime('Data Inizio Trasporto'),
 		# ----- Dettagli
 		'vendita_banco_dettaglio_ids' : fields.one2many('vendita_banco.dettaglio', 'vendita_banco_id', 'Dettagli', ondelete='cascade', readonly=True, states={'draft': [('readonly', False)]}),

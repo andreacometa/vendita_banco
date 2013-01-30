@@ -57,8 +57,9 @@
 						<field name="transportation_reason_id" attrs="{'required':[('ddt','=',True)], 'invisible':[('ddt','=',False)], 'readonly':[('state','in',['done', 'invoiced'])]}" />
 						<field name="data_inizio_trasporto" attrs="{'required':[('ddt','=',True)], 'invisible':[('ddt','=',False)], 'readonly':[('state','in',['done', 'invoiced'])]}" />
 					</group>
-					<group col="4" colspan="4">
+					<group col="6" colspan="4">
 						<field name="number_of_packages" attrs="{'required':[('ddt','=',True)], 'invisible':[('ddt','=',False)], 'readonly':[('state','in',['done', 'invoiced'])]}" />
+						<field name="tipo_trasporto_id" attrs="{'required':[('ddt','=',True)], 'invisible':[('ddt','=',False)], 'readonly':[('state','in',['done', 'invoiced'])]}" />
 						<field name="trasportatore_id" attrs="{'invisible':[('ddt','=',False)], 'readonly':[('state','in',['done', 'invoiced'])]}" />
 					</group>
 					<notebook colspan="4">
@@ -232,6 +233,29 @@
 				<field name="context">{'form_view_ref' : 'vendita_banco.view_vendita_banco_dettaglio_form'}</field>
 		</record>
 		
+		<record id="view_vendita_banco_tipo_trasporto_tree" model="ir.ui.view">
+			<field name="name">vendita_banco.trasporto.tree</field>
+			<field name="model">vendita_banco.trasporto</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Tipo Trasporto" editable="top">
+					<field name="name" required="1"/>
+				</tree>
+			</field>
+		</record>
+		
+		<!-- ====================================================== -->
+		<!-- 				TIPO TRASPORTO - ACTION 				-->
+		<!-- ====================================================== -->
+		<record model="ir.actions.act_window" id="action_vendita_banco_tipo_trasporto">
+				<field name="name">Tipo Trasporto</field>
+				<field name="type">ir.actions.act_window</field>
+				<field name="res_model">vendita_banco.trasporto</field>
+				<field name="view_type">form</field>
+				<field name="view_mode">tree,form</field>
+				<field name="view_id" ref="view_vendita_banco_tipo_trasporto_tree"/>
+		</record>
+		
 		<!-- ====================================================== -->
 		<!-- 					VENDITA BANCO - MENU 				-->
 		<!-- ====================================================== -->
@@ -247,7 +271,8 @@
 			<!-- CONFIGURAZIONI -->
 			<menuitem icon="terp-tools" groups="base.group_extended" parent="menu_vendita_banco_main" 
 				id="menu_vendita_banco_config" name="Configurazioni" sequence="20"/>
-				<menuitem parent="menu_vendita_banco_config" id="product.menu_product_pricelist_main" name="Listini" sequence="2"/>
+				<menuitem action="action_vendita_banco_tipo_trasporto" parent="menu_vendita_banco_config" id="menu_vendita_banco_config_tipo_trasporto" name="Tipo Trasporto" sequence="2"/>
+				<menuitem parent="menu_vendita_banco_config" id="product.menu_product_pricelist_main" name="Listini" sequence="3"/>
 			<!-- EXTRA -->
 			<menuitem icon="terp-tools" groups="base.group_extended" parent="menu_vendita_banco_main" 
 				id="menu_vendita_banco_extra" name="Extra" sequence="30"/>

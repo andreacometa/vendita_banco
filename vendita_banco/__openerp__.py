@@ -45,5 +45,6 @@
         'wizard/wizard_view.xml',
         'account/invoice_view.xml',
         'vb_causali.xml',
+        'vb_tipo_trasporto.xml',
     ],
 }
