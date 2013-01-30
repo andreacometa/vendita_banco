@@ -399,8 +399,9 @@ class vendita_banco_dettaglio(osv.osv):
 			imponibile = line.price_unit * line.product_qty
 			# ----- applica lo sconto
 			if line.discount:
-				sconto = imponibile * line.discount
-				imponibile = imponibile - sconto
+				#sconto = imponibile * line.discount
+				#imponibile = imponibile - sconto
+				imponibile = imponibile * ( 1 - (line.discount / 100.00))
 			tax_amount = line.tax_id and line.tax_id.amount or 0
 			importo = (imponibile * tax_amount) + imponibile
 			res[line.id]['importo'] = importo
@@ -416,7 +417,7 @@ class vendita_banco_dettaglio(osv.osv):
 		'product_qty' : fields.float('Quantità'),
 		'product_uom' : fields.many2one('product.uom', 'Unità di misura'),
 		'price_unit' : fields.float('Prezzo Unitario', digits_compute=dp.get_precision('Vendita Banco Dettaglio')),
-		'discount' : fields.float('Sconto (%)'),
+		'discount' : fields.float('Sconto (%)', help="Indicare uno sconto in percentuale"),
 		'tax_id': fields.many2one('account.tax', 'IVA'),
 		'importo' : fields.function(_calcola_importi, method=True, digits_compute=dp.get_precision('Vendita Banco Dettaglio'), 
 			string='Importo', type='float', store=False, multi='sums'),
