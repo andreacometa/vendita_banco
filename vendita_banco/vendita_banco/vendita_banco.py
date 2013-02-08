@@ -354,10 +354,13 @@ class vendita_banco(osv.osv):
 				raise osv.except_osv(_('Attenzione!'), _(message))
 				return False
 			# ----- Cancello i movimenti collegati
+			move_ids = move_obj.search(cr, uid, [('sorgente_id', '=', order_obj.id)])
+			move_obj.write(cr, uid, move_ids, {'state':'draft'})
+			move_obj.unlink(cr, uid, move_ids)
 			for line in order_obj.vendita_banco_dettaglio_ids:
-				if line.move_id and move_obj.browse(cr,uid,line.move_id):
-					move_obj.write(cr, uid, [line.move_id.id], {'state':'draft'})
-					move_obj.unlink(cr, uid, [line.move_id.id])
+				#if line.move_id and move_obj.browse(cr,uid,line.move_id.id):
+				#	move_obj.write(cr, uid, [line.move_id.id], {'state':'draft'})
+				#	move_obj.unlink(cr, uid, [line.move_id.id])
 				if line.spesa:
 					self.pool.get('vendita_banco.dettaglio').unlink(cr, uid, [line.id,])
 		# ----- Cambio lo stato
