@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="vb_tipo_trasporto_mittente" model="vendita_banco.trasporto">
+            <field name="name">Mittente</field>
+        </record>
+
+        <record id="vb_tipo_trasporto_destinatario" model="vendita_banco.trasporto">
+            <field name="name">Destinatario</field>
+        </record>
+
+        <record id="vb_tipo_trasporto_vettore" model="vendita_banco.trasporto">
+            <field name="name">Vettore</field>
+        </record>
+         
+    </data>
+</openerp>

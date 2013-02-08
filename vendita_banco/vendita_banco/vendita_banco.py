@@ -27,6 +27,19 @@ import datetime
 import time
 import decimal_precision as dp
 
+
+class vendita_banco_trasporto(osv.osv):
+
+	_name = "vendita_banco.trasporto"
+	_description = "Lista Tipologie Trasporto"
+
+	_columns = {
+		'name' : fields.char('Descrizione', size=64),
+		}
+
+vendita_banco_trasporto()
+
+
 class vendita_banco(osv.osv):
 
 	_name = "vendita_banco"
@@ -92,7 +105,6 @@ class vendita_banco(osv.osv):
 		'partner_invoice_id' : fields.many2one('res.partner.address', 'Indirizzo Fatturazione', required=True),
 		'partner_shipping_id' : fields.many2one('res.partner.address', 'Indirizzo Spedizione'),
 		'pricelist_id' : fields.many2one('product.pricelist', 'Listino Prezzi', required=True),
-		#'ddt' : fields.boolean('DDT', help="Se la casella è spuntata verrà generato e stampato un DDT altrimenti verrà creato un altro documento"),
 		'ddt' : fields.related('causale', 'ddt', type='boolean', relation='vendita.causali', readonly=True, help="Se la casella è spuntata verrà generato e stampato un DDT altrimenti verrà creato un altro documento"),
 		'fatturabile' : fields.related('causale', 'fatturabile', type='boolean', relation='vendita.causali', readonly=True),
 		'report' : fields.function(_get_report,  method=True, type='boolean'),
@@ -106,6 +118,7 @@ class vendita_banco(osv.osv):
 		'transportation_reason_id' : fields.many2one('stock.picking.transportation_reason','Causale Trasporto'),
 		'number_of_packages' : fields.integer('Numero Colli'),
 		'trasportatore_id' : fields.many2one('delivery.carrier', 'Trasportatore'),
+		'tipo_trasporto_id' : fields.many2one('vendita_banco.trasporto', 'Tipo Trasporto'),
 		'data_inizio_trasporto' : fields.datetime('Data Inizio Trasporto'),
 		# ----- Dettagli
 		'vendita_banco_dettaglio_ids' : fields.one2many('vendita_banco.dettaglio', 'vendita_banco_id', 'Dettagli', ondelete='cascade', readonly=True, states={'draft': [('readonly', False)]}),
@@ -164,6 +177,7 @@ class vendita_banco(osv.osv):
 			'carriage_condition_id' : part.carriage_condition_id and part.carriage_condition_id.id or False,
 			'modalita_pagamento_id' : part.property_payment_term and part.property_payment_term.id or False,
 			'transportation_reason_id' : part.transportation_reason_id and part.transportation_reason_id.id or False,
+			'tipo_trasporto_id' : part.tipo_trasporto_id and part.tipo_trasporto_id.id or False,
 		}
 		if pricelist:
 			val['pricelist_id'] = pricelist

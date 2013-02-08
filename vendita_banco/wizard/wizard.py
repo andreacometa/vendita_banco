@@ -38,6 +38,7 @@ class vb_modifica_causale(osv.osv_memory):
 		'carriage_condition_id' : fields.many2one('stock.picking.carriage_condition','Resa merce'),
 		'transportation_reason_id' : fields.many2one('stock.picking.transportation_reason','Causale Trasporto'),
 		'number_of_packages' : fields.integer('Numero Colli'),
+		'tipo_trasporto_id' : fields.many2one('vendita_banco.trasporto', 'Tipo Trasporto'),
 		'trasportatore_id' : fields.many2one('delivery.carrier', 'Trasportatore'),
 		}
 
@@ -47,11 +48,13 @@ class vb_modifica_causale(osv.osv_memory):
 			return {'value' : {'goods_description_id' : vb.partner_id.goods_description_id and vb.partner_id.goods_description_id.id or False,
 				'transportation_reason_id' : vb.partner_id.transportation_reason_id and vb.partner_id.transportation_reason_id.id or False ,
 				'carriage_condition_id': vb.partner_id.transportation_reason_id and vb.partner_id.transportation_reason_id.id or False,
+				'tipo_trasporto_id': vb.partner_id.tipo_trasporto_id and vb.partner_id.tipo_trasporto_id.id or False,
 				'ddt' : True,}}
 		else:
 			return {'value' : {'goods_description_id' : False,
 				'transportation_reason_id' : False ,
 				'carriage_condition_id': False,
+				'tipo_trasporto_id': False,
 				'ddt': False,}}
 
 	def modifica_causale(self, cr, uid, ids, context={}):
@@ -73,6 +76,7 @@ class vb_modifica_causale(osv.osv_memory):
 				'transportation_reason_id':False,
 				'number_of_packages':0,
 				'trasportatore_id':False,
+				'tipo_trasporto_id':False,
 				'ddt':False,
 				}
 			if wizard.nuova_causale.ddt:
@@ -82,6 +86,7 @@ class vb_modifica_causale(osv.osv_memory):
 				values['transportation_reason_id'] = wizard.transportation_reason_id.id
 				values['number_of_packages'] = wizard.number_of_packages
 				values['trasportatore_id'] = wizard.trasportatore_id and wizard.trasportatore_id.id or False
+				values['tipo_trasporto_id'] = wizard.tipo_trasporto_id and wizard.tipo_trasporto_id.id or False
 			vb_obj.write(cr, uid, [vb.id,], values)
 		return {'type': 'ir.actions.act_window_close'}
 

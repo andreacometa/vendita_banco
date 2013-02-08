@@ -49,6 +49,7 @@ class res_partner(osv.osv):
 
 	_columns = {
 		'causale' : fields.many2one('vendita.causali', 'Causale', help="Causale predefinita da usare nella vendita al banco"),
+		'tipo_trasporto_id' : fields.many2one('vendita_banco.trasporto', 'Tipo Trasporto', help="Tipo Trasporto predefinito da usare nella vendita al banco"),
 		'sconto_fisso' : fields.float('Sconto Fisso', help="Sconto da applicare di dafault al cliente in fase di vendita"),
 		'vb_credit': fields.function(_vb_credit, string='Totale Credito', multi=False, store=False),
 	}
