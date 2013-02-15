@@ -67,9 +67,13 @@ class vb_modifica_causale(osv.osv_memory):
 				raise osv.except_osv(_('Attenzione!'), _('Questa procedura è applicabile solo agli ordini confermati!'))
 			# ----- recuperiamo il protocollo se non è una fattura e se non è spuntata la voce che evita il recupero del protocollo
 			if (not (vb.causale.fattura or vb.causale.fatturabile)) and not vb.causale.no_recupera_protocollo_cambio_causale:
-				vb.causale.recupera_protocollo(vb.name, vb.data_ordine)
+				if vb.causale.protocollo != wizard.nuova_causale.protocollo:
+					vb.causale.recupera_protocollo(vb.name, vb.data_ordine)
 			# ----- Generiamo un nuovo protocollo
-			nuovo_protocollo = wizard.nuova_causale.get_protocollo()
+			if vb.causale.protocollo != wizard.nuova_causale.protocollo:
+				nuovo_protocollo = wizard.nuova_causale.get_protocollo()
+			else:
+				nuovo_protocollo = vb.name
 			values = {'name':nuovo_protocollo,
 				'causale':wizard.nuova_causale.id,
 				'goods_description_id':False,
