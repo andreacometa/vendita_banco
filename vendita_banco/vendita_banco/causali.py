@@ -55,6 +55,7 @@ class vendita_causali(osv.osv):
 			'causale_raggruppamento_id',
 			'causale_id',
 			'Causali Raggruppamento'),
+		'no_recupera_protocollo_cambio_causale' : fields.boolean('Non Recuperare Protocollo al Cambio Causale', help='Se spuntata, indica che, al cambio di causale, il protocollo deve essere perso'),
 	}
 
 	_defaults = {

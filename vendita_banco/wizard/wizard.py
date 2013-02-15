@@ -32,6 +32,7 @@ class vb_modifica_causale(osv.osv_memory):
 
 	_columns = {
 		'nuova_causale' : fields.many2one('vendita.causali', 'Causale', required=True),
+		'data' : fields.date('Forza Data', help="Forza l'ordine alla data indicata"),
 		# ----- Dati DDT
 		'ddt' : fields.boolean('DDT'),
 		'goods_description_id' : fields.many2one('stock.picking.goods_description','Aspetto dei beni'),
@@ -64,8 +65,8 @@ class vb_modifica_causale(osv.osv_memory):
 			vb = vb_obj.browse(cr, uid, context['active_id'])
 			if vb.state == 'draft':
 				raise osv.except_osv(_('Attenzione!'), _('Questa procedura è applicabile solo agli ordini confermati!'))
-			# ----- recuperiamo il protocollo
-			if not (vb.causale.fattura or vb.causale.fatturabile):
+			# ----- recuperiamo il protocollo se non è una fattura e se non è spuntata la voce che evita il recupero del protocollo
+			if (not (vb.causale.fattura or vb.causale.fatturabile)) and not vb.causale.no_recupera_protocollo_cambio_causale:
 				vb.causale.recupera_protocollo(vb.name, vb.data_ordine)
 			# ----- Generiamo un nuovo protocollo
 			nuovo_protocollo = wizard.nuova_causale.get_protocollo()
@@ -79,6 +80,8 @@ class vb_modifica_causale(osv.osv_memory):
 				'tipo_trasporto_id':False,
 				'ddt':False,
 				}
+			if wizard.data:
+				values.update({'data_ordine':wizard.data})
 			if wizard.nuova_causale.ddt:
 				values['ddt'] = True
 				values['goods_description_id'] = wizard.goods_description_id.id

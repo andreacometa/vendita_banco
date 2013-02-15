@@ -54,6 +54,7 @@
 							<field name="riga_raggruppa" colspan="4"/>
 						</page>
 						<page string="Altro">
+							<field name="no_recupera_protocollo_cambio_causale" colspan="4"/>
 							<separator string="Report" colspan="4" />
 							<field name="report" colspan="4" nolabel="1"/>
 							<separator string="Causali Raggruppamento" colspan="4" />
