@@ -305,7 +305,7 @@ class vendita_banco(osv.osv):
 			# CREA UNA RIGA FITTIZIA COME TESTATA
 			if order_obj.causale.riga_raggruppa:
 				invoice_fake_line_id = self.pool.get('account.invoice.line').create(cr, uid, {
-						'name' : 'Rif. Ns. %s Nr. %s del %s' % (order_obj.ddt and 'DDT' or 'DOC', order_obj.name, order_obj.data_ordine),
+						'name' : 'Rif. Ns. %s Nr. %s del %s' % (order_obj.causale.descrizione_raggruppamento, order_obj.name, order_obj.data_ordine),
 						'invoice_id' : account_invoice_id,
 						'quantity' : 1,
 						'account_id' : account_id,

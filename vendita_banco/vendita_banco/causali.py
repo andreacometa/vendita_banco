@@ -56,12 +56,14 @@ class vendita_causali(osv.osv):
 			'causale_id',
 			'Causali Raggruppamento'),
 		'no_recupera_protocollo_cambio_causale' : fields.boolean('Non Recuperare Protocollo al Cambio Causale', help='Se spuntata, indica che, al cambio di causale, il protocollo deve essere perso'),
+		'descrizione_raggruppamento' : fields.char('Descrizione Raggruppamento', size=16, required=True, help="Indica la stringa da riportare in raggruppamento nella fattura"),
 	}
 
 	_defaults = {
 		'segno' : '+1',
 		'tipo' : 'nessuno',
 		'riga_raggruppa': False,
+		'descrizione_raggruppamento': "Documento",
 	}
 
 	def get_protocollo(self, cr, uid, causale_id):

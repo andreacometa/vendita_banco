@@ -32,9 +32,10 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Causali">
-					<group colspan="4">
-						<field name="name"/>
-						<field name="descrizione" />
+					<group colspan="4" col="6">
+						<field name="name" colspan="2"/>
+						<field name="descrizione" colspan="2"/>
+						<field name="descrizione_raggruppamento" colspan="2"/>
 					</group>
 					<group colspan="4">
 						<field name="tipo"  />
