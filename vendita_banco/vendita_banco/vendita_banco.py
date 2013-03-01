@@ -168,11 +168,12 @@ class vendita_banco(osv.osv):
 		addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['delivery', 'invoice'])
 		part = self.pool.get('res.partner').browse(cr, uid, part)
 		pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
+		causale_id = causale or part.causale and part.causale.id or False
 		val = {
 			'partner_invoice_id': addr['invoice'],
 			'partner_shipping_id': addr['delivery'],
-			'causale' : causale or part.causale and part.causale.id or False,
-			'ddt' : causale and self.pool.get('vendita.causali').browse(cr,uid,causale).ddt or False,
+			'causale' : causale_id,
+			'ddt' : causale_id and self.pool.get('vendita.causali').browse(cr,uid,causale_id).ddt or False,
 			'goods_description_id' : part.goods_description_id and part.goods_description_id.id or False,
 			'carriage_condition_id' : part.carriage_condition_id and part.carriage_condition_id.id or False,
 			'modalita_pagamento_id' : part.property_payment_term and part.property_payment_term.id or False,
