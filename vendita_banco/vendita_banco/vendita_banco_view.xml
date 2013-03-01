@@ -48,8 +48,8 @@
 					</group>
 					<group col="4" colspan="4">
 						<field name="pricelist_id" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
-						<field name="modalita_pagamento_id" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" 
-							on_change="onchange_modalita_pagamento(modalita_pagamento_id)"/>
+						<field name="modalita_pagamento_id" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
+							<!--on_change="onchange_modalita_pagamento(modalita_pagamento_id)"/-->
 					</group>
 					<group col="8" colspan="4">
 						<field name="goods_description_id" attrs="{'required':[('ddt','=',True)], 'invisible':[('ddt','=',False)], 'readonly':[('state','in',['done', 'invoiced'])]}"/>

@@ -184,7 +184,7 @@ class vendita_banco(osv.osv):
 			val['pricelist_id'] = pricelist
 		return {'value': val}
 
-	
+	"""
 	def onchange_modalita_pagamento(self, cr, uid, ids, modalita_pagamento_id):
 		val = {}
 		if not modalita_pagamento_id:
@@ -205,7 +205,7 @@ class vendita_banco(osv.osv):
 		print '============', val
 		'''
 		return {'value': val}
-	
+	"""
 
 	# ----- Funzione richiamata dal button Conferma Vendita
 	def conferma_vendita(self, cr, uid, ids, *args):
