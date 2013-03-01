@@ -21,32 +21,4 @@
 #
 ##############################################################################
 
-import netsvc
-import pooler, tools
-
-from osv import fields, osv
-from tools.translate import _
-
-class account_invoice(osv.osv):
-	_inherit = 'account.invoice'
-
-	_columns = {
-			'packages_number' : fields.integer('Colli'),
-			'partner_shipping_id' : fields.many2one('res.partner.address','Indirizzo Spedizione'),
-		}
-account_invoice()
-
-
-class account_invoice_line(osv.osv):
-
-	_name = "account.invoice.line"
-	_inherit = "account.invoice.line"
-
-	_columns = {
-		'spesa' : fields.boolean('Spesa', help="Da spuntare se il prodotto è una spesa (trasporto, incasso, etc.)"),
-		}
-	_defaults = {
-		'spesa' : False,
-	}
-
-account_invoice_line()
+import product

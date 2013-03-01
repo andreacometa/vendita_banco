@@ -140,8 +140,8 @@ class vendita_banco(osv.osv):
 	_defaults = {
 		'state' : 'draft',
 		'name' : '',
-		'data_ordine': lambda *a: time.strftime('%Y-%m-%d'),
-		'data_inizio_trasporto': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+		'data_ordine': time.strftime('%Y-%m-%d'),
+		'data_inizio_trasporto': time.strftime('%Y-%m-%d %H:%M:%S'),
 	}
 	
 	_order = "data_ordine desc, name desc"
@@ -251,6 +251,7 @@ class vendita_banco(osv.osv):
 						'tax_id':line.spesa_id.tax_id and line.spesa_id.tax_id.id,
 						'product_qty' : 1,
 						'vendita_banco_id' : order_obj.id,
+						'spesa_automatica':True,
 						}
 					self.pool.get('vendita_banco.dettaglio').create(cr, uid, vals)
 			# ----- SCRIVE IL NUMERO DI PROTOCOLLO NUOVO O LO RECUPERA
@@ -325,6 +326,8 @@ class vendita_banco(osv.osv):
 					'partner_id' : line.vendita_banco_id.partner_id.id,
 					'invoice_line_tax_id' : invoice_line_tax_id,
 					'uos_id' : line.product_uom.id,
+					'spesa' : line.spesa,
+					'spesa_automatica' : line.spesa_automatica,
 					})
 				self.pool.get('vendita_banco.dettaglio').write(cr, uid, [line.id], {'invoice_line_id':invoice_line_id})
 		# ----- Salva in vendita_banco la fattura appena creata e modifica lo stato
@@ -375,7 +378,7 @@ class vendita_banco(osv.osv):
 				#if line.move_id and move_obj.browse(cr,uid,line.move_id.id):
 				#	move_obj.write(cr, uid, [line.move_id.id], {'state':'draft'})
 				#	move_obj.unlink(cr, uid, [line.move_id.id])
-				if line.spesa:
+				if line.spesa_automatica:
 					self.pool.get('vendita_banco.dettaglio').unlink(cr, uid, [line.id,])
 		# ----- Cambio lo stato
 		res = {}
@@ -442,7 +445,12 @@ class vendita_banco_dettaglio(osv.osv):
 			string='Imponibile', type='float', store=False, multi='sums'),
 		'move_id' : fields.many2one('stock.move', 'Movimento'),
 		'invoice_line_id' : fields.many2one('account.invoice.line', 'Linea di fattura'),
-		'spesa' : fields.boolean('Spesa'),
+		'spesa' : fields.boolean('Spesa'), # gestione spese di incasso 
+		'spesa_automatica' : fields.boolean('Spesa Automatica'), # individua le righe di spesa inserite automaticamente
+	}
+	_defaults = {
+		'spesa':False,
+		'spesa_automatica':False,
 	}
 
 	def onchange_product(self, cr, uid, ids, product_id, product_qty, data_ordine, partner_id, pricelist, tax_id=False, context={}):
@@ -456,6 +464,7 @@ class vendita_banco_dettaglio(osv.osv):
 			res['product_uom'] = product_obj.uom_id.id
 			res['product_qty'] = 1
 			res['name'] = '%s' % (product_obj.name)
+			res['spesa'] = product_obj.spesa
 			# ----- richiama lo sconto fisso
 			if partner_id:
 				res['discount'] = self.pool.get('res.partner').browse(cr, uid, partner_id).sconto_fisso

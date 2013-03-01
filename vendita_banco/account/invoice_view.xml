@@ -15,7 +15,19 @@
 					<field name="packages_number"/>
 				</field>
 			</field>
-        </record>
+		</record>
+
+	<record id="view_invoice_line_spesa" model="ir.ui.view">
+		<field name="name">account.invoice.line.spesa</field>
+		<field name="model">account.invoice.line</field>
+		<field name="inherit_id" ref="account.view_invoice_line_form"/>
+		<field name="arch" type="xml">
+			<field name="discount" position="after">
+				<field name="spesa"/>
+			</field>
+		</field>
+	</record>
+
 	</data>
 </openerp>
 

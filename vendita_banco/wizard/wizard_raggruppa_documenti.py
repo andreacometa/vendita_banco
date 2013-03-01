@@ -107,6 +107,8 @@ class vb_raggruppa_documenti(osv.osv_memory):
 						'price_unit' : line.price_unit,
 						'tax_id' : line.tax_id and line.tax_id.id,
 						'discount' : line.discount,
+						'spesa' : line.spesa,
+						'spesa_automatica' : line.spesa_automatica,
 					}
 					vb_lines_obj.create(cr, uid, vb_line_struttura)
 			# ----- Mostra il documento appena creato
