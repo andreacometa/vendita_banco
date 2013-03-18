@@ -434,6 +434,7 @@ class vendita_banco_dettaglio(osv.osv):
 		'vendita_banco_id' : fields.many2one('vendita_banco', 'Vendita', ondelete='cascade'),
 		'partner_id' : fields.related('vendita_banco_id', 'partner_id', string="Cliente", type="many2one", relation="res.partner", store=True),
 		'causale' : fields.related('vendita_banco_id', 'causale', string="Causale", type="many2one", relation="vendita.causali", store=True),
+		'data_ordine' : fields.related('vendita_banco_id', 'data_ordine', string="Data Vendita", type="date", store=True),
 		'product_id' : fields.many2one('product.product', 'Prodotto'),
 		'product_qty' : fields.float('Quantità'),
 		'product_uom' : fields.many2one('product.uom', 'Unità di misura'),
