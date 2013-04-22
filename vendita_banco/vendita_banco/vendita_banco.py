@@ -50,14 +50,18 @@ class vendita_banco(osv.osv):
 		return super(vendita_banco, self).copy(cr, uid, id, default, context)
 		
 	def unlink(self, cr, uid, ids, context=None):
-		for vendita in self.browse(cr, uid, ids):
+		unlink_ids = []
+		vendite = self.browse(cr, uid, ids)
+		for vendita in vendite: #:
 			if vendita.state != 'draft':
 				raise osv.except_osv(_('Azione non valida!'), _('Impossibile eliminare una vendita validata!'))
 				return False
 			else:
 				if not vendita.causale.fattura and vendita.name:
 					vendita.causale.recupera_protocollo(vendita.name, vendita.data_ordine)
-				return super(vendita_banco, self).unlink(cr, uid, vendita.id, context)
+				unlink_ids.append(vendita.id)
+				
+		return super(vendita_banco, self).unlink(cr, uid, unlink_ids, context)
 
 	def create(self, cr, uid, vals, context=None):
 		vals.update({'user_id':uid})
