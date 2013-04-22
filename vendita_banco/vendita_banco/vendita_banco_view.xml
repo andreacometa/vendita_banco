@@ -195,6 +195,7 @@
 				<tree string="Dettagli Vendite">
 					<field name="causale"/>
 					<field name="vendita_banco_id"/>
+					<field name="data_ordine"/>
 					<field name="partner_id"/>
 					<field name="name"/>
 					<field name="product_id"/>
@@ -217,6 +218,7 @@
 				<search string="Filtri Dettaglio Vendita">
 					<field name="causale" filter_domain="['|', ('causale.name','ilike',self),('causale.descrizione','ilike',self)]"/>
 					<field name="vendita_banco_id"/>
+					<field name="data_ordine"/>
 					<field name="partner_id" filter_domain="['|', ('partner_id.name','ilike',self),('partner_id.ref','ilike',self)]"/>
 					<field name="product_id" /> <!--filter_domain="['|', ('product_id.name','ilike',self),('product_id.default_code','ilike',self)]"/-->
 					<newline/>
