@@ -144,8 +144,8 @@ class vendita_banco(osv.osv):
 	_defaults = {
 		'state' : 'draft',
 		'name' : '',
-		'data_ordine': time.strftime('%Y-%m-%d'),
-		'data_inizio_trasporto': time.strftime('%Y-%m-%d %H:%M:%S'),
+		'data_ordine': fields.date.context_today,
+		'data_inizio_trasporto': fields.date.context_today,
 	}
 	
 	_order = "data_ordine desc, name desc"
