@@ -52,7 +52,7 @@ class vendita_banco(osv.osv):
 	def unlink(self, cr, uid, ids, context=None):
 		unlink_ids = []
 		vendite = self.browse(cr, uid, ids)
-		for vendita in vendite: #:
+		for vendita in vendite:
 			if vendita.state != 'draft':
 				raise osv.except_osv(_('Azione non valida!'), _('Impossibile eliminare una vendita validata!'))
 				return False
@@ -187,29 +187,6 @@ class vendita_banco(osv.osv):
 		if pricelist:
 			val['pricelist_id'] = pricelist
 		return {'value': val}
-
-	"""
-	def onchange_modalita_pagamento(self, cr, uid, ids, modalita_pagamento_id):
-		val = {}
-		if not modalita_pagamento_id:
-			return {'value': val}
-		'''
-		val = {'vendita_banco_dettaglio_ids':[]}
-		mod_pag_obj = self.pool.get('account.payment.term')
-		modalita_pagamento = mod_pag_obj.browse(cr, uid, modalita_pagamento_id)
-		for line in modalita_pagamento.line_ids:
-			if line.spesa_id:
-				val['vendita_banco_dettaglio_ids'] += [(0, 0, {
-					'spesa':True,
-					'name':line.spesa_id.name,
-					'price_unit':line.spesa_id.price,
-					'tax_id':line.spesa_id.tax_id and line.spesa_id.tax_id.id,
-					'product_qty' : 1,
-					})]
-		print '============', val
-		'''
-		return {'value': val}
-	"""
 
 	# ----- Funzione richiamata dal button Conferma Vendita
 	def conferma_vendita(self, cr, uid, ids, *args):

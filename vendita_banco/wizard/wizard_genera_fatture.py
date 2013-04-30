@@ -77,7 +77,7 @@ class vb_raggruppa_fatture(osv.osv_memory):
 			for vendita_banco_id in vendita_banco_ids:
 				ordini_da_fatturare_obj.create(cr, uid, {'name':vendita_banco_id, 'vb_raggruppa_fatture_id':wizard_obj.id})
 		else:
-			raise osv.except_osv(_('Attenzione!'), _('Impossibile trovare documenti da fatturare per il cliente selezionato!'))			
+			raise osv.except_osv(_('Attenzione!'), _('Impossibile trovare documenti da fatturare per il cliente selezionato!'))
 			return {'type': 'ir.actions.act_window_close'}
 		self.write(cr, uid, ids, {'filtrato':True})
 		return True
@@ -112,12 +112,11 @@ class vb_raggruppa_fatture(osv.osv_memory):
 			if cliente != order_obj.partner_id.id or (modalita != order_obj.modalita_pagamento_id.id and wizard_obj.raggruppa_per_termine_pagamento) :
 				# nuova fattura
 				account_invoice_id = self.pool.get('account.invoice').create(cr, uid, {
-					'name' : "Fattura Differita",
-					#'origin' : order_obj.name,
+					'name' : "Fattura",
 					'date_invoice' : data_fattura,
 					'partner_id' : order_obj.partner_id.id,
 					'account_id' : order_obj.partner_id.property_account_receivable.id,
-					'journal_id' : journal_id,
+					'journal_id' : order_obj.causale and order_obj.causale.journal_id and order_obj.causale.journal_id.id or journal_id,
 					'currency_id' : currency_id,
 					'address_invoice_id' : order_obj.partner_invoice_id.id,
 					'state' : 'draft',
@@ -185,30 +184,6 @@ class vb_raggruppa_fatture(osv.osv_memory):
 			'res_id': account_invoice_ids or False,
 		}
 
-		
-		
-		
-		
-		
-		
-		
-		'''
-		doc_da_fatturare = {}
-		documenti = self.pool.get('vendita_banco').browse(cr, uid, ids)
-		for doc in documenti:
-			# raggruppiamo per cliente
-			if not doc.partner_id.id in doc_da_fatturare:
-				doc_da_fatturare[doc.partner_id.id] = []
-			doc_da_fatturare[doc.partner_id.id].append(doc.id)
-			
-		for cliente in doc_da_fatturare:
-			doc_da_fatturare[cliente][doc_id] = {}
-			doc_id = doc_da_fatturare[cliente]
-			modalita_di_pagamento =self.pool.get('vendita_banco').browse(cr, uid, doc_id).modalita_pagamento.id
-			#if not modalita_di_pagamento in doc_da_fatturare[cliente][doc_id]:
-			doc_da_fatturare[cliente][doc_id].append(modalita_di_pagamento)
-		'''
-			
 	def crea_fatture(self, cr, uid, ids, context={}):
 		wizard_obj = self.browse(cr,uid,ids)[0]
 		# ----- Crea una fattura per ogni linea selezionata
@@ -217,7 +192,7 @@ class vb_raggruppa_fatture(osv.osv_memory):
 			self.genera_fatture_raggruppate(cr, uid, ids, wizard_obj.ordini_ids)
 		else:
 			for ordine in wizard_obj.ordini_ids:
-				origin = ordine.name.name				
+				origin = ordine.name.name
 				ordine.name.crea_fatture_raggruppate(wizard_obj.data_fattura, origin, {})
 			
 		return {'type': 'ir.actions.act_window_close'}
