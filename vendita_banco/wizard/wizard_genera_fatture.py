@@ -144,6 +144,7 @@ class vb_raggruppa_fatture(osv.osv_memory):
 				nriga += 1
 				invoice_line_tax_id = line.tax_id and [(6,0,[line.tax_id.id])] or False
 				struttura_dati = {
+					'name' : line.name,
 					'invoice_id' : account_invoice_id,
 					'product_id' : line.product_id and line.product_id.id or False,
 					'quantity' : line.product_qty,
@@ -156,10 +157,6 @@ class vb_raggruppa_fatture(osv.osv_memory):
 					'uos_id' : line.product_uom and line.product_uom.id,
 					'spesa' : line.spesa,
 					}
-				if line.product_id:
-					struttura_dati.update({'name' : '[%s] %s' % (line.product_id.default_code, line.product_id.name)})
-				else:
-					struttura_dati.update({'name' : line.name})
 				invoice_line_id = self.pool.get('account.invoice.line').create(cr, uid, struttura_dati)
 				self.pool.get('vendita_banco.dettaglio').write(cr, uid, [line.id], {'invoice_line_id':invoice_line_id})
 			# ----- Salva in vendita_banco la fattura appena creata e modifica lo stato

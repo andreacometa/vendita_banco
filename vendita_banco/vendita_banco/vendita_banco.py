@@ -446,7 +446,10 @@ class vendita_banco_dettaglio(osv.osv):
 			warning = {}
 			res['product_uom'] = product_obj.uom_id.id
 			res['product_qty'] = 1
-			res['name'] = '%s' % (product_obj.name)
+			if product_obj.default_code:
+				res['name'] = '[%s] %s' % (product_obj.default_code, product_obj.name)
+			else:
+				res['name'] = '%s' % (product_obj.name)
 			res['spesa'] = product_obj.spesa
 			# ----- richiama lo sconto fisso
 			if partner_id:
