@@ -53,8 +53,8 @@
 					<field name="name"/>
 					<field name="modalita_pagamento_id"/>
 					<field name="partner_id"/>
-					<field name="totale"/>
-					<field name="imponibile"/>
+					<field name="totale" sum="Totale"/>
+					<field name="imponibile" sum="Imponibile"/>
 				</tree>
 			</field>
 		</record>
