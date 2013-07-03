@@ -11,6 +11,7 @@
 					<field name="partner_shipping_id" domain="[('partner_id', '=', partner_id)]" context="{'default_partner_id':partner_id}"/>
 				</field>
 				<field name="transportation_reason_id" position="after">
+					<field name="tipo_trasporto_id"/>
 					<newline />
 					<field name="packages_number"/>
 				</field>

@@ -283,6 +283,7 @@ class vendita_banco(osv.osv):
 				'carriage_condition_id' : order_obj.carriage_condition_id and order_obj.carriage_condition_id.id or False,
 				'goods_description_id' : order_obj.goods_description_id and order_obj.goods_description_id.id or False,
 				'transportation_reason_id' : order_obj.transportation_reason_id and order_obj.transportation_reason_id.id or False,
+				'tipo_trasporto_id' : order_obj.tipo_trasporto_id and order_obj.tipo_trasporto_id.id or False,
 				'packages_number' : order_obj.number_of_packages or 0.0,
 				})
 			# CREA UNA RIGA FITTIZIA COME TESTATA

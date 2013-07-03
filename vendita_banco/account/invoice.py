@@ -33,6 +33,7 @@ class account_invoice(osv.osv):
 	_columns = {
 			'packages_number' : fields.integer('Colli'),
 			'partner_shipping_id' : fields.many2one('res.partner.address','Indirizzo Spedizione'),
+			'tipo_trasporto_id' : fields.many2one('vendita_banco.trasporto', 'Tipo Trasporto'),
 		}
 account_invoice()
 
