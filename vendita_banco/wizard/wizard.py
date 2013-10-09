@@ -41,6 +41,7 @@ class vb_modifica_causale(osv.osv_memory):
 		'number_of_packages' : fields.integer('Numero Colli'),
 		'tipo_trasporto_id' : fields.many2one('vendita_banco.trasporto', 'Tipo Trasporto'),
 		'trasportatore_id' : fields.many2one('delivery.carrier', 'Trasportatore'),
+		'data_inizio_trasporto' : fields.datetime('Data Inizio Trasporto'),
 		}
 
 	def onchange_causale(self, cr, uid, ids, causale, context):
@@ -94,6 +95,7 @@ class vb_modifica_causale(osv.osv_memory):
 				values['number_of_packages'] = wizard.number_of_packages
 				values['trasportatore_id'] = wizard.trasportatore_id and wizard.trasportatore_id.id or False
 				values['tipo_trasporto_id'] = wizard.tipo_trasporto_id and wizard.tipo_trasporto_id.id or False
+				values['data_inizio_trasporto'] = wizard.data_inizio_trasporto or False
 			vb_obj.write(cr, uid, [vb.id,], values)
 		return {'type': 'ir.actions.act_window_close'}
 

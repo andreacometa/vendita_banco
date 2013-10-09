@@ -145,7 +145,7 @@ class vendita_banco(osv.osv):
 		'state' : 'draft',
 		'name' : '',
 		'data_ordine': fields.date.context_today,
-		'data_inizio_trasporto': fields.date.context_today,
+		#'data_inizio_trasporto': datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'),
 	}
 	
 	_order = "data_ordine desc, name desc"
