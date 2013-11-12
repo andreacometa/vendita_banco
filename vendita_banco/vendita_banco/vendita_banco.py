@@ -298,15 +298,17 @@ class vendita_banco(osv.osv):
             # ----- CREA LE RIGHE REALI DEI PRODOTTI
             for line in order_obj.vendita_banco_dettaglio_ids:
                 invoice_line_tax_id = line.tax_id and [(6,0,[line.tax_id.id])] or False
-                price_unit = ( 100 * line.imponibile ) / ( 100 - line.discount )
-                price_unit = price_unit / line.product_qty
+                # ----- Il codice seguente deve essere implementato nei clienti che hanno
+                #       il calcolo dello sconto dinamico
+                #price_unit = ( 100 * line.imponibile ) / ( 100 - line.discount )
+                #price_unit = price_unit / line.product_qty
                 invoice_line_id = self.pool.get('account.invoice.line').create(cr, uid, {
                     'name' : line.name,
                     'invoice_id' : account_invoice_id,
                     'product_id' : line.product_id and line.product_id.id or False,
                     'quantity' : line.product_qty,
                     'account_id' : account_id,
-                    'price_unit' : price_unit,
+                    'price_unit' : line.price_unit,
                     'discount' : line.discount,
                     'partner_id' : line.vendita_banco_id.partner_id.id,
                     'invoice_line_tax_id' : invoice_line_tax_id,
