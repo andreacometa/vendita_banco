@@ -30,5 +30,16 @@
 			</field>
 		</record>
 
+        <record id="stock_move_search_vb" model="ir.ui.view">
+            <field name="name">stock.move.search.vb</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_search"/>
+            <field name="arch" type="xml">
+                <field name="origin" position="after">
+                    <field name="sorgente_id"/>
+                </field>
+            </field>
+        </record>
+
 	</data>
 </openerp>
