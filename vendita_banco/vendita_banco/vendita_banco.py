@@ -46,7 +46,11 @@ class vendita_banco(osv.osv):
     _description = "Vendite"
 
     def copy(self, cr, uid, id, default={}, context=None):
-        default.update({'name': '', 'invoice_id':False})
+        default.update({
+            'name': '',
+            'invoice_id': False,
+            'vb_raggruppamento_id': False,
+        })
         return super(vendita_banco, self).copy(cr, uid, id, default, context)
         
     def unlink(self, cr, uid, ids, context=None):
@@ -54,7 +58,9 @@ class vendita_banco(osv.osv):
         vendite = self.browse(cr, uid, ids)
         for vendita in vendite:
             if vendita.state != 'draft':
-                raise osv.except_osv(_('Azione non valida!'), _('Impossibile eliminare una vendita validata!'))
+                raise osv.except_osv(
+                    _('Azione non valida!'),
+                    _('Impossibile eliminare una vendita validata!'))
                 return False
             else:
                 if not vendita.causale.fattura and vendita.name:
@@ -145,7 +151,7 @@ class vendita_banco(osv.osv):
         'state' : 'draft',
         'name' : '',
         'data_ordine': fields.date.context_today,
-        #'data_inizio_trasporto': datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S'),
+        'vb_raggruppamento_id': False,
     }
     
     _order = "data_ordine desc, name desc"
@@ -416,35 +422,54 @@ class vendita_banco_dettaglio(osv.osv):
         return res
 
     _columns = {
-        'name' : fields.char('Descrizione', size=64),
-        'vendita_banco_id' : fields.many2one('vendita_banco', 'Vendita', ondelete='cascade'),
-        'partner_id' : fields.related('vendita_banco_id', 'partner_id', string="Cliente", type="many2one", relation="res.partner", store=True),
-        'causale' : fields.related('vendita_banco_id', 'causale', string="Causale", type="many2one", relation="vendita.causali", store=True),
-        'data_ordine' : fields.related('vendita_banco_id', 'data_ordine', string="Data Vendita", type="date", store=True),
-        'product_id' : fields.many2one('product.product', 'Prodotto'),
-        'product_qty' : fields.float('Quantità'),
-        'product_uom' : fields.many2one('product.uom', 'Unità di misura'),
-        'price_unit' : fields.float('Prezzo Unitario', digits_compute=dp.get_precision('Vendita Banco Dettaglio')),
-        'discount' : fields.float('Sconto (%)', help="Indicare uno sconto in percentuale"),
+        'name': fields.char('Descrizione', size=64),
+        'vendita_banco_id': fields.many2one('vendita_banco', 'Vendita',
+                                            ondelete='cascade'),
+        'partner_id': fields.related(
+            'vendita_banco_id', 'partner_id', string="Cliente",
+            type="many2one", relation="res.partner", store=True),
+        'causale': fields.related(
+            'vendita_banco_id', 'causale', string="Causale", type="many2one",
+            relation="vendita.causali", store=True),
+        'data_ordine': fields.related(
+            'vendita_banco_id', 'data_ordine', string="Data Vendita",
+            type="date", store=True),
+        'product_id': fields.many2one('product.product', 'Prodotto'),
+        'product_qty': fields.float('Quantità'),
+        'product_uom': fields.many2one('product.uom', 'Unità di misura'),
+        'price_unit': fields.float(
+            'Prezzo Unitario',
+            digits_compute=dp.get_precision('Vendita Banco Dettaglio')),
+        'discount': fields.float(
+            'Sconto (%)', help="Indicare uno sconto in percentuale"),
         'tax_id': fields.many2one('account.tax', 'IVA'),
-        'importo' : fields.function(_calcola_importi, method=True, digits_compute=dp.get_precision('Vendita Banco Dettaglio'), 
+        'importo' : fields.function(
+            _calcola_importi, method=True,
+            digits_compute=dp.get_precision('Vendita Banco Dettaglio'), 
             string='Importo', type='float', store=False, multi='sums'),
-        'imponibile' : fields.function(_calcola_importi, method=True, digits_compute=dp.get_precision('Vendita Banco Dettaglio'),
+        'imponibile' : fields.function(
+            _calcola_importi, method=True,
+            digits_compute=dp.get_precision('Vendita Banco Dettaglio'),
             string='Imponibile', type='float', store=False, multi='sums'),
         'move_id' : fields.many2one('stock.move', 'Movimento'),
-        'invoice_line_id' : fields.many2one('account.invoice.line', 'Linea di fattura'),
+        'invoice_line_id' : fields.many2one('account.invoice.line',
+                                            'Linea di fattura'),
         'spesa' : fields.boolean('Spesa'), # gestione spese di incasso 
-        'spesa_automatica' : fields.boolean('Spesa Automatica'), # individua le righe di spesa inserite automaticamente
+        'spesa_automatica' : fields.boolean('Spesa Automatica'),
+        # individua le righe di spesa inserite automaticamente
     }
     _defaults = {
         'spesa':False,
         'spesa_automatica':False,
     }
 
-    def onchange_product(self, cr, uid, ids, product_id, product_qty, data_ordine, partner_id, pricelist, tax_id=False, context={}):
+    def onchange_product(self, cr, uid, ids, product_id, product_qty,
+                         data_ordine, partner_id, pricelist, tax_id=False,
+                         context={}):
         if product_id:
             res = {}
-            product_obj = self.pool.get('product.product').browse(cr, uid, product_id)
+            product_obj = self.pool.get('product.product').browse(
+                cr, uid, product_id)
             # ----- Aggiunge eventuale IVA presente nel prodotto
             if (not tax_id) and (product_obj.taxes_id):
                 res['tax_id'] = product_obj.taxes_id[0].id
@@ -452,32 +477,37 @@ class vendita_banco_dettaglio(osv.osv):
             res['product_uom'] = product_obj.uom_id.id
             res['product_qty'] = 1
             if product_obj.default_code:
-                res['name'] = '[%s] %s' % (product_obj.default_code, product_obj.name)
+                res['name'] = '[%s] %s' % (
+                    product_obj.default_code, product_obj.name)
             else:
                 res['name'] = '%s' % (product_obj.name)
             res['spesa'] = product_obj.spesa
             # ----- richiama lo sconto fisso
             if partner_id:
-                res['discount'] = self.pool.get('res.partner').browse(cr, uid, partner_id).sconto_fisso
+                res['discount'] = self.pool.get('res.partner').browse(
+                    cr, uid, partner_id).sconto_fisso
             if not pricelist:
                 warning = {
-                    'title' : 'Nessun Listino!',
-                    'message' : 'Selezionare un listino di vendita o associarne uno al cliente!'
+                    'title': 'Nessun Listino!',
+                    'message': 'Selezionare un listino di vendita o associarne\
+ uno al cliente!'
                     }
             else:
-                price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
-                        product_id, product_qty or 1.0, partner_id, {
-                            'uom': product_obj.uom_id.id,
-                            'date': data_ordine,
-                            })[pricelist]
+                price = self.pool.get('product.pricelist').price_get(
+                    cr, uid, [pricelist], product_id, product_qty or 1.0,
+                    partner_id, {
+                        'uom': product_obj.uom_id.id,
+                        'date': data_ordine,
+                    })[pricelist]
                 if price is False:
                     warning = {
-                        'title' : 'Nessuna linea del listino valida trovata!',
-                        'message' : 'Impossibile trovare una linea del listino valida per questo prodotto.'
+                        'title': 'Nessuna linea del listino valida trovata!',
+                        'message': 'Impossibile trovare una linea del listino \
+valida per questo prodotto.'
                         }
                 else:
                     res['price_unit'] = price
-            return {'value':res, 'warning': warning}
+            return {'value': res, 'warning': warning}
         return False
 
 vendita_banco_dettaglio()
