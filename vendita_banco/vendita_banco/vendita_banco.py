@@ -224,18 +224,19 @@ class vendita_banco(osv.osv):
                         move_id = move_obj.create(cr, uid, move_valori)
                         self.pool.get('vendita_banco.dettaglio').write(cr, uid, line.id, {'move_id':move_id})
             # ----- INSERISCE EVENTUALI LINEE DI SPESA
-            for line in order_obj.modalita_pagamento_id.line_ids:
-                if line.spesa_id:
-                    vals = {
-                        'spesa':True,
-                        'name':line.spesa_id.name,
-                        'price_unit':line.spesa_id.price,
-                        'tax_id':line.spesa_id.tax_id and line.spesa_id.tax_id.id,
-                        'product_qty' : 1,
-                        'vendita_banco_id' : order_obj.id,
-                        'spesa_automatica':True,
-                        }
-                    self.pool.get('vendita_banco.dettaglio').create(cr, uid, vals)
+            if not order_obj.causale.no_spesa_incasso:
+                for line in order_obj.modalita_pagamento_id.line_ids:
+                    if line.spesa_id:
+                        vals = {
+                            'spesa':True,
+                            'name':line.spesa_id.name,
+                            'price_unit':line.spesa_id.price,
+                            'tax_id':line.spesa_id.tax_id and line.spesa_id.tax_id.id,
+                            'product_qty' : 1,
+                            'vendita_banco_id' : order_obj.id,
+                            'spesa_automatica':True,
+                            }
+                        self.pool.get('vendita_banco.dettaglio').create(cr, uid, vals)
             # ----- SCRIVE IL NUMERO DI PROTOCOLLO NUOVO O LO RECUPERA
             res = {}
             res['name'] = order_obj.name or order_obj.causale.get_protocollo()

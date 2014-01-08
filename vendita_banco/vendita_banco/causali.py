@@ -43,20 +43,24 @@ class vendita_causali(osv.osv):
         'journal_id' : fields.many2one('account.journal', 'Sezionale', help="Imposta un sezionale che verrà automaticamente inserito nella fattura generata"),
         'riga_raggruppa' : fields.boolean('Riga Raggruppamento', help="Indica se la generazione della fattura porta le righe descrittive per ogni raggruppamento"),
         'location_id' : fields.many2one('stock.location', 'Location', help="Indica se, usando questa causale, si deve muovere la merce verso una location differente"),
-        'user_ids': fields.many2many(
-            'res.users',
-            'res_users_causali_rel',
-            'user_id',
-            'causale_id',
-            'Utenti Abilitati'),
-        'raggruppamento_ids': fields.many2many(
-            'vendita.causali',
-            'causali_raggruppamento_rel',
-            'causale_raggruppamento_id',
-            'causale_id',
-            'Causali Raggruppamento'),
+        'user_ids': fields.many2many('res.users',
+                                     'res_users_causali_rel',
+                                     'user_id',
+                                     'causale_id',
+                                     'Utenti Abilitati'),
+        'raggruppamento_ids': fields.many2many('vendita.causali',
+                                               'causali_raggruppamento_rel',
+                                               'causale_raggruppamento_id',
+                                               'causale_id',
+                                               'Causali Raggruppamento'),
         'no_recupera_protocollo_cambio_causale' : fields.boolean('Non Recuperare Protocollo al Cambio Causale', help='Se spuntata, indica che, al cambio di causale, il protocollo deve essere perso'),
-        'descrizione_raggruppamento' : fields.char('Descrizione Raggruppamento', size=16, required=True, help="Indica la stringa da riportare in raggruppamento nella fattura"),
+        'descrizione_raggruppamento' : fields.char(
+            'Descrizione Raggruppamento',
+            size=16, required=True,
+            help="Indica la stringa da riportare in raggruppamento nella fattura"),
+        'no_spesa_incasso': fields.boolean(
+            'No Spesa Incasso',
+            help='Indica che la causale non è soggetta a spesa d\'incasso'),
     }
 
     _defaults = {
