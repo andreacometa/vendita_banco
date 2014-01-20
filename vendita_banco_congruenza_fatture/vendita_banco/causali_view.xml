@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+		<record id="view_causali_form_incongruenza_fatture" model="ir.ui.view">
+			<field name="name">vendita.causali.form.40</field>
+			<field name="model">vendita.causali</field>
+			<field name="inherit_id" ref="vendita_banco.view_causali_form"/>
+			<field name="arch" type="xml">
+				<field name="report" position="before">
+					<field name="valuta_congruenza_fattura"/>
+				</field>
+			</field>
+		</record>
+
+	</data>
+</openerp>

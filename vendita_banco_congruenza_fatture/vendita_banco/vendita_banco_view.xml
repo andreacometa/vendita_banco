@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+    <!-- ======================= -->
+    <!-- 		VENDITA AL BANCO -->
+    <!-- ======================= -->
+    <record id="view_vendita_banco_form_conguenza_fattura" model="ir.ui.view">
+        <field name="name">vendita_banco.form.40</field>
+        <field name="model">vendita_banco</field>
+        <field name="inherit_id" ref="vendita_banco.view_vendita_banco_form"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="conguenza_fattura" />
+            </field>
+        </field>
+    </record>
+    
+    <!-- ======================= -->
+    <!--    CONGRUENZA FATTURE   -->
+    <!-- ======================= -->
+    <record id="vb_incongruenza_fatture" model="ir.ui.view">
+        <field name="name">vb.incongruenze.fatture</field>
+        <field name="model">vendita_banco</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Incongruenza Fatture">
+                <field name="invoice_id"/>
+                <field name="data_ordine"/>
+                <field name="partner_id"/>
+                <field name="conguenza_fattura"/>
+                <field name="imponibile"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_incongruenza_fatture" model="ir.actions.act_window">
+        <field name="name">Incongruenza Fatture</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">vendita_banco</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="vb_incongruenza_fatture"/>
+        <field name="domain" eval="[('causale', '=', ref('vendita_banco.vc_causali_fatt'))]" />
+    </record>
+    
+    <menuitem
+        id="menu_incongruenza_fatture"
+        name="Incongruenza Fatture"
+        string="Incongruenza Fatture"
+        action="action_incongruenza_fatture"
+        parent="vendita_banco.menu_vendita_banco_extra"/>
+
+    </data>
+</openerp>
