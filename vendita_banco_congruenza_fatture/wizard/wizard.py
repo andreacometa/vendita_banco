@@ -31,7 +31,11 @@ class forza_controllo_congruenza(osv.osv_memory):
     _description = "Forza il controllo congruenza"
 
     _columns = {
-        'name': fields.boolean('Name'),
+        'name': fields.integer('Arrotondamento Decimali'),
+        }
+        
+    _defaults = {
+        'name': 2,
         }
 
     def forza_controllo(self, cr, uid, ids, context={}):
@@ -41,6 +45,7 @@ class forza_controllo_congruenza(osv.osv_memory):
             raise osv.except_osv(
                 _('Attenzione'),
                 _('Nessuna causale soggetta a controllo congruenza'))
+        wizard = self.browse(cr, uid, ids[0], context)
         vb_obj = self.pool.get('vendita_banco')
         vb_ids = vb_obj.search(
             cr, uid, [('causale', 'in', causale_ids)])
@@ -48,7 +53,7 @@ class forza_controllo_congruenza(osv.osv_memory):
         for vb in vb_obj.browse(cr, uid, vb_ids, context):
             congruente = True
             if vb.invoice_id:
-                if round(vb.imponibile, 2) != round(vb.invoice_id.amount_untaxed, 2):
+                if round(vb.imponibile, wizard.name) != round(vb.invoice_id.amount_untaxed, wizard.name):
                     congruente = False
                     vendita_ids.append(vb.id)
             vb_obj.write(cr, uid, [vb.id, ], {'conguenza_fattura': congruente})

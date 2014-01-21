@@ -9,7 +9,8 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Forza Controllo Congruenza">
-					<group colspan="4" col="6">
+					<field name="name" colspan="4" />
+                    <group colspan="4" col="6">
 						<button string="Annulla" special="cancel" icon="gtk-cancel" colspan="2"/>
 						<button string="Forza Controllo" name="forza_controllo" 
 							type="object" icon="gtk-ok" colspan="2"/>
