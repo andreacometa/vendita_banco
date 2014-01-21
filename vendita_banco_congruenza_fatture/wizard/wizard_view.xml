@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+	<data>
+		
+		<record id="forza_controllo_congruenza_wizard" model="ir.ui.view">
+			<field name="name">forza_controllo_congruenza.wizard</field>
+			<field name="model">forza.controllo.congruenza</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Forza Controllo Congruenza">
+					<group colspan="4" col="6">
+						<button string="Annulla" special="cancel" icon="gtk-cancel" colspan="2"/>
+						<button string="Forza Controllo" name="forza_controllo" 
+							type="object" icon="gtk-ok" colspan="2"/>
+					</group>
+				</form>
+			</field>
+		</record>
+	
+		<record id="action_forza_controllo_congruenza" model="ir.actions.act_window">
+			<field name="name">Forza Controllo Congruenza</field>
+			<field name="res_model">forza.controllo.congruenza</field>
+			<field name="src_model">vendita_banco</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+			<field name="view_id" ref="forza_controllo_congruenza_wizard"/>
+		</record>
+	
+		<menuitem
+			id="menu_forza_controllo_congruenza"
+			name="Forza Controllo Congruenza"
+			string="Forza Controllo Congruenza"
+			action="action_forza_controllo_congruenza"
+			parent="vendita_banco.menu_vendita_banco_extra"/>
+
+	</data>
+</openerp>

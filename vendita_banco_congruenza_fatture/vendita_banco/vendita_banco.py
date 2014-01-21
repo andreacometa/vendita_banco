@@ -42,35 +42,8 @@ class vendita_banco(osv.osv):
     _name = "vendita_banco"
     _inherit = "vendita_banco"
 
-    def _get_invoice(self, cr, uid, ids, context=None):
-        vb_ids = self.pool.get('vendita_banco').search(
-            cr, uid, [('invoice_id', 'in', ids)])
-        return vb_ids
-
-    def _conguenza_fattura(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        # ----- Diamo per scontato che il documento sia conguente
-        #       in modo da non avere falsi positivi con documenti
-        #       che non hanno la causale fattura
-        for vb in self.browse(cr, uid, ids):
-            congruente = True
-            if vb.causale.valuta_congruenza_fattura and vb.invoice_id:
-                if vb.imponibile != vb.invoice_id.amount_untaxed:
-                    congruente = False
-            res.update({vb.id: congruente})
-        return res
-
     _columns = {
-        'conguenza_fattura': fields.function(
-            _conguenza_fattura, type='boolean',
-            string="Congruente con fattura",
-            store={
-                'account.invoice': (_get_invoice,
-                                    ['amount_untaxed',
-                                     'state',
-                                     'invoice_line'], 10),
-                },
-            ),
+        'conguenza_fattura': fields.boolean('Congruente con fattura'),
         }
 
 vendita_banco()

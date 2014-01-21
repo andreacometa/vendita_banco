@@ -35,6 +35,7 @@
     "update_xml": [
         'vendita_banco/causali_view.xml',
         'vendita_banco/vendita_banco_view.xml',
+        'wizard/wizard_view.xml',
     ],
     "demo_xml": [],
     "active": False,
