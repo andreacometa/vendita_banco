@@ -42,6 +42,11 @@ class vendita_banco(osv.osv):
     _name = "vendita_banco"
     _inherit = "vendita_banco"
 
+    def _get_invoice(self, cr, uid, ids, context=None):
+        vb_ids = self.pool.get('vendita_banco').search(
+            cr, uid, [('invoice_id', 'in', ids)])
+        return vb_ids
+
     def _conguenza_fattura(self, cr, uid, ids, name, arg, context=None):
         res = {}
         # ----- Diamo per scontato che il documento sia conguente
@@ -57,8 +62,15 @@ class vendita_banco(osv.osv):
 
     _columns = {
         'conguenza_fattura': fields.function(
-            _conguenza_fattura, type='boolean', method=True,
-            store=False, string="Congruente con fattura"),
+            _conguenza_fattura, type='boolean',
+            string="Congruente con fattura",
+            store={
+                'account.invoice': (_get_invoice,
+                                    ['amount_untaxed',
+                                     'state',
+                                     'invoice_line'], 10),
+                },
+            ),
         }
 
 vendita_banco()
