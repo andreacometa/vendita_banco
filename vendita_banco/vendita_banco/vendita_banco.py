@@ -458,6 +458,7 @@ class vendita_banco_dettaglio(osv.osv):
         'spesa' : fields.boolean('Spesa'), # gestione spese di incasso 
         'spesa_automatica' : fields.boolean('Spesa Automatica'),
         # individua le righe di spesa inserite automaticamente
+        'note' : fields.text('Note'),
     }
     _defaults = {
         'spesa':False,
