@@ -459,11 +459,13 @@ class vendita_banco_dettaglio(osv.osv):
         'spesa_automatica' : fields.boolean('Spesa Automatica'),
         # individua le righe di spesa inserite automaticamente
         'note' : fields.text('Note'),
+        'sequence': fields.integer('Ordine'),
     }
     _defaults = {
         'spesa':False,
         'spesa_automatica':False,
     }
+    _order = "sequence"
 
     def onchange_product(self, cr, uid, ids, product_id, product_qty,
                          data_ordine, partner_id, pricelist, tax_id=False,
