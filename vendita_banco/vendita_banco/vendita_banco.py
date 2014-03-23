@@ -7,8 +7,8 @@
 #                       openerp@andreacometa.it
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
+#    it under the terms of the GNU Affero General Public License as published
+#    by the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
@@ -34,7 +34,7 @@ class vendita_banco_trasporto(osv.osv):
     _description = "Lista Tipologie Trasporto"
 
     _columns = {
-        'name' : fields.char('Descrizione', size=64),
+        'name': fields.char('Descrizione', size=64),
         }
 
 vendita_banco_trasporto()
@@ -52,7 +52,7 @@ class vendita_banco(osv.osv):
             'vb_raggruppamento_id': False,
         })
         return super(vendita_banco, self).copy(cr, uid, id, default, context)
-        
+
     def unlink(self, cr, uid, ids, context=None):
         unlink_ids = []
         vendite = self.browse(cr, uid, ids)
@@ -64,27 +64,30 @@ class vendita_banco(osv.osv):
                 return False
             else:
                 if not vendita.causale.fattura and vendita.name:
-                    vendita.causale.recupera_protocollo(vendita.name, vendita.data_ordine)
+                    vendita.causale.recupera_protocollo(
+                        vendita.name, vendita.data_ordine)
                 unlink_ids.append(vendita.id)
-                
         return super(vendita_banco, self).unlink(cr, uid, unlink_ids, context)
 
     def create(self, cr, uid, vals, context=None):
-        vals.update({'user_id':uid})
-        return super(vendita_banco,self).create(cr, uid, vals, context=context)
+        vals.update({'user_id': uid})
+        return super(vendita_banco, self).create(
+            cr, uid, vals, context=context)
 
     # ----- calcola gli importi per ogni riga dell'ordine
     def _calcola_importi(self, cr, uid, ids, field_name, arg, context=None):
         # ----- Calcola il totale della riga di dettaglio
         res = {}
         for vb in self.browse(cr, uid, ids, context):
-            res[vb.id] = {'totale':0.0, 'imponibile':0.0,}
+            res[vb.id] = {'totale': 0.0, 'imponibile': 0.0, }
             for line in vb.vendita_banco_dettaglio_ids:
                 res[vb.id]['totale'] += (line.importo * int(vb.causale.segno))
-                res[vb.id]['imponibile'] += (line.imponibile * int(vb.causale.segno))
+                res[vb.id]['imponibile'] += (
+                    line.imponibile * int(vb.causale.segno))
         return res
 
-    # ----- restituisce true se la causale ha un report in modo da mostrare il button sdi stampa 
+    # ----- restituisce true se la causale ha un report in modo da
+    # mostrare il button di stampa
     def _get_report(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         vbs = self.browse(cr, uid, ids, context)
@@ -98,7 +101,8 @@ class vendita_banco(osv.osv):
     def _get_company(self, cr, uid, ids, name, arg, context=None):
         res = {}
         vbs = self.browse(cr, uid, ids, context)
-        company_id = self.pool.get('res.company')._company_default_get(cr, uid, context=context)
+        company_id = self.pool.get('res.company')._company_default_get(
+            cr, uid, context=context)
         if not company_id:
             for vb in vbs:
                 res[vb.id] = False
@@ -108,48 +112,83 @@ class vendita_banco(osv.osv):
         return res
 
     _columns = {
-        'name' : fields.char('Numero Documento', size=16),
-        'user_id': fields.many2one('res.users','Utente'),
-        'data_ordine' : fields.date('Data Ordine', required=True),
-        'partner_id' : fields.many2one('res.partner', 'Cliente', required=True),
-        'partner_invoice_id' : fields.many2one('res.partner.address', 'Indirizzo Fatturazione', required=True),
-        'partner_shipping_id' : fields.many2one('res.partner.address', 'Indirizzo Spedizione'),
-        'pricelist_id' : fields.many2one('product.pricelist', 'Listino Prezzi', required=True),
-        'ddt' : fields.related('causale', 'ddt', type='boolean', relation='vendita.causali', readonly=True, help="Se la casella è spuntata verrà generato e stampato un DDT altrimenti verrà creato un altro documento"),
-        'fatturabile' : fields.related('causale', 'fatturabile', type='boolean', relation='vendita.causali', readonly=True),
-        'report' : fields.function(_get_report,  method=True, type='boolean'),
-        'company_id' : fields.function(_get_company,  method=True, type='many2one', relation='res.company', store=False),
-        'causale' : fields.many2one('vendita.causali', 'Causale', required=True),
-        'invoice_id' : fields.many2one('account.invoice', 'Fattura', ondelete='set null'),
-        'modalita_pagamento_id' : fields.many2one('account.payment.term', 'Modalità di pagamento', required=True),
+        'name': fields.char('Numero Documento', size=16),
+        'user_id': fields.many2one('res.users', 'Utente'),
+        'data_ordine': fields.date('Data Ordine', required=True),
+        'partner_id': fields.many2one('res.partner', 'Cliente', required=True),
+        'partner_invoice_id': fields.many2one(
+            'res.partner.address',
+            'Indirizzo Fatturazione',
+            required=True),
+        'partner_shipping_id': fields.many2one(
+            'res.partner.address',
+            'Indirizzo Spedizione'),
+        'pricelist_id': fields.many2one(
+            'product.pricelist',
+            'Listino Prezzi',
+            required=True),
+        'ddt': fields.related('causale', 'ddt', type='boolean',
+                              relation='vendita.causali', readonly=True,
+                              help="Se la casella è spuntata verrà generato e\
+ stampato un DDT altrimenti verrà creato un altro documento"),
+        'fatturabile': fields.related('causale', 'fatturabile', type='boolean',
+                                      relation='vendita.causali',
+                                      readonly=True),
+        'report': fields.function(_get_report,  method=True, type='boolean'),
+        'company_id': fields.function(_get_company,  method=True,
+                                      type='many2one', relation='res.company',
+                                      store=False),
+        'causale': fields.many2one('vendita.causali', 'Causale',
+                                   required=True),
+        'invoice_id': fields.many2one('account.invoice', 'Fattura',
+                                      ondelete='set null'),
+        'modalita_pagamento_id': fields.many2one(
+            'account.payment.term', 'Modalità di pagamento', required=True),
         # ----- Campi di gestione ddt
-        'goods_description_id' : fields.many2one('stock.picking.goods_description','Aspetto dei beni'),
-        'carriage_condition_id' : fields.many2one('stock.picking.carriage_condition','Resa merce'),
-        'transportation_reason_id' : fields.many2one('stock.picking.transportation_reason','Causale Trasporto'),
-        'number_of_packages' : fields.integer('Numero Colli'),
-        'trasportatore_id' : fields.many2one('delivery.carrier', 'Trasportatore'),
-        'tipo_trasporto_id' : fields.many2one('vendita_banco.trasporto', 'Tipo Trasporto'),
-        'data_inizio_trasporto' : fields.datetime('Data Inizio Trasporto'),
+        'goods_description_id': fields.many2one(
+            'stock.picking.goods_description', 'Aspetto dei beni'),
+        'carriage_condition_id': fields.many2one(
+            'stock.picking.carriage_condition', 'Resa merce'),
+        'transportation_reason_id': fields.many2one(
+            'stock.picking.transportation_reason', 'Causale Trasporto'),
+        'number_of_packages': fields.integer('Numero Colli'),
+        'trasportatore_id': fields.many2one('delivery.carrier',
+                                            'Trasportatore'),
+        'tipo_trasporto_id': fields.many2one('vendita_banco.trasporto',
+                                             'Tipo Trasporto'),
+        'data_inizio_trasporto': fields.datetime('Data Inizio Trasporto'),
         # ----- Dettagli
-        'vendita_banco_dettaglio_ids' : fields.one2many('vendita_banco.dettaglio', 'vendita_banco_id', 'Dettagli', ondelete='cascade', readonly=True, states={'draft': [('readonly', False)]}),
-        'totale' : fields.function(_calcola_importi, method=True, 
+        'vendita_banco_dettaglio_ids': fields.one2many(
+            'vendita_banco.dettaglio', 'vendita_banco_id', 'Dettagli',
+            ondelete='cascade', readonly=True,
+            states={'draft': [('readonly', False)]}),
+        'totale': fields.function(
+            _calcola_importi, method=True,
             digits_compute=dp.get_precision('Account'),
             string='Totale', type='float', store=True, multi='sums'),
-        'imponibile' : fields.function(_calcola_importi, method=True,
+        'imponibile': fields.function(
+            _calcola_importi, method=True,
             digits_compute=dp.get_precision('Account'),
-            string='Totale Imponibile', type='float', store=True, multi='sums'),
-        'acconto' : fields.float('Acconto', digits_compute=dp.get_precision('Account')),
-        'state' : fields.selection((('draft', 'Preventivo'),('done', 'Confermato'), ('invoiced', 'Fatturato')), 'Stato', readonly=True, select=True),
+            string='Totale Imponibile', type='float', store=True,
+            multi='sums'),
+        'acconto': fields.float('Acconto',
+                                digits_compute=dp.get_precision('Account')),
+        'state': fields.selection((
+            ('draft', 'Preventivo'), ('done', 'Confermato'),
+            ('invoiced', 'Fatturato')),
+            'Stato', readonly=True, select=True),
         # ----- Altro
-        'note' : fields.text('Note'),
+        'note': fields.text('Note'),
         # ----- Wizard
-        # --- Contiene l'id di un eventuale ordine generato da raggruppamento con wizard
-        'vb_raggruppamento_id' : fields.many2one('vendita_banco', 'Ordine Raggruppamento', ondelete="set null"),
+        # --- Contiene l'id di un eventuale ordine generato da raggruppamento
+        # con wizard
+        'vb_raggruppamento_id': fields.many2one(
+            'vendita_banco', 'Ordine Raggruppamento', ondelete="set null"),
         }
 
     _defaults = {
-        'state' : 'draft',
-        'name' : '',
+        'state': 'draft',
+        'name': '',
         'data_ordine': fields.date.context_today,
         'vb_raggruppamento_id': False,
     }
@@ -177,18 +216,31 @@ class vendita_banco(osv.osv):
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'payment_term': False, 'fiscal_position': False}}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['delivery', 'invoice'])
         part = self.pool.get('res.partner').browse(cr, uid, part)
+        causali_obj = self.pool.get('vendita.causali')
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         causale_id = causale or part.causale and part.causale.id or False
         val = {
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
-            'causale' : causale_id,
-            'ddt' : causale_id and self.pool.get('vendita.causali').browse(cr,uid,causale_id).ddt or False,
-            'goods_description_id' : part.goods_description_id and part.goods_description_id.id or False,
-            'carriage_condition_id' : part.carriage_condition_id and part.carriage_condition_id.id or False,
-            'modalita_pagamento_id' : part.property_payment_term and part.property_payment_term.id or False,
-            'transportation_reason_id' : part.transportation_reason_id and part.transportation_reason_id.id or False,
-            'tipo_trasporto_id' : part.tipo_trasporto_id and part.tipo_trasporto_id.id or False,
+            'causale': causale_id,
+            'ddt': (
+                causale_id and
+                causali_obj.browse(cr,uid,causale_id).ddt or False,
+            'goods_description_id': (
+                part.goods_description_id and
+                part.goods_description_id.id or False),
+            'carriage_condition_id': (
+                part.carriage_condition_id and
+                part.carriage_condition_id.id or False),
+            'modalita_pagamento_id': (
+                part.property_payment_term and
+                part.property_payment_term.id or False),
+            'transportation_reason_id': (
+                part.transportation_reason_id and
+                part.transportation_reason_id.id or False),
+            'tipo_trasporto_id': (
+                part.tipo_trasporto_id and
+                part.tipo_trasporto_id.id or False),
         }
         if pricelist:
             val['pricelist_id'] = pricelist
@@ -201,48 +253,61 @@ class vendita_banco(osv.osv):
         warehouse_id = warehouse_obj.search(cr, uid, [('id', '>', 0)])[0]
         warehouse = warehouse_obj.browse(cr, uid, warehouse_id)
         for order_obj in order_objs:
-            if order_obj.causale.tipo in ['carico', 'scarico']:	# se non è un carico/scarico non fa nulla
+            if order_obj.causale.tipo in ['carico', 'scarico']:
+                # se non è un carico/scarico non fa nulla
                 if not order_obj.vendita_banco_dettaglio_ids:
-                    raise osv.except_osv(_('Azione non valida!'), _('Non esistono righe di vendita per questo ordine!'))
+                    raise osv.except_osv(
+                        _('Azione non valida!'),
+                        _('Non esistono righe di vendita per questo ordine!'))
                     return False
                 # ----- CREA UN MOVIMENTO DI MAGAZZINO PER OGNI RIGA DI VENDITA
                 # imposta il verso della merce
                 if order_obj.causale.tipo == 'scarico':
                     location_sorgente = warehouse.lot_stock_id.id
-                    location_destinazione = order_obj.causale.location_id and order_obj.causale.location_id.id or warehouse.location_vendita_banco_id.id
+                    location_destinazione = (
+                        order_obj.causale.location_id and
+                        order_obj.causale.location_id.id or
+                        warehouse.location_vendita_banco_id.id)
                 else:
-                    location_destinazione = order_obj.causale.location_id and order_obj.causale.location_id.id or warehouse.lot_stock_id.id
+                    location_destinazione = (
+                        order_obj.causale.location_id and
+                        order_obj.causale.location_id.id or
+                        warehouse.lot_stock_id.id)
                     location_sorgente = warehouse.location_vendita_banco_id.id
                 for line in order_obj.vendita_banco_dettaglio_ids:
                     if line.product_id and line.product_id.type != 'service':
                         move_obj = self.pool.get('stock.move')
                         move_valori = {
-                            'name' : '[%s] %s' % (line.product_id.default_code, line.product_id.name),
-                            'sorgente_id' : line.vendita_banco_id.id,
-                            'product_uom' : line.product_uom.id,
-                            'price_unit' : line.price_unit,
-                            'product_qty' : line.product_qty,
-                            'product_id' : line.product_id.id,
-                            'location_id' : location_sorgente,
-                            'location_dest_id' :location_destinazione,
-                            'state' : 'done',
+                            'name': '[%s] %s' % (line.product_id.default_code,
+                                                 line.product_id.name),
+                            'sorgente_id': line.vendita_banco_id.id,
+                            'product_uom': line.product_uom.id,
+                            'price_unit': line.price_unit,
+                            'product_qty': line.product_qty,
+                            'product_id': line.product_id.id,
+                            'location_id': location_sorgente,
+                            'location_dest_id': location_destinazione,
+                            'state': 'done',
                         }
                         move_id = move_obj.create(cr, uid, move_valori)
-                        self.pool.get('vendita_banco.dettaglio').write(cr, uid, line.id, {'move_id':move_id})
+                        self.pool.get('vendita_banco.dettaglio').write(
+                            cr, uid, line.id, {'move_id': move_id})
             # ----- INSERISCE EVENTUALI LINEE DI SPESA
             if not order_obj.causale.no_spesa_incasso:
                 for line in order_obj.modalita_pagamento_id.line_ids:
                     if line.spesa_id:
                         vals = {
-                            'spesa':True,
-                            'name':line.spesa_id.name,
-                            'price_unit':line.spesa_id.price,
-                            'tax_id':line.spesa_id.tax_id and line.spesa_id.tax_id.id,
-                            'product_qty' : 1,
-                            'vendita_banco_id' : order_obj.id,
-                            'spesa_automatica':True,
+                            'spesa': True,
+                            'name': line.spesa_id.name,
+                            'price_unit': line.spesa_id.price,
+                            'tax_id': (line.spesa_id.tax_id and
+                                       line.spesa_id.tax_id.id),
+                            'product_qty': 1,
+                            'vendita_banco_id': order_obj.id,
+                            'spesa_automatica': True,
                             }
-                        self.pool.get('vendita_banco.dettaglio').create(cr, uid, vals)
+                        self.pool.get('vendita_banco.dettaglio').create(
+                            cr, uid, vals)
             # ----- SCRIVE IL NUMERO DI PROTOCOLLO NUOVO O LO RECUPERA
             res = {}
             res['name'] = order_obj.name or order_obj.causale.get_protocollo()
@@ -250,16 +315,23 @@ class vendita_banco(osv.osv):
             res['state'] = 'done'
             self.write(cr, uid, order_obj.id, res)
             if order_obj.causale.fattura:
-                return self.crea_fatture_raggruppate(cr, uid, ids, order_obj.data_ordine, order_obj.causale.name, args[0])
+                return self.crea_fatture_raggruppate(
+                    cr, uid, ids, order_obj.data_ordine,
+                    order_obj.causale.name, args[0])
         return True
 
-    def crea_fatture_raggruppate(self, cr, uid, ids, data_fattura, origin, context):
+    def crea_fatture_raggruppate(self, cr, uid, ids, data_fattura, origin,
+                                 context):
         order_objs = self.browse(cr, uid, ids)
-        journal_ids = self.pool.get('account.journal').search(cr, uid, [('type','=','sale')])
+        invoice_line_objs = self.pool.get('account.invoice.line')
+        journal_ids = self.pool.get('account.journal').search(
+            cr, uid, [('type', '=', 'sale')])
         journal_id = journal_ids[0]
-        account_id = self.pool.get('account.account').search(cr, uid, [('code', '=', '310100')])[0]
+        account_id = self.pool.get('account.account').search(
+            cr, uid, [('code', '=', '310100')])[0]
         currency_id = False
-        currency_ids = self.pool.get('res.currency').search(cr, uid, [('name', '=', 'EUR')])
+        currency_ids = self.pool.get('res.currency').search(
+            cr, uid, [('name', '=', 'EUR')])
         if currency_ids:
             currency_id = currency_ids[0]
         # -----
@@ -269,63 +341,91 @@ class vendita_banco(osv.osv):
             # -----
             # CREAZIONE TESTATA FATTURA
             # -----
-            account_invoice_id = self.pool.get('account.invoice').create(cr, uid, {
-                'name' : order_obj.causale.fattura and order_obj.causale.descrizione or "Fattura Differita",
-                'origin' : order_obj.name,
-                'date_invoice' : data_fattura,
-                'immediate' : order_obj.causale.fattura,
-                'partner_id' : order_obj.partner_id.id,
-                'account_id' : order_obj.partner_id.property_account_receivable.id,
-                'journal_id' : journal_id,
-                'currency_id' : currency_id,
-                'address_invoice_id' : order_obj.partner_invoice_id.id,
-                'partner_shipping_id' : order_obj.partner_shipping_id and order_obj.partner_shipping_id.id,
-                'state' : 'draft',
-                'type' : 'out_invoice',
-                'reconciled' : False,
-                'fiscal_position' : order_obj.partner_id.property_account_position.id,
-                'payment_term' : order_obj.modalita_pagamento_id.id,
-                'journal_id' : order_obj.causale and order_obj.causale.journal_id and order_obj.causale.journal_id.id or False,
-                'comment' : order_obj.note,
-                'carriage_condition_id' : order_obj.carriage_condition_id and order_obj.carriage_condition_id.id or False,
-                'goods_description_id' : order_obj.goods_description_id and order_obj.goods_description_id.id or False,
-                'transportation_reason_id' : order_obj.transportation_reason_id and order_obj.transportation_reason_id.id or False,
-                'tipo_trasporto_id' : order_obj.tipo_trasporto_id and order_obj.tipo_trasporto_id.id or False,
-                'packages_number' : order_obj.number_of_packages or 0.0,
-                })
+            account_invoice_id = self.pool.get('account.invoice').create(
+                cr, uid, {
+                    'name': (
+                        order_obj.causale.fattura and
+                        order_obj.causale.descrizione or
+                        "Fattura Differita"),
+                    'origin': order_obj.name,
+                    'date_invoice': data_fattura,
+                    'immediate': order_obj.causale.fattura,
+                    'partner_id': order_obj.partner_id.id,
+                    'account_id': (
+                        order_obj.partner_id.property_account_receivable.id),
+                    'journal_id': journal_id,
+                    'currency_id': currency_id,
+                    'address_invoice_id': order_obj.partner_invoice_id.id,
+                    'partner_shipping_id': (
+                        order_obj.partner_shipping_id and
+                        order_obj.partner_shipping_id.id),
+                    'state': 'draft',
+                    'type': 'out_invoice',
+                    'reconciled': False,
+                    'fiscal_position': (
+                        order_obj.partner_id.property_account_position.id),
+                    'payment_term': order_obj.modalita_pagamento_id.id,
+                    'journal_id': (
+                        order_obj.causale and
+                        order_obj.causale.journal_id and
+                        order_obj.causale.journal_id.id or False),
+                    'comment': order_obj.note,
+                    'carriage_condition_id': (
+                        order_obj.carriage_condition_id and
+                        order_obj.carriage_condition_id.id or False),
+                    'goods_description_id': (
+                        order_obj.goods_description_id and
+                        order_obj.goods_description_id.id or False),
+                    'transportation_reason_id': (
+                        order_obj.transportation_reason_id and
+                        order_obj.transportation_reason_id.id or False),
+                    'tipo_trasporto_id': (
+                        order_obj.tipo_trasporto_id and
+                        order_obj.tipo_trasporto_id.id or False),
+                    'packages_number': order_obj.number_of_packages or 0.0,
+                    })
             # CREA UNA RIGA FITTIZIA COME TESTATA
             if order_obj.causale.riga_raggruppa:
-                invoice_fake_line_id = self.pool.get('account.invoice.line').create(cr, uid, {
-                        'name' : 'Rif. Ns. %s Nr. %s del %s' % (order_obj.causale.descrizione_raggruppamento, order_obj.name, order_obj.data_ordine),
-                        'invoice_id' : account_invoice_id,
-                        'quantity' : 1,
-                        'account_id' : account_id,
-                        'price_unit' : 0.0,
-                        })
+                invoice_fake_line_id = invoice_line_obj.create(
+                    cr, uid, {
+                        'name': 'Rif. Ns. %s Nr. %s del %s' % (
+                            order_obj.causale.descrizione_raggruppamento,
+                            order_obj.name,
+                            order_obj.data_ordine),
+                        'invoice_id': account_invoice_id,
+                        'quantity': 1,
+                        'account_id': account_id,
+                        'price_unit': 0.0,
+                    })
             # ----- CREA LE RIGHE REALI DEI PRODOTTI
             for line in order_obj.vendita_banco_dettaglio_ids:
-                invoice_line_tax_id = line.tax_id and [(6,0,[line.tax_id.id])] or False
-                # ----- Il codice seguente deve essere implementato nei clienti che hanno
-                #       il calcolo dello sconto dinamico
-                #price_unit = ( 100 * line.imponibile ) / ( 100 - line.discount )
+                invoice_line_tax_id = (
+                    line.tax_id and [(6, 0, [line.tax_id.id])] or False)
+                # Il codice seguente deve essere implementato nei clienti che
+                # hanno il calcolo dello sconto dinamico
+                #price_unit = (100 * line.imponibile) / (100 - line.discount)
                 #price_unit = price_unit / line.product_qty
-                invoice_line_id = self.pool.get('account.invoice.line').create(cr, uid, {
-                    'name' : line.name,
-                    'invoice_id' : account_invoice_id,
-                    'product_id' : line.product_id and line.product_id.id or False,
-                    'quantity' : line.product_qty,
-                    'account_id' : account_id,
-                    'price_unit' : line.price_unit,
-                    'discount' : line.discount,
-                    'partner_id' : line.vendita_banco_id.partner_id.id,
-                    'invoice_line_tax_id' : invoice_line_tax_id,
-                    'uos_id' : line.product_uom.id,
-                    'spesa' : line.spesa,
-                    'spesa_automatica' : line.spesa_automatica,
+                invoice_line_id = invoice_line_obj.create(cr, uid, {
+                    'name': line.name,
+                    'invoice_id': account_invoice_id,
+                    'product_id': (
+                        line.product_id and line.product_id.id or False),
+                    'quantity': line.product_qty,
+                    'account_id': account_id,
+                    'price_unit': line.price_unit,
+                    'discount': line.discount,
+                    'partner_id': line.vendita_banco_id.partner_id.id,
+                    'invoice_line_tax_id': invoice_line_tax_id,
+                    'uos_id': line.product_uom.id,
+                    'spesa': line.spesa,
+                    'spesa_automatica': line.spesa_automatica,
                     })
-                self.pool.get('vendita_banco.dettaglio').write(cr, uid, [line.id], {'invoice_line_id':invoice_line_id})
-        # ----- Salva in vendita_banco la fattura appena creata e modifica lo stato
-        self.write(cr, uid, ids, {'invoice_id':account_invoice_id, 'state':'invoiced'})
+                self.pool.get('vendita_banco.dettaglio').write(
+                    cr, uid, [line.id], {'invoice_line_id': invoice_line_id})
+        # ----- Salva in vendita_banco la fattura appena creata e
+        # modifica lo stato
+        self.write(cr, uid, ids, {
+            'invoice_id': account_invoice_id, 'state': 'invoiced'})
         # ----- MOSTRA LA FATTURA APPENA CREATA
         mod_obj = self.pool.get('ir.model.data')
         res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
@@ -346,34 +446,45 @@ class vendita_banco(osv.osv):
     # ----- Funzione che crea la fattura dal button nel form
     def crea_fattura(self, cr, uid, ids, *args):
         data_fattura = datetime.datetime.today()
-        data_fattura = '%s/%s/%s' % (data_fattura.strftime('%d'), data_fattura.strftime('%m'), data_fattura.strftime('%Y'))
+        data_fattura = '%s/%s/%s' % (
+            data_fattura.strftime('%d'),
+            data_fattura.strftime('%m'),
+            data_fattura.strftime('%Y'))
         origin = self.browse(cr, uid, ids[0]).name
-        return self.crea_fatture_raggruppate(cr, uid, ids, data_fattura, origin, args[0])
+        return self.crea_fatture_raggruppate(
+            cr, uid, ids, data_fattura, origin, args[0])
 
     # ----- Funzione richiamata dal button Conferma Vendita
     def riapri_vendita(self, cr, uid, ids, *args):
         for order_obj in self.browse(cr, uid, ids):
             move_obj = self.pool.get('stock.move')
-            # ----- Controlla che non ci siano fatture generate da questi ordini
+            # ----- Controlla che non ci siano fatture generate da questi ord
             if (order_obj.state == 'invoiced') and (order_obj.invoice_id):
-                message = 'La fattura "%s" e\' collegata a questo ordine\nAccertarsi che essa venga eliminata prima di procedere!' % (order_obj.invoice_id.number or order_obj.invoice_id.name)
+                message = 'La fattura "%s" e\' collegata a questo ordine\n\
+Accertarsi che essa venga eliminata prima di procedere!' % (
+                    order_obj.invoice_id.number or order_obj.invoice_id.name)
                 raise osv.except_osv(_('Attenzione!'), _(message))
                 return False
-            # ----- Controlla che non ci siano ordini di raggruppamento generati da questi ordini
+            # ----- Controlla che non ci siano ordini di raggruppamento
+            # generati da questi ordini
             if order_obj.vb_raggruppamento_id:
-                message = 'L\'ordine di raggruppamento "%s" e\' collegata a questo ordine\nAccertarsi che essa venga eliminata prima di procedere!' % (order_obj.vb_raggruppamento_id.name)
+                message = 'L\'ordine di raggruppamento "%s" e\' collegata a\
+ questo ordine\nAccertarsi che essa venga eliminata prima di procedere!' % (
+                    order_obj.vb_raggruppamento_id.name)
                 raise osv.except_osv(_('Attenzione!'), _(message))
                 return False
             # ----- Cancello i movimenti collegati
-            move_ids = move_obj.search(cr, uid, [('sorgente_id', '=', order_obj.id)])
-            move_obj.write(cr, uid, move_ids, {'state':'draft'})
+            move_ids = move_obj.search(
+                cr, uid, [('sorgente_id', '=', order_obj.id)])
+            move_obj.write(cr, uid, move_ids, {'state': 'draft'})
             move_obj.unlink(cr, uid, move_ids)
             for line in order_obj.vendita_banco_dettaglio_ids:
                 #if line.move_id and move_obj.browse(cr,uid,line.move_id.id):
-                #	move_obj.write(cr, uid, [line.move_id.id], {'state':'draft'})
-                #	move_obj.unlink(cr, uid, [line.move_id.id])
+                # move_obj.write(cr, uid, [line.move_id.id], {'state':'draft'})
+                # move_obj.unlink(cr, uid, [line.move_id.id])
                 if line.spesa_automatica:
-                    self.pool.get('vendita_banco.dettaglio').unlink(cr, uid, [line.id,])
+                    self.pool.get('vendita_banco.dettaglio').unlink(
+                        cr, uid, [line.id, ])
         # ----- Cambio lo stato
         res = {}
         res['state'] = 'draft'
@@ -386,10 +497,10 @@ class vendita_banco(osv.osv):
         report_name = order_obj.causale.report.report_name
         return {
             # ----- Jasper Report
-            'type':'ir.actions.report.xml',
+            'type': 'ir.actions.report.xml',
             'report_name': report_name,
             'datas': {
-                'model':'vendita_banco',
+                'model': 'vendita_banco',
                 'ids': ids,
                 'report_type': 'pdf',
             },
@@ -409,13 +520,13 @@ class vendita_banco_dettaglio(osv.osv):
         # ----- Calcola il totale della riga di dettaglio
         res = {}
         for line in self.browse(cr, uid, ids, context):
-            res[line.id] = {'importo':0.0, 'imponibile':0.0,}
+            res[line.id] = {'importo': 0.0, 'imponibile': 0.0, }
             imponibile = line.price_unit * line.product_qty
             # ----- applica lo sconto
             if line.discount:
                 #sconto = imponibile * line.discount
                 #imponibile = imponibile - sconto
-                imponibile = imponibile * ( 1 - (line.discount / 100.00))
+                imponibile = imponibile * (1 - (line.discount / 100.00))
             tax_amount = line.tax_id and line.tax_id.amount or 0
             importo = (imponibile * tax_amount) + imponibile
             res[line.id]['importo'] = importo
@@ -444,29 +555,52 @@ class vendita_banco_dettaglio(osv.osv):
         'discount': fields.float(
             'Sconto (%)', help="Indicare uno sconto in percentuale"),
         'tax_id': fields.many2one('account.tax', 'IVA'),
-        'importo' : fields.function(
+        'importo': fields.function(
             _calcola_importi, method=True,
-            digits_compute=dp.get_precision('Vendita Banco Dettaglio'), 
+            digits_compute=dp.get_precision('Vendita Banco Dettaglio'),
             string='Importo', type='float', store=False, multi='sums'),
-        'imponibile' : fields.function(
+        'imponibile': fields.function(
             _calcola_importi, method=True,
             digits_compute=dp.get_precision('Vendita Banco Dettaglio'),
             string='Imponibile', type='float', store=False, multi='sums'),
-        'move_id' : fields.many2one('stock.move', 'Movimento'),
-        'invoice_line_id' : fields.many2one('account.invoice.line',
-                                            'Linea di fattura'),
-        'spesa' : fields.boolean('Spesa'), # gestione spese di incasso 
-        'spesa_automatica' : fields.boolean('Spesa Automatica'),
+        'move_id': fields.many2one('stock.move', 'Movimento'),
+        'invoice_line_id': fields.many2one(
+            'account.invoice.line', 'Linea di fattura'),
+        'spesa': fields.boolean('Spesa'),  # gestione spese di incasso
+        'spesa_automatica': fields.boolean('Spesa Automatica'),
         # individua le righe di spesa inserite automaticamente
-        'note' : fields.text('Note'),
+        'note': fields.text('Note'),
         'sequence': fields.integer('Ordine'),
     }
     _defaults = {
-        'spesa':False,
-        'spesa_automatica':False,
+        'spesa': False,
+        'spesa_automatica': False,
     }
-    _order = "sequence"
+    _order = "sequence asc"
 
+    def create(self, cr, uid, vals, context=None):
+        #import pdb; pdb.set_trace()
+        #print "create \t%s" % vals.keys()['vendita_banco_id']
+        #vals.update({'user_id':uid})
+        vbd_obj = self.pool.get('vendita_banco.dettaglio')
+        vbd_ids = vbd_obj.search(
+            cr, uid, [('vendita_banco_id', '=', vals['vendita_banco_id'])],
+            order='sequence desc')
+        if vbd_ids:
+            vals.update(
+                {'sequence': vbd_obj.browse(cr, uid, vbd_ids[0]).sequence + 1})
+        else:
+            vals.update({'sequence': 1})
+        return super(vendita_banco_dettaglio, self).create(
+            cr, uid, vals, context=context)
+
+    '''
+    def write(self, cr, uid, ids, vals, context=None):
+        print "write \t%s" % vals
+        #vals.update({'user_id':uid})
+        return super(vendita_banco_dettaglio,self).write(
+            cr, uid, ids, vals, context=context)
+    '''
     def onchange_product(self, cr, uid, ids, product_id, product_qty,
                          data_ordine, partner_id, pricelist, tax_id=False,
                          context={}):
