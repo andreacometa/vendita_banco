@@ -97,7 +97,7 @@ class vendita_banco(osv.osv):
             else:
                 res[vb.id] = False
         return res
-        
+
     def _get_company(self, cr, uid, ids, name, arg, context=None):
         res = {}
         vbs = self.browse(cr, uid, ids, context)
@@ -192,32 +192,46 @@ class vendita_banco(osv.osv):
         'data_ordine': fields.date.context_today,
         'vb_raggruppamento_id': False,
     }
-    
+
     _order = "data_ordine desc, name desc"
 
     # ----- Funzione che aggiorna il flag ddt
     def onchange_causale(self, cr, uid, ids, causale):
         if causale:
-            causale_vals = self.pool.get('vendita.causali').browse(cr,uid,causale)
+            causale_vals = self.pool.get('vendita.causali').browse(cr,
+                                                                   uid,
+                                                                   causale)
             warning = {}
-            if not self.pool.get('res.users').browse(cr, uid, uid) in causale_vals.user_ids:
+            if (not self.pool.get('res.users').browse(cr, uid, uid) in
+                    causale_vals.user_ids):
                 warning = {
-                    'title' : 'Attenzione!',
-                    'message' : 'Non si è abilitati all\'emissione di una vendita con questa causale!'
+                    'title': 'Attenzione!',
+                    'message': 'Non si è abilitati all\'emissione di una \
+vendita con questa causale!'
                     }
                 causale = False
             ddt = causale_vals.ddt
-            return {'value' : {'ddt' : ddt, 'name':'', 'causale':causale}, 'warning': warning}
+            return {'value': {
+                'ddt': ddt,
+                'name': '',
+                'causale': causale}, 'warning': warning}
         return False
-    
-    # ----- Funzione che oltre al normale onchange inserisce anche il valore di genera ddt del partner
+
+    # ----- Funzione che oltre al normale onchange inserisce anche il
+    # valore di genera ddt del partner
     def onchange_cliente_id(self, cr, uid, ids, part, causale):
         if not part:
-            return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'payment_term': False, 'fiscal_position': False}}
-        addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['delivery', 'invoice'])
+            return {'value': {
+                'partner_invoice_id': False,
+                'partner_shipping_id': False,
+                'payment_term': False,
+                'fiscal_position': False}}
+        addr = self.pool.get('res.partner').address_get(
+            cr, uid, [part], ['delivery', 'invoice'])
         part = self.pool.get('res.partner').browse(cr, uid, part)
         causali_obj = self.pool.get('vendita.causali')
-        pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
+        pricelist = (part.property_product_pricelist and
+                     part.property_product_pricelist.id or False)
         causale_id = causale or part.causale and part.causale.id or False
         val = {
             'partner_invoice_id': addr['invoice'],
@@ -225,7 +239,7 @@ class vendita_banco(osv.osv):
             'causale': causale_id,
             'ddt': (
                 causale_id and
-                causali_obj.browse(cr,uid,causale_id).ddt or False,
+                causali_obj.browse(cr, uid, causale_id).ddt or False),
             'goods_description_id': (
                 part.goods_description_id and
                 part.goods_description_id.id or False),
