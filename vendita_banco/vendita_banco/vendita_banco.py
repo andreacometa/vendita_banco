@@ -589,22 +589,25 @@ class vendita_banco_dettaglio(osv.osv):
     _defaults = {
         'spesa': False,
         'spesa_automatica': False,
+        'sequence': -1,
     }
     _order = "sequence asc"
 
     def create(self, cr, uid, vals, context=None):
         #import pdb; pdb.set_trace()
-        #print "create \t%s" % vals.keys()['vendita_banco_id']
-        #vals.update({'user_id':uid})
-        vbd_obj = self.pool.get('vendita_banco.dettaglio')
-        vbd_ids = vbd_obj.search(
-            cr, uid, [('vendita_banco_id', '=', vals['vendita_banco_id'])],
-            order='sequence desc')
-        if vbd_ids:
-            vals.update(
-                {'sequence': vbd_obj.browse(cr, uid, vbd_ids[0]).sequence + 1})
-        else:
-            vals.update({'sequence': 1})
+        if (not 'sequence' in vals): #  and vals['sequence'] < 1):
+            print "----- create -----"
+            vbd_obj = self.pool.get('vendita_banco.dettaglio')
+            vbd_ids = vbd_obj.search(
+                cr, uid, [
+                    ('vendita_banco_id', '=', vals['vendita_banco_id'])],
+                order='sequence desc')
+            if vbd_ids:
+                vals.update(
+                    {'sequence':
+                     vbd_obj.browse(cr, uid, vbd_ids[0]).sequence + 1})
+            else:
+                vals.update({'sequence': 1})
         return super(vendita_banco_dettaglio, self).create(
             cr, uid, vals, context=context)
 
