@@ -596,7 +596,6 @@ class vendita_banco_dettaglio(osv.osv):
     def create(self, cr, uid, vals, context=None):
         #import pdb; pdb.set_trace()
         if (not 'sequence' in vals): #  and vals['sequence'] < 1):
-            print "----- create -----"
             vbd_obj = self.pool.get('vendita_banco.dettaglio')
             vbd_ids = vbd_obj.search(
                 cr, uid, [
