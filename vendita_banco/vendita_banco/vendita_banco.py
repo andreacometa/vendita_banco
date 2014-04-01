@@ -337,7 +337,7 @@ vendita con questa causale!'
     def crea_fatture_raggruppate(self, cr, uid, ids, data_fattura, origin,
                                  context):
         order_objs = self.browse(cr, uid, ids)
-        invoice_line_objs = self.pool.get('account.invoice.line')
+        invoice_line_obj = self.pool.get('account.invoice.line')
         journal_ids = self.pool.get('account.journal').search(
             cr, uid, [('type', '=', 'sale')])
         journal_id = journal_ids[0]
