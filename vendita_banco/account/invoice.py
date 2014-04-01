@@ -41,12 +41,10 @@ class account_invoice(osv.osv):
             'vendita_banco.trasporto', 'Tipo Trasporto'),
         }
 
-    def action_number(self, cr, uid, ids, context=None):
-        res = super(account_invoice, self).action_number(cr, uid, ids,
-                                                         context=None)
+    def action_date_assign(self, cr, uid, ids, *args):
         default_account_id = self.pool.get('account.account').search(
             cr, uid, [('code', '=', '310100')])[0]
-        for inv in self.browse(cr, uid, ids, context):
+        for inv in self.browse(cr, uid, ids):
             # ----- Aggiunge automaticamente le righe di spesa/e
             for line in inv.payment_term.line_ids:
                 if not line.spesa_id:
@@ -66,7 +64,8 @@ class account_invoice(osv.osv):
                     'spesa_automatica': True,
                     }
                 self.pool.get('account.invoice.line').create(cr, uid, vals)
-        return res
+        return super(account_invoice, self).action_date_assign(cr, uid,
+                                                               ids, args)
 
     def action_cancel_draft(self, cr, uid, ids, *args):
         res = super(account_invoice, self).action_cancel_draft(
