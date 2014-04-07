@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -29,7 +29,6 @@ import decimal_precision as dp
 
 
 class vendita_banco_trasporto(osv.osv):
-
     _name = "vendita_banco.trasporto"
     _description = "Lista Tipologie Trasporto"
 
@@ -41,7 +40,6 @@ vendita_banco_trasporto()
 
 
 class vendita_banco(osv.osv):
-
     _name = "vendita_banco"
     _description = "Vendite"
 
@@ -214,7 +212,11 @@ vendita con questa causale!'
             return {'value': {
                 'ddt': ddt,
                 'name': '',
-                'causale': causale}, 'warning': warning}
+                'causale': causale,
+                'transportation_reason_id':
+                    causale_vals.transportation_reason_id and
+                    causale_vals.transportation_reason_id.id, },
+                'warning': warning}
         return False
 
     # ----- Funzione che oltre al normale onchange inserisce anche il
@@ -233,13 +235,14 @@ vendita con questa causale!'
         pricelist = (part.property_product_pricelist and
                      part.property_product_pricelist.id or False)
         causale_id = causale or part.causale and part.causale.id or False
+        causale = causali_obj.browse(cr, uid, causale_id)
         val = {
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
             'causale': causale_id,
             'ddt': (
                 causale_id and
-                causali_obj.browse(cr, uid, causale_id).ddt or False),
+                causale.ddt or False),
             'goods_description_id': (
                 part.goods_description_id and
                 part.goods_description_id.id or False),
@@ -249,12 +252,16 @@ vendita con questa causale!'
             'modalita_pagamento_id': (
                 part.property_payment_term and
                 part.property_payment_term.id or False),
-            'transportation_reason_id': (
+            'transportation_reason_id': ((
                 part.transportation_reason_id and
-                part.transportation_reason_id.id or False),
+                part.transportation_reason_id.id) or (
+                causale_id and causale.transportation_reason_id and
+                causale.transportation_reason_id.id) or
+                False),
             'tipo_trasporto_id': (
                 part.tipo_trasporto_id and
-                part.tipo_trasporto_id.id or False),
+                part.tipo_trasporto_id.id or
+                False),
         }
         if pricelist:
             val['pricelist_id'] = pricelist
@@ -594,8 +601,7 @@ class vendita_banco_dettaglio(osv.osv):
     _order = "sequence asc"
 
     def create(self, cr, uid, vals, context=None):
-        #import pdb; pdb.set_trace()
-        if (not 'sequence' in vals): #  and vals['sequence'] < 1):
+        if (not 'sequence' in vals):  # and vals['sequence'] < 1):
             vbd_obj = self.pool.get('vendita_banco.dettaglio')
             vbd_ids = vbd_obj.search(
                 cr, uid, [
