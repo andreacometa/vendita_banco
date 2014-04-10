@@ -215,7 +215,8 @@ vendita con questa causale!'
                 'causale': causale,
                 'transportation_reason_id':
                     causale_vals.transportation_reason_id and
-                    causale_vals.transportation_reason_id.id, },
+                    causale_vals.transportation_reason_id.id or
+                    False },
                 'warning': warning}
         return False
 
