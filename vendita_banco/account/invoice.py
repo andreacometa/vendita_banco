@@ -45,25 +45,26 @@ class account_invoice(osv.osv):
         default_account_id = self.pool.get('account.account').search(
             cr, uid, [('code', '=', '310100')])[0]
         for inv in self.browse(cr, uid, ids):
-            # ----- Aggiunge automaticamente le righe di spesa/e
-            for line in inv.payment_term.line_ids:
-                if not line.spesa_id:
-                    continue
-                if line.spesa_id.account_id:
-                    account_id = line.spesa_id.account_id.id
-                else:
-                    account_id = default_account_id
-                vals = {
-                    'spesa': True,
-                    'name': line.spesa_id.name,
-                    'price_unit': line.spesa_id.price,
-                    'tax_id': line.spesa_id.tax_id and [(6, 0, [line.spesa_id.tax_id.id])] or False,
-                    'quantity': 1,
-                    'invoice_id': inv.id,
-                    'account_id': account_id,
-                    'spesa_automatica': True,
-                    }
-                self.pool.get('account.invoice.line').create(cr, uid, vals)
+            if inv.type not in ('in_invoice', 'in_refund'):
+                # ----- Aggiunge automaticamente le righe di spesa/e
+                for line in inv.payment_term.line_ids:
+                    if not line.spesa_id:
+                        continue
+                    if line.spesa_id.account_id:
+                        account_id = line.spesa_id.account_id.id
+                    else:
+                        account_id = default_account_id
+                    vals = {
+                        'spesa': True,
+                        'name': line.spesa_id.name,
+                        'price_unit': line.spesa_id.price,
+                        'tax_id': line.spesa_id.tax_id and [(6, 0, [line.spesa_id.tax_id.id])] or False,
+                        'quantity': 1,
+                        'invoice_id': inv.id,
+                        'account_id': account_id,
+                        'spesa_automatica': True,
+                        }
+                    self.pool.get('account.invoice.line').create(cr, uid, vals)
         return super(account_invoice, self).action_date_assign(cr, uid,
                                                                ids, args)
 
