@@ -178,10 +178,10 @@ class vendita_banco(osv.osv):
         # ----- Altro
         'note': fields.text('Note'),
         # ----- Wizard
-        # --- Contiene l'id di un eventuale ordine generato da raggruppamento
+        # --- Contiene l'id di un eventuale doc generato da raggruppamento
         # con wizard
         'vb_raggruppamento_id': fields.many2one(
-            'vendita_banco', 'Ordine Raggruppamento', ondelete="set null"),
+            'vendita_banco', 'Documento generato', ondelete="set null"),
         }
 
     _defaults = {
@@ -216,7 +216,7 @@ vendita con questa causale!'
                 'transportation_reason_id':
                     causale_vals.transportation_reason_id and
                     causale_vals.transportation_reason_id.id or
-                    False },
+                    False},
                 'warning': warning}
         return False
 

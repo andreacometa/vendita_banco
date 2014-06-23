@@ -101,6 +101,7 @@
 							<separator string="Note" />
 							<field name="note" colspan="4" nolabel="1" />
 							<field name="invoice_id" />
+                            <field name="vb_raggruppamento_id" />
 						</page>
 					</notebook>
 					<group col="10" colspan="4">
