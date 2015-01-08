@@ -51,6 +51,7 @@
 			<field name="arch" type="xml">
 				<tree string="Ordini da fatturare">
 					<field name="name"/>
+                    <field name="data_documento" />
 					<field name="modalita_pagamento_id"/>
 					<field name="partner_id"/>
 					<field name="totale" sum="Totale"/>

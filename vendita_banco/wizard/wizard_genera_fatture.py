@@ -263,6 +263,8 @@ class vb_ordini_da_fatturare(osv.osv_memory):
         'modalita_pagamento_id': fields.related(
             'name', 'modalita_pagamento_id', type="many2one",
             relation="account.payment.term", string='Modalità di pagamento'),
+        'data_documento': fields.related('name', 'data_ordine', type='date',
+                                         string='Data Documento'),
         }
 
 vb_ordini_da_fatturare()
