@@ -70,7 +70,7 @@ termini di pagamento")
             ('data_ordine', '<=', wizard_obj.filtro_data_fine),
             ('data_ordine', '>=', wizard_obj.filtro_data_inizio),
             ('invoice_id', '=', None), ('state', '!=', 'draft'),
-            ('fatturabile', '=', True), ]
+            ('fatturabile', '=', True), ('vb_raggruppamento_id', '=', None)]
 
         # se presente il cliente
         if wizard_obj.cliente:
