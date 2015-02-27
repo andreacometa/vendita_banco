@@ -9,9 +9,10 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <br/>
 <br/>
-Sviluppato da 
-Andrea Cometa <info@andreacometa.it>
-Francesco Apruzzese <f.apruzzese@andreacometa.it>
+Sviluppato da:
+<br/>Andrea Cometa <info@andreacometa.it>
+<br/>Francesco Apruzzese <f.apruzzese@andreacometa.it>
 
-AMiGA rulez
-but Linux is better!!! Developers Developers Developers!
+#AMiGA rulez
+#but Linux is better!!!
+#Developers Developers Developers!
