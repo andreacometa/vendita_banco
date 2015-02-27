@@ -46,6 +46,9 @@ documento"),
             'Fatturabile',
             help="Se spuntato da la possibilità al documento di generare \
 fattura"),
+        'invoice_template_id': fields.many2one(
+            'vendita.causali', 'Causale fattura',
+            help="Select the template for invoicing this document"),
         'ddt': fields.boolean(
             'Documento di Trasporto',
             help="Se spuntato da la possibilità al documento di associare dati\
@@ -103,18 +106,21 @@ verso una location differente"),
         'tipo': 'nessuno',
         'riga_raggruppa': False,
         'descrizione_raggruppamento': "Documento",
+        'invoice_template_id': False,
     }
 
     def get_protocollo(self, cr, uid, causale_id):
         if causale_id:
             causale = self.browse(cr, uid, causale_id)[0]
-            if not causale.fattura:
+            # if not causale.fattura:
                 #return self.pool.get('ir.sequence').get_id(cr,uid,causale.protocollo.id)
-                return self.pool.get('ir.sequence').next_by_id(
-                    cr, uid, causale.protocollo.id)
-            else:
-                return "FAT"
-        return False
+            return self.pool.get('ir.sequence').next_by_id(
+                cr, uid, causale.protocollo.id)
+        else:
+            raise osv.except_osv(
+                _("Attention!"),
+                _("No sequence defined for this template"))
+            return False
 
     def recupera_protocollo(self, cr, uid, ids, protocollo, data_protocollo):
         for c in self.browse(cr, uid, ids):

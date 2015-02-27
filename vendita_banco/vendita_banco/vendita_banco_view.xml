@@ -42,7 +42,7 @@
 						<field name="ddt" invisible="1" />
 					</group>
 					<group col="6" colspan="4">
-						<field name="partner_id" on_change="onchange_cliente_id(partner_id, causale)" 
+						<field name="partner_id" on_change="onchange_cliente_id(partner_id, causale)"
 							attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" domain="[('customer', '=', True)]"/>
 						<field name="partner_invoice_id" domain="[('partner_id', '=', partner_id)]" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
 						<field name="partner_shipping_id" domain="[('partner_id', '=', partner_id)]" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
@@ -98,10 +98,18 @@
 							</field>
 						</page>
 						<page string="Altro">
-							<separator string="Note" />
-							<field name="note" colspan="4" nolabel="1" />
-							<field name="invoice_id" />
-                            <field name="vb_raggruppamento_id" />
+                                <group>
+                                    <group>
+                                        <field name="invoice_id" />
+                                        <field name="move_id" />
+                                    </group><group>
+                                        <field name="vb_raggruppamento_id" />
+                                        <field name="picking_id" />
+                                    </group>
+                                    <group>
+                                        <field name="note" colspan="4"/>
+                                    </group>
+                                </group>
 						</page>
 					</notebook>
 					<group col="10" colspan="4">
@@ -111,10 +119,10 @@
 						<field name="state" />
 						<group col="4" colspan="1">
 							<button name="conferma_vendita" type="object" states="draft" string="Conferma" icon="gtk-apply"/>
-							<button name="riapri_vendita" type="object" states="done,invoiced" string="Riapri Vendita" icon="gtk-cancel"/>
-							<button name="crea_fattura" type="object" 
+							<button name="riapri_vendita" type="object" states="done,invoiced,validated" string="Riapri Vendita" icon="gtk-cancel"/>
+							<button name="create_so_invoice" type="object"
 								attrs="{'invisible':['|', ('fatturabile','=',False), ('state', 'in', ['draft', 'invoiced'] )]}" string="Crea Fattura" icon="terp-dolar_ok!"/>
-							<button name="stampa" type="object" 
+							<button name="stampa" type="object"
 								attrs="{'invisible':['|', ('report','=',False),('state','=','draft')]}" string="Stampa" icon="gtk-print"
 								groups="vendita_banco.group_vendita_banco_printer"/>
 						</group>
@@ -281,13 +289,15 @@
 			<menuitem icon="terp-partner" parent="menu_vendita_banco_main" id="menu_vendita_banco_partner" name="Partner" sequence="10"/>
 				<menuitem action="base.action_partner_customer_form" parent="menu_vendita_banco_partner" id="menu_vendita_banco_customer" name="Clienti" sequence="1"/>
 				<menuitem action="base.action_partner_supplier_form" parent="menu_vendita_banco_partner" id="menu_vendita_banco_supplier" name="Fornitori" sequence="2"/>
+                <menuitem action="base.action_partner_address_form" id="menu_partner_address_form" name="Contacts" parent="menu_vendita_banco_partner" sequence="30"/>
+
 			<!-- CONFIGURAZIONI -->
-			<menuitem icon="terp-tools" groups="base.group_extended" parent="menu_vendita_banco_main" 
+			<menuitem icon="terp-tools" groups="base.group_extended" parent="menu_vendita_banco_main"
 				id="menu_vendita_banco_config" name="Configurazioni" sequence="20"/>
 				<menuitem action="action_vendita_banco_tipo_trasporto" parent="menu_vendita_banco_config" id="menu_vendita_banco_config_tipo_trasporto" name="Tipo Trasporto" sequence="2"/>
 				<menuitem parent="menu_vendita_banco_config" id="product.menu_product_pricelist_main" name="Listini" sequence="3"/>
 			<!-- EXTRA -->
-			<menuitem icon="terp-tools" groups="base.group_extended" parent="menu_vendita_banco_main" 
+			<menuitem icon="terp-tools" groups="base.group_extended" parent="menu_vendita_banco_main"
 				id="menu_vendita_banco_extra" name="Extra" sequence="30"/>
 
 
