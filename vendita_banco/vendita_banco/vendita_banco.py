@@ -352,7 +352,7 @@ source or dest location not defined"))
                         move_valori = {
                             'name': '[%s] %s' % (line.product_id.default_code,
                                                  line.product_id.name),
-                            'sorgente_id': line.vendita_banco_id.id,
+                            #'sorgente_id': line.vendita_banco_id.id,
                             'product_uom': line.product_uom.id,
                             'price_unit': line.price_unit,
                             'product_qty': line.product_qty,
@@ -360,6 +360,7 @@ source or dest location not defined"))
                             'location_id': location_sorgente,
                             'location_dest_id': location_destinazione,
                             'state': 'done',
+                            'picking_id': picking_id,
                         }
                         move_id = move_obj.create(cr, uid, move_valori)
                         self.pool.get('vendita_banco.dettaglio').write(
