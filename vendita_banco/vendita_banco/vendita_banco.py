@@ -620,7 +620,6 @@ source or dest location not defined"))
 
     # ----- Funzione richiamata dal button Conferma Vendita
     def riapri_vendita(self, cr, uid, ids, *args):
-        import pdb; pdb.set_trace()
         for order_obj in self.browse(cr, uid, ids):
             move_obj = self.pool.get('stock.move')
             picking_obj = self.pool['stock.picking']
