@@ -314,32 +314,8 @@ vendita con questa causale!'
                         _('Non esistono righe di vendita per questo ordine!'))
                     return False
                 # ----- CREA UN MOVIMENTO DI MAGAZZINO PER OGNI RIGA DI VENDITA
-                # imposta il verso della merce
-                if order_obj.causale.tipo == 'scarico':
-                    location_sorgente = (
-                        order_obj.causale.source_location_id and
-                        order_obj.causale.source_location_id.id or
-                        warehouse.lot_stock_id.id)
-                    location_destinazione = (
-                        order_obj.causale.location_id and
-                        order_obj.causale.location_id.id or
-                        warehouse.location_vendita_banco_id.id)
-                else:
-                    location_destinazione = (
-                        order_obj.causale.location_id and
-                        order_obj.causale.location_id.id or
-                        warehouse.lot_stock_id.id)
-                    location_sorgente = (
-                        order_obj.causale.source_location_id and
-                        order_obj.causale.source_location_id.id or
-                        warehouse.location_vendita_banco_id.id)
-                if ((location_sorgente is False) or
-                    (location_destinazione is False)):
-                    raise osv.except_osv(
-                        _("Attention!"),
-                        _("Check locations and wharehouse configuration, \
-source or dest location not defined"))
-                    return False
+                location_sorgente = order_obj.causale.source_location_id.id
+                location_destinazione = order_obj.causale.location_id.id
                 # create a new picking
                 picking_data = {
                     'origin': res['name'],

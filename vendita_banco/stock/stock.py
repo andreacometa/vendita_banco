@@ -23,7 +23,7 @@
 
 from osv import fields, osv
 
-
+"""
 class stock_warehouse(osv.osv):
 
 	_name = "stock.warehouse"
@@ -35,7 +35,7 @@ class stock_warehouse(osv.osv):
 	}
 
 stock_warehouse()
-
+"""
 
 class stock_move(osv.osv):
 
