@@ -316,7 +316,10 @@ vendita con questa causale!'
                 # ----- CREA UN MOVIMENTO DI MAGAZZINO PER OGNI RIGA DI VENDITA
                 # imposta il verso della merce
                 if order_obj.causale.tipo == 'scarico':
-                    location_sorgente = warehouse.lot_stock_id.id
+                    location_sorgente = (
+                        order_obj.causale.source_location_id and
+                        order_obj.causale.source_location_id.id or
+                        warehouse.lot_stock_id.id)
                     location_destinazione = (
                         order_obj.causale.location_id and
                         order_obj.causale.location_id.id or
@@ -326,7 +329,10 @@ vendita con questa causale!'
                         order_obj.causale.location_id and
                         order_obj.causale.location_id.id or
                         warehouse.lot_stock_id.id)
-                    location_sorgente = warehouse.location_vendita_banco_id.id
+                    location_sorgente = (
+                        order_obj.causale.source_location_id and
+                        order_obj.causale.source_location_id.id or
+                        warehouse.location_vendita_banco_id.id)
                 if ((location_sorgente is False) or
                     (location_destinazione is False)):
                     raise osv.except_osv(

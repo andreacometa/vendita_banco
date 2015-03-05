@@ -71,9 +71,13 @@ a fattura generata"),
             help="Indica se la generazione della fattura porta le righe \
 descrittive per ogni raggruppamento"),
         'location_id': fields.many2one(
-            'stock.location', 'Location',
+            'stock.location', 'Dest Location', required=True,
             help="Indica se, usando questa causale, si deve muovere la merce \
-verso una location differente"),
+verso una location differente rispetto a quella standard"),
+        'source_location_id': fields.many2one(
+            'stock.location', 'Source Location', required=True,
+            help="Indica se, usando questa causale, si deve muovere la merce \
+da una location differente rispetto a quella standard"),
         'user_ids': fields.many2many('res.users',
                                      'res_users_causali_rel',
                                      'user_id',

@@ -45,7 +45,8 @@
 						<page string="Magazzino">
 							<field name="ddt" colspan="4"/>
 							<field name="segno" colspan="4"/>
-							<field name="location_id" colspan="4"/>
+                            <field name="source_location_id" colspan="2"/>
+							<field name="location_id" colspan="2"/>
                             <field name="transportation_reason_id" colspan="4"/>
 						</page>
 						<page string="Contabilità">
