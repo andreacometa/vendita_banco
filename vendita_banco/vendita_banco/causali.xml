@@ -48,7 +48,7 @@
                             <field name="source_location_id" colspan="2"
                                 attrs="{'readonly':[('tipo', '=', 'nessuno'])]}"/>
 							<field name="location_id" colspan="2"
-                                 attrs="{'readonly':[('tipo', '=', 'nessuno'])]}"/>
+                                 attrs="{'readonly':[('tipo', '=', 'nessuno')]}"/>
                             <field name="transportation_reason_id" colspan="4"/>
 						</page>
 						<page string="Contabilità">
