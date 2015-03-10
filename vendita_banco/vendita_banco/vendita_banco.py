@@ -318,6 +318,7 @@ vendita con questa causale!'
                 location_destinazione = order_obj.causale.location_id.id
                 # create a new picking
                 picking_data = {
+                    'name':res['name'],
                     'origin': res['name'],
                     'type': (
                         order_obj.causale.tipo in ['scarico'] and 'out' or
