@@ -372,7 +372,7 @@ vendita con questa causale!'
             if order_obj.causale.fattura:
                 invoice_id = self.crea_fatture_raggruppate(
                     cr, uid, ids, order_obj.data_ordine,
-                    order_obj.causale.name, order_obj.internal_number,
+                    order_obj.causale.name, res['name'],
                     args[0])
                 # ----- Validate the invoice
                 wf_service = netsvc.LocalService("workflow")
