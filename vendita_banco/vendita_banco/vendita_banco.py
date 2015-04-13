@@ -63,7 +63,7 @@ class vendita_banco(osv.osv):
                     _('Impossibile eliminare una vendita validata!'))
                 return False
             else:
-                #if not vendita.causale.fattura and vendita.name:
+                # if not vendita.causale.fattura and vendita.name:
                 if vendita.internal_number:
                     vendita.causale.recupera_protocollo(
                         vendita.internal_number, vendita.data_ordine)
@@ -237,11 +237,11 @@ vendita con questa causale!'
                 'ddt': ddt,
                 'name': '',
                 'causale': causale,
-                'transportation_reason_id':
+                'transportation_reason_id': (
                     causale_vals.transportation_reason_id and
                     causale_vals.transportation_reason_id.id or
-                    False},
-                'warning': warning}
+                    False)
+                }, 'warning': warning}
         return False
 
     # ----- Funzione che oltre al normale onchange inserisce anche il
@@ -318,7 +318,7 @@ vendita con questa causale!'
                 location_destinazione = order_obj.causale.location_id.id
                 # create a new picking
                 picking_data = {
-                    'name':res['name'],
+                    'name': res['name'],
                     'origin': res['name'],
                     'type': (
                         order_obj.causale.tipo in ['scarico'] and 'out' or
@@ -335,7 +335,7 @@ vendita con questa causale!'
                         move_valori = {
                             'name': '[%s] %s' % (line.product_id.default_code,
                                                  line.product_id.name),
-                            #'sorgente_id': line.vendita_banco_id.id,
+                            # 'sorgente_id': line.vendita_banco_id.id,
                             'product_uom': line.product_uom.id,
                             'price_unit': line.price_unit,
                             'product_qty': line.product_qty,
@@ -389,12 +389,12 @@ vendita con questa causale!'
         journal_id = self.pool['account.invoice']._get_journal(
             cr, uid, {'lang': 'it_IT'})
         account_id = self.pool['account.journal'].browse(
-                cr, uid, journal_id).default_credit_account_id.id
+            cr, uid, journal_id).default_credit_account_id.id
 
-        #currency_id = False
-        #currency_ids = self.pool.get('res.currency').search(
+        # currency_id = False
+        # currency_ids = self.pool.get('res.currency').search(
         #    cr, uid, [('name', '=', 'EUR')])
-        #if currency_ids:
+        # if currency_ids:
         #    currency_id = currency_ids[0]
         # -----
         # CREAZIONE
@@ -411,12 +411,12 @@ vendita con questa causale!'
                     order_obj.name),
                 'origin': order_obj.name,
                 'date_invoice': data_fattura,
-                #'immediate': order_obj.causale.fattura,
+                # 'immediate': order_obj.causale.fattura,
                 'partner_id': order_obj.partner_id.id,
                 'account_id': (
                     order_obj.partner_id.property_account_receivable.id),
                 'journal_id': journal_id,
-                #'currency_id': currency_id,
+                # 'currency_id': currency_id,
                 'address_invoice_id': order_obj.partner_invoice_id.id,
                 'partner_shipping_id': (
                     order_obj.partner_shipping_id and
@@ -468,8 +468,8 @@ vendita con questa causale!'
                     line.tax_id and [(6, 0, [line.tax_id.id])] or False)
                 # Il codice seguente deve essere implementato nei clienti che
                 # hanno il calcolo dello sconto dinamico
-                #price_unit = (100 * line.imponibile) / (100 - line.discount)
-                #price_unit = price_unit / line.product_qty
+                # price_unit = (100 * line.imponibile) / (100 - line.discount)
+                # price_unit = price_unit / line.product_qty
                 invoice_line_id = invoice_line_obj.create(cr, uid, {
                     'name': line.name,
                     'invoice_id': account_invoice_id,
@@ -492,13 +492,13 @@ vendita con questa causale!'
                     cr, uid, [line.id], {'invoice_line_id': invoice_line_id})
         # ----- Salva in vendita_banco la fattura appena creata e
         # modifica lo stato
-        #self.write(cr, uid, ids, {
+        # self.write(cr, uid, ids, {
         #    'invoice_id': account_invoice_id, 'state': 'invoiced'})
         # ----- MOSTRA LA FATTURA APPENA CREATA
-        #mod_obj = self.pool.get('ir.model.data')
-        #res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
-        #res_id = res and res[1] or False,
-        #return {
+        # mod_obj = self.pool.get('ir.model.data')
+        # res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+        # res_id = res and res[1] or False,
+        # return {
         #    'name': 'Customer Invoices',
         #    'view_type': 'form',
         #    'view_mode': 'form',
@@ -509,7 +509,7 @@ vendita con questa causale!'
         #    'nodestroy': True,
         #    'target': 'current',
         #    'res_id': account_invoice_id or False,
-        #}
+        # }
         return account_invoice_id
 
     # ----- Funzione che crea la fattura dal button nel form
@@ -657,19 +657,33 @@ vendita con questa causale!'
     # ----- Funzione richiamata dal button Stampa BC o DDT
     def stampa(self, cr, uid, ids, context=None):
         order_obj = self.browse(cr, uid, ids[0])
-        report_name = order_obj.causale.report.report_name
-        return {
-            # ----- Jasper Report
-            'type': 'ir.actions.report.xml',
-            'report_name': report_name,
-            'datas': {
-                'model': 'vendita_banco',
-                'ids': ids,
-                'report_type': 'pdf',
-            },
-            'nodestroy': True,
-        }
-
+        if order_obj.causale.fattura:
+            return order_obj.invoice_id.print_imm_diff_invoice(
+                cr, uid, [order_obj.invoice_id.id])
+            #return {
+            #    # ----- Jasper Report
+            #    'type': 'ir.actions.report.xml',
+            #    'report_name': report_name,
+            #    'datas': {
+            #        'model': 'account_invoice',
+            #        'ids': ids,
+            #        'report_type': 'pdf',
+            #    },
+            #    'nodestroy': True,
+            #}
+        else:
+            report_name = order_obj.causale.report.report_name
+            return {
+                # ----- Jasper Report
+                'type': 'ir.actions.report.xml',
+                'report_name': report_name,
+                'datas': {
+                    'model': 'vendita_banco',
+                    'ids': ids,
+                    'report_type': 'pdf',
+                },
+                'nodestroy': True,
+            }
 vendita_banco()
 
 
@@ -743,7 +757,7 @@ class vendita_banco_dettaglio(osv.osv):
     _order = "sequence asc"
 
     def create(self, cr, uid, vals, context=None):
-        if (not 'sequence' in vals):  # and vals['sequence'] < 1):
+        if ('sequence' not in vals):  # and vals['sequence'] < 1):
             vbd_obj = self.pool.get('vendita_banco.dettaglio')
             vbd_ids = vbd_obj.search(
                 cr, uid, [
