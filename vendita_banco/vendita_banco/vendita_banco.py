@@ -659,7 +659,7 @@ vendita con questa causale!'
         order_obj = self.browse(cr, uid, ids[0])
         if order_obj.causale.fattura:
             return order_obj.invoice_id.print_imm_diff_invoice(
-                cr, uid, [order_obj.invoice_id.id])
+                [order_obj.invoice_id.id])
             #return {
             #    # ----- Jasper Report
             #    'type': 'ir.actions.report.xml',
