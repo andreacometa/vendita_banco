@@ -373,7 +373,7 @@ vendita con questa causale!'
                 invoice_id = self.crea_fatture_raggruppate(
                     cr, uid, ids, order_obj.data_ordine,
                     order_obj.causale.name, res['name'],
-                    args[0])
+                    order_obj.internal_number or False)
                 # ----- Validate the invoice
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'account.invoice',
@@ -383,8 +383,10 @@ vendita con questa causale!'
         return True
 
     def crea_fatture_raggruppate(self, cr, uid, ids, data_fattura, origin,
-                                 invoice_number, context):
+                                 invoice_number=False, context=None):
         order_objs = self.browse(cr, uid, ids)
+        vbanco_dett_obj = self.pool['vendita_banco.dettaglio']
+        vbanco_obj = self.pool['vendita_banco']
         invoice_line_obj = self.pool['account.invoice.line']
         journal_id = self.pool['account.invoice']._get_journal(
             cr, uid, {'lang': 'it_IT'})
@@ -399,6 +401,7 @@ vendita con questa causale!'
         # -----
         # CREAZIONE
         # -----
+        #import pdb; pdb.set_trace()
         for order_obj in order_objs:
             # -----
             # CREAZIONE TESTATA FATTURA
@@ -445,8 +448,9 @@ vendita con questa causale!'
                     order_obj.tipo_trasporto_id and
                     order_obj.tipo_trasporto_id.id or False),
                 'packages_number': order_obj.number_of_packages or 0.0,
-                'internal_number': invoice_number,
                 }
+            if invoice_number:
+                invoice_data['internal_number'] = invoice_number
             account_invoice_id = self.pool['account.invoice'].create(
                 cr, uid, invoice_data)
             # CREA UNA RIGA FITTIZIA COME TESTATA
@@ -488,8 +492,11 @@ vendita con questa causale!'
                     'spesa': line.spesa,
                     'spesa_automatica': line.spesa_automatica,
                     })
-                self.pool.get('vendita_banco.dettaglio').write(
+                vbanco_dett_obj.write(
                     cr, uid, [line.id], {'invoice_line_id': invoice_line_id})
+            # modifica lo stato
+            vbanco_obj.write(cr, uid, [order_obj.id], {
+                'invoice_id': account_invoice_id, 'state': 'invoiced'})
         # ----- Salva in vendita_banco la fattura appena creata e
         # modifica lo stato
         # self.write(cr, uid, ids, {
@@ -513,15 +520,17 @@ vendita con questa causale!'
         return account_invoice_id
 
     # ----- Funzione che crea la fattura dal button nel form
-    def crea_fattura(self, cr, uid, ids, *args):
+    def crea_fattura(self, cr, uid, ids, context={}):
         data_fattura = datetime.datetime.today()
         data_fattura = '%s/%s/%s' % (
             data_fattura.strftime('%d'),
             data_fattura.strftime('%m'),
             data_fattura.strftime('%Y'))
-        origin = self.browse(cr, uid, ids[0]).name
+        order = self.browse(cr, uid, ids[0])
         return self.crea_fatture_raggruppate(
-            cr, uid, ids, data_fattura, origin, args[0])
+            cr, uid, ids, data_fattura, order.name,
+            order.causale.fattura and order.internal_number or False,
+            context)
 
     def create_so_invoice(self, cr, uid, ids, context={}):
         orders = self.browse(cr, uid, ids)
