@@ -120,6 +120,13 @@ da una location differente rispetto a quella standard"),
                 #return self.pool.get('ir.sequence').get_id(cr,uid,causale.protocollo.id)
             return self.pool.get('ir.sequence').next_by_id(
                 cr, uid, causale.protocollo.id)
+            # TODO AGGIORNARE PRELIEVO PROTOCOLLO CON ANNO FISCALE
+            #        if journal.sequence_id:
+            #            c = {'fiscalyear_id': move.period_id.fiscalyear_id.id}
+            #            new_name = obj_sequence.next_by_id(cr, uid, journal.sequence_id.id, c)
+            #        else:
+            #            raise osv.except_osv(_('Error'), _('No sequence defined on the journal !'))
+
         else:
             raise osv.except_osv(
                 _("Attention!"),
