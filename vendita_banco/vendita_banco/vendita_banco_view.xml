@@ -114,7 +114,7 @@
                                                groups="account.group_account_manager"/>
                                     <field name="internal_number"
                                            groups="account.group_account_manager"
-                                           attrs="{'readonly':[('state','in',['done', 'invoiced'])]}"/>
+                                           attrs="{'readonly':[('state','in',['done', 'invoiced', 'validated'])]}"/>
                                 </group>
 						</page>
 					</notebook>

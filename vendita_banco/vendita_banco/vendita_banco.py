@@ -418,7 +418,6 @@ vendita con questa causale!'
                 'partner_id': order_obj.partner_id.id,
                 'account_id': (
                     order_obj.partner_id.property_account_receivable.id),
-                'journal_id': journal_id,
                 # 'currency_id': currency_id,
                 'address_invoice_id': order_obj.partner_invoice_id.id,
                 'partner_shipping_id': (
