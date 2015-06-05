@@ -102,13 +102,19 @@
                                     <group>
                                         <field name="invoice_id" />
                                         <field name="move_id" />
-                                    </group><group>
+                                    </group>
+									<group>
                                         <field name="vb_raggruppamento_id" />
                                         <field name="picking_id" />
                                     </group>
                                     <group>
                                         <field name="note" colspan="4"/>
                                     </group>
+                                    <separator string="Numerazione"
+                                               groups="account.group_account_manager"/>
+                                    <field name="internal_number"
+                                           groups="account.group_account_manager"
+                                           attrs="{'readonly':[('state','in',['done', 'invoiced'])]}"/>
                                 </group>
 						</page>
 					</notebook>
