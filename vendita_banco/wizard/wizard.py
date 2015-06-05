@@ -65,27 +65,33 @@ class vb_modifica_causale(osv.osv_memory):
             vb_obj = self.pool.get('vendita_banco')
             vb = vb_obj.browse(cr, uid, context['active_id'])
             if vb.state == 'draft':
-                raise osv.except_osv(_('Attenzione!'), _('Questa procedura è applicabile solo agli ordini confermati!'))
+                raise osv.except_osv(
+                    _('Attenzione!'),
+                    _('Questa procedura è applicabile solo agli ordini confermati!'))
             if vb.invoice_id:
-                raise osv.except_osv(_('Attenzione!'), _('Impossibile modificare la causale ad un ordine fatturato!'))
+                raise osv.except_osv(
+                    _('Attenzione!'),
+                    _('Impossibile modificare la causale ad un ordine fatturato!'))
             # ----- recuperiamo il protocollo se non è una fattura e se non è spuntata la voce che evita il recupero del protocollo
             if not vb.causale.no_recupera_protocollo_cambio_causale:
                 if vb.causale.protocollo != wizard.nuova_causale.protocollo:
                     vb.causale.recupera_protocollo(vb.name, vb.data_ordine)
             # ----- Generiamo un nuovo protocollo
             if vb.causale.protocollo != wizard.nuova_causale.protocollo:
-                nuovo_protocollo = wizard.nuova_causale.get_protocollo()
+                nuovo_protocollo = wizard.nuova_causale.get_protocollo(
+                    wizard.data)
             else:
                 nuovo_protocollo = vb.name
-            values = {'name':nuovo_protocollo,
-                'causale':wizard.nuova_causale.id,
-                'goods_description_id':False,
-                'carriage_condition_id':False,
-                'transportation_reason_id':False,
-                'number_of_packages':0,
-                'trasportatore_id':False,
-                'tipo_trasporto_id':False,
-                'ddt':False,
+            values = {
+                'name': nuovo_protocollo,
+                'causale': wizard.nuova_causale.id,
+                'goods_description_id': False,
+                'carriage_condition_id': False,
+                'transportation_reason_id': False,
+                'number_of_packages': 0,
+                'trasportatore_id': False,
+                'tipo_trasporto_id': False,
+                'ddt': False,
                 }
             if wizard.data:
                 values.update({'data_ordine':wizard.data})

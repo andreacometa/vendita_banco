@@ -304,7 +304,8 @@ vendita con questa causale!'
             if order_obj.internal_number:
                 res['name'] = order_obj.internal_number
             else:
-                res['name'] = order_obj.causale.get_protocollo()
+                res['name'] = order_obj.causale.get_protocollo(
+                    order_obj.data_ordine)
                 res['internal_number'] = res['name']
             if order_obj.causale.tipo in ['carico', 'scarico']:
                 # se non è un carico/scarico non fa nulla
@@ -312,7 +313,7 @@ vendita con questa causale!'
                     raise osv.except_osv(
                         _('Azione non valida!'),
                         _('Non esistono righe di vendita per questo ordine!'))
-                    return False
+                    # return False
                 # ----- CREA UN MOVIMENTO DI MAGAZZINO PER OGNI RIGA DI VENDITA
                 location_sorgente = order_obj.causale.source_location_id.id
                 location_destinazione = order_obj.causale.location_id.id

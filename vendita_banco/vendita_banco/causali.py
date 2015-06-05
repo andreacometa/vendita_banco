@@ -113,25 +113,21 @@ da una location differente rispetto a quella standard"),
         'invoice_template_id': False,
     }
 
-    def get_protocollo(self, cr, uid, causale_id):
+    def get_protocollo(self, cr, uid, causale_id, date):
         if causale_id:
             causale = self.browse(cr, uid, causale_id)[0]
-            # if not causale.fattura:
-                #return self.pool.get('ir.sequence').get_id(cr,uid,causale.protocollo.id)
+            fiscalyear_id = self.pool['account.fiscalyear'].search(
+                cr, uid, [('date_start', '<=', date),
+                          ('date_stop', '>=', date)]
+            )
+            c = {'fiscalyear_id': fiscalyear_id and fiscalyear_id[0] or False}
             return self.pool.get('ir.sequence').next_by_id(
-                cr, uid, causale.protocollo.id)
-            # TODO AGGIORNARE PRELIEVO PROTOCOLLO CON ANNO FISCALE
-            #        if journal.sequence_id:
-            #            c = {'fiscalyear_id': move.period_id.fiscalyear_id.id}
-            #            new_name = obj_sequence.next_by_id(cr, uid, journal.sequence_id.id, c)
-            #        else:
-            #            raise osv.except_osv(_('Error'), _('No sequence defined on the journal !'))
-
+                cr, uid, causale.protocollo.id, c)
         else:
             raise osv.except_osv(
                 _("Attention!"),
                 _("No sequence defined for this template"))
-            return False
+            # return False
 
     def recupera_protocollo(self, cr, uid, ids, protocollo, data_protocollo):
         for c in self.browse(cr, uid, ids):
