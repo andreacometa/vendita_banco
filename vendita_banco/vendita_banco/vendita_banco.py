@@ -98,7 +98,7 @@ class vendita_banco(osv.osv):
             else:
                 res[vb.id] = False
         return res
-
+    """
     def _get_company(self, cr, uid, ids, name, arg, context=None):
         res = {}
         vbs = self.browse(cr, uid, ids, context)
@@ -111,7 +111,7 @@ class vendita_banco(osv.osv):
             for vb in vbs:
                 res[vb.id] = company_id
         return res
-
+    """
     _columns = {
         'name': fields.char('Numero Documento', size=16),
         'internal_number': fields.char('Internal number', size=16),
@@ -137,9 +137,6 @@ class vendita_banco(osv.osv):
                                       relation='vendita.causali',
                                       readonly=True),
         'report': fields.function(_get_report, method=True, type='boolean'),
-        'company_id': fields.function(_get_company, method=True,
-                                      type='many2one', relation='res.company',
-                                      store=False),
         'causale': fields.many2one('vendita.causali', 'Causale',
                                    required=True),
         'invoice_id': fields.many2one('account.invoice', 'Fattura',
@@ -191,6 +188,9 @@ class vendita_banco(osv.osv):
             'vendita_banco', 'Documento generato', ondelete="set null"),
         'company_id': fields.many2one('res.company', 'Company',
                                       required=False),
+        #'company_id': fields.function(_get_company, method=True,
+        #                              type='many2one', relation='res.company',
+        #                              store=False),
         'picking_id': fields.many2one('stock.picking', 'Picking',
                                       ondelete="set null"),
         # ----- Invoice relations
