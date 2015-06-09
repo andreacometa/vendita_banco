@@ -44,7 +44,12 @@ class vb_raggruppa_documenti(osv.osv_memory):
         'number_of_packages': fields.integer('Numero Colli'),
         'trasportatore_id': fields.many2one('delivery.carrier',
                                             'Trasportatore'),
+        'group_documents': fields.boolean('Raggruppa documenti'),
         }
+
+    _defaults = {
+        'group_documents': True,
+    }
 
     def onchange_causale(self, cr, uid, ids, causale, context):
         if causale and self.pool.get('vendita.causali').browse(cr,
@@ -73,8 +78,8 @@ class vb_raggruppa_documenti(osv.osv_memory):
     def raggruppa_crea(self, cr, uid, ids, context={}):
         if 'active_ids' in context:
             wizard = self.browse(cr, uid, ids[0])
-            vb_obj = self.pool.get('vendita_banco')
-            vb_lines_obj = self.pool.get('vendita_banco.dettaglio')
+            vb_obj = self.pool['vendita_banco']
+            vb_lines_obj = self.pool['vendita_banco.dettaglio']
             vbs = vb_obj.browse(cr, uid, context['active_ids'])
             # ----- Controlla che tutti i documenti siano confermati
             for vb in vbs:
@@ -88,26 +93,46 @@ confermati!'))
                         _('Attenzione!'),
                         _('La causale di uno dei movimento non permette il \
 raggruppamento come %s!' % (wizard.nuova_causale.name)))
-            # ----- Genera la testa del nuovo documento
-            vb_struttura = {
-                'partner_id': vbs[0].partner_id.id,
-                'partner_invoice_id': vbs[0].partner_invoice_id.id,
-                'partner_shipping_id': vbs[0].partner_shipping_id.id,
-                'pricelist_id': vbs[0].pricelist_id.id,
-                'modalita_pagamento_id': vbs[0].modalita_pagamento_id.id,
-                'causale': wizard.nuova_causale.id,
-                'goods_description_id': wizard.goods_description_id.id,
-                'carriage_condition_id': wizard.carriage_condition_id.id,
-                'transportation_reason_id': wizard.transportation_reason_id.id,
-                'number_of_packages': wizard.number_of_packages,
-                'trasportatore_id': wizard.trasportatore_id.id,
-            }
-            nuovo_vb_id = vb_obj.create(cr, uid, vb_struttura)
-            # ----- Indica il nuovo ordine in quelli vecchi
-            vb_obj.write(cr, uid, context['active_ids'],
-                         {'vb_raggruppamento_id': nuovo_vb_id})
+            if wizard.group_documents:
+                # ----- Genera la testa del nuovo documento
+                vb_struttura = {
+                    'partner_id': vbs[0].partner_id.id,
+                    'partner_invoice_id': vbs[0].partner_invoice_id.id,
+                    'partner_shipping_id': vbs[0].partner_shipping_id.id,
+                    'pricelist_id': vbs[0].pricelist_id.id,
+                    'modalita_pagamento_id': vbs[0].modalita_pagamento_id.id,
+                    'causale': wizard.nuova_causale.id,
+                    'goods_description_id': wizard.goods_description_id.id,
+                    'carriage_condition_id': wizard.carriage_condition_id.id,
+                    'transportation_reason_id': wizard.transportation_reason_id.id,
+                    'number_of_packages': wizard.number_of_packages,
+                    'trasportatore_id': wizard.trasportatore_id.id,
+                }
+                nuovo_vb_id = vb_obj.create(cr, uid, vb_struttura)
+                # ----- Indica il nuovo ordine in quelli vecchi
+                vb_obj.write(cr, uid, context['active_ids'],
+                             {'vb_raggruppamento_id': nuovo_vb_id})
             # ----- Genera i dettagli del nuovo documento
             for vb in vbs:
+                if not wizard.group_documents:
+                    # ----- Genera la testa del nuovo documento
+                    vb_struttura = {
+                        'partner_id': vb.partner_id.id,
+                        'partner_invoice_id': vb.partner_invoice_id.id,
+                        'partner_shipping_id': vb.partner_shipping_id.id,
+                        'pricelist_id': vb.pricelist_id.id,
+                        'modalita_pagamento_id': vb.modalita_pagamento_id.id,
+                        'causale': wizard.nuova_causale.id,
+                        'goods_description_id': wizard.goods_description_id.id,
+                        'carriage_condition_id': wizard.carriage_condition_id.id,
+                        'transportation_reason_id': wizard.transportation_reason_id.id,
+                        'number_of_packages': wizard.number_of_packages,
+                        'trasportatore_id': wizard.trasportatore_id.id,
+                    }
+                    nuovo_vb_id = vb_obj.create(cr, uid, vb_struttura)
+                    # ----- Indica il nuovo ordine in quelli vecchi
+                    vb_obj.write(cr, uid, vb.id,
+                                 {'vb_raggruppamento_id': nuovo_vb_id})
                 # ----- Crea la riga descrittiva di riferimento
                 vb_line_struttura = {
                     'name': 'Rif. Ns. %s Nr. %s del %s' % (
@@ -137,7 +162,7 @@ raggruppamento come %s!' % (wizard.nuova_causale.name)))
                     }
                     vb_lines_obj.create(cr, uid, vb_line_struttura)
             # ----- Mostra il documento appena creato
-            mod_obj = self.pool.get('ir.model.data')
+            mod_obj = self.pool['ir.model.data']
             res = mod_obj.get_object_reference(cr, uid, 'vendita_banco',
                                                'view_vendita_banco_form')
             res_id = res and res[1] or False,
