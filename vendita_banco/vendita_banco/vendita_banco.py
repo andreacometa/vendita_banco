@@ -61,7 +61,6 @@ class vendita_banco(osv.osv):
                 raise osv.except_osv(
                     _('Azione non valida!'),
                     _('Impossibile eliminare una vendita validata!'))
-                return False
             else:
                 # if not vendita.causale.fattura and vendita.name:
                 if vendita.internal_number:
