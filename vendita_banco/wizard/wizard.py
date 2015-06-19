@@ -84,6 +84,7 @@ class vb_modifica_causale(osv.osv_memory):
                 nuovo_protocollo = vb.name
             values = {
                 'name': nuovo_protocollo,
+                'internal_number': nuovo_protocollo,
                 'causale': wizard.nuova_causale.id,
                 'goods_description_id': False,
                 'carriage_condition_id': False,
@@ -94,7 +95,7 @@ class vb_modifica_causale(osv.osv_memory):
                 'ddt': False,
                 }
             if wizard.data:
-                values.update({'data_ordine':wizard.data})
+                values.update({'data_ordine': wizard.data})
             if wizard.nuova_causale.ddt:
                 values['ddt'] = True
                 values['goods_description_id'] = wizard.goods_description_id.id
