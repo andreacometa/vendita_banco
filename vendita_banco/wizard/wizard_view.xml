@@ -42,7 +42,7 @@
 		<!-- ====================================================== -->
 		<!-- 				RAGGRUPPA FATTURE ACTION				-->
 		<!-- ====================================================== -->
-		<record id="action_vb_modifica_causale" model="ir.actions.act_window" groups="base.group_extended">
+		<record id="action_vb_modifica_causale" model="ir.actions.act_window" >
 			<field name="name">Modifica Causale</field>
 			<field name="res_model">vb.modifica_causale</field>
 			<field name="src_model">vendita_banco</field>

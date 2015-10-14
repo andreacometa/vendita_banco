@@ -71,12 +71,22 @@ class account_invoice(osv.osv):
     def action_cancel_draft(self, cr, uid, ids, *args):
         res = super(account_invoice, self).action_cancel_draft(
             cr, uid, ids, args)
-        line_obj = self.pool.get('account.invoice.line')
+        line_obj = self.pool['account.invoice.line']
         for inv in self.browse(cr, uid, ids):
             # ----- Elimina le righe di spesa/e create automaticamente
             for line in inv.invoice_line:
                 if line.spesa_automatica:
                     line_obj.unlink(cr, uid, [line.id])
+        return res
+
+    def unlink(self, cr, uid, ids, context=None):
+        res = super(account_invoice, self).unlink(cr, uid, ids, context)
+        # riporta lo stato a 'done'
+        if res:
+            vb_model = self.pool['vendita_banco']
+            vb_ids = vb_model.search(
+                cr, uid, [('invoice_id', 'in', ids)])
+            vb_model.write(cr, uid, vb_ids, {'state': 'done'})
         return res
 
 account_invoice()

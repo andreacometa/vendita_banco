@@ -125,11 +125,21 @@
 						<field name="state" />
 						<group col="4" colspan="1">
 							<button name="conferma_vendita" type="object" states="draft" string="Conferma" icon="gtk-apply"/>
-							<button name="riapri_vendita" type="object" states="done,invoiced,validated" string="Riapri Vendita" icon="gtk-cancel"/>
+							<button name="riapri_vendita" type="object"
+									string="Riapri Vendita" icon="gtk-cancel"
+									attrs="{'invisible': [('invoice_id', 'not', False),
+										('state', 'not in', ['done', 'invoiced', 'validated'])]}"/>
+							<button name="riapri_vendita" type="object"
+									string="Riapri Vendita" icon="gtk-cancel"
+									confirm="il documento è legato ad una fattura, sei sicuro di voler procedere?"
+									attrs="{'invisible': [('invoice_id', '=', False),
+										('state', 'not in', ['done', 'invoiced', 'validated'])]}"/>
 							<button name="create_so_invoice" type="object"
-								attrs="{'invisible':['|', ('fatturabile','=',False), ('state', 'in', ['draft', 'invoiced'] )]}" string="Crea Fattura" icon="terp-dolar_ok!"/>
+								attrs="{'invisible':['|', ('fatturabile','=',False), ('state', 'in', ['draft', 'invoiced'] )]}"
+								string="Crea Fattura" icon="terp-dolar_ok!"/>
 							<button name="stampa" type="object"
-								attrs="{'invisible':['|', ('report','=',False),('state','=','draft')]}" string="Stampa" icon="gtk-print"
+								attrs="{'invisible':['|', ('report','=',False), ('state','=','draft')]}"
+								string="Stampa" icon="gtk-print"
 								groups="vendita_banco.group_vendita_banco_printer"/>
 						</group>
 						<field name="fatturabile" invisible="1" />

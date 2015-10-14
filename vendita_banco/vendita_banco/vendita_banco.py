@@ -139,7 +139,7 @@ class vendita_banco(osv.osv):
         'causale': fields.many2one('vendita.causali', 'Causale',
                                    required=True),
         'invoice_id': fields.many2one('account.invoice', 'Fattura',
-                                      ondelete='set null'),
+                                      ondelete="set null"),
         'move_id': fields.related(
             'invoice_id', 'move_id', string="Account move",
             type="many2one", relation="account.move", store=False),
@@ -613,7 +613,7 @@ vendita con questa causale!'
     # ----- Funzione richiamata dal button Conferma Vendita
     def riapri_vendita(self, cr, uid, ids, *args):
         for order_obj in self.browse(cr, uid, ids):
-            move_obj = self.pool.get('stock.move')
+            move_obj = self.pool['stock.move']
             picking_obj = self.pool['stock.picking']
             # ----- Controlla che non ci siano fatture generate da questi ord
             if ((order_obj.state in ['invoiced', 'validated']) and
@@ -622,13 +622,18 @@ vendita con questa causale!'
                 if order_obj.invoice_id.payment_ids:
                     message = 'Invoice has payments, you should delete them!'
                     raise osv.except_osv(_('Attention!'), _(message))
-                    return False
                 # reopen invoice
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'account.invoice',
                                         order_obj.invoice_id.id,
                                         'invoice_cancel', cr)
                 invoice_obj = self.pool['account.invoice']
+                self.pool['ir.protocolli_da_recuperare'].create(
+                    cr, uid, {
+                        'name': ' account.journal',
+                        'protocollo': order_obj.invoice_id.internal_number,
+                        'data': order_obj.invoice_id.date_invoice,
+                        'sequence_id': order_obj.invoice_id.journal_id.sequence_id.id, })
                 invoice_obj.write(cr, uid, [order_obj.invoice_id.id],
                                   {'internal_number': False})
                 invoice_obj.unlink(cr, uid, [order_obj.invoice_id.id])
@@ -765,6 +770,10 @@ class vendita_banco_dettaglio(osv.osv):
     _order = "sequence asc"
 
     def create(self, cr, uid, vals, context=None):
+        if vals['product_qty'] > 0 and not vals['tax_id']:
+            raise osv.except_osv(
+                _('Attenzione!'),
+                _('Riga senza IVA nel documento \n>> {0}'.format(vals['name'])))
         if ('sequence' not in vals):  # and vals['sequence'] < 1):
             vbd_obj = self.pool.get('vendita_banco.dettaglio')
             vbd_ids = vbd_obj.search(
