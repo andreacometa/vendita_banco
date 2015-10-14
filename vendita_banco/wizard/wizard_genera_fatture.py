@@ -172,7 +172,7 @@ selezionato!'))
                         order_obj.causale.descrizione_raggruppamento,
                         order_obj.name, order_obj.data_ordine),
                     'invoice_id': account_invoice_id,
-                    'quantity': 1,
+                    'quantity': 0,
                     'account_id': account_id,
                     'price_unit': 0.0,
                     'sequence': nriga,
