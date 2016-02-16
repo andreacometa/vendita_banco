@@ -731,7 +731,7 @@ class vendita_banco_dettaglio(osv.osv):
             'vendita_banco_id', 'partner_id', string="Cliente",
             type="many2one", relation="res.partner", store=True),
         'causale_id': fields.related(
-            'vendita_banco_id', 'causale', string="Causale", type="many2one",
+            'vendita_banco_id', 'causale_id', string="Causale", type="many2one",
             relation="vendita.causali", store=True),
         'data_ordine': fields.related(
             'vendita_banco_id', 'data_ordine', string="Data Vendita",
