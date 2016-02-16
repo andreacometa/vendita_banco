@@ -42,7 +42,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="vb_incongruenza_fatture"/>
-        <field name="domain" eval="[('causale', '=', ref('vendita_banco.vc_causali_fatt')), ('conguenza_fattura', '=', False)]" />
+        <field name="domain" eval="[('causale_id', '=', ref('vendita_banco.vc_causali_fatt')), ('conguenza_fattura', '=', False)]" />
     </record>
     
     <menuitem

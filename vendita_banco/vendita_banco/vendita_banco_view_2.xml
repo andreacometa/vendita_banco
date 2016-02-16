@@ -11,7 +11,7 @@
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Vendite" colors="blue:state=='draft';orange:invoice_id != False">
-					<field name="causale" />
+					<field name="causale_id" />
 					<field name="name"/>
 					<field name="data_ordine"/>
 					<field name="partner_id" />
@@ -35,11 +35,11 @@
 					<group col="6" colspan="4">
 						<field name="name" readonly="1"/>
 						<field name="data_ordine" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}"/>
-						<field name="causale" on_change="onchange_causale(causale)" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
+						<field name="causale_id" on_change="onchange_causale(causale_id)" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
 						<field name="ddt" invisible="1" />
 					</group>
 					<group col="6" colspan="4">
-						<field name="partner_id" on_change="onchange_cliente_id(partner_id, causale)" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}"/>
+						<field name="partner_id" on_change="onchange_cliente_id(partner_id, causale_id)" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}"/>
 						<field name="partner_invoice_id" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
 						<field name="partner_shipping_id" attrs="{'readonly':[('state','in',['done', 'invoiced'])]}" />
 					</group>
@@ -127,7 +127,7 @@
                     <field name="name" select="1"/>
                     <field name="data_ordine" />
                     <field name="partner_id" />
-                    <field name="causale" />
+                    <field name="causale_id" />
                     <newline/>
                </search>
             </field>

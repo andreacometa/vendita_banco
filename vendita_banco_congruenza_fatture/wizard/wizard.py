@@ -48,7 +48,7 @@ class forza_controllo_congruenza(osv.osv_memory):
         wizard = self.browse(cr, uid, ids[0], context)
         vb_obj = self.pool.get('vendita_banco')
         vb_ids = vb_obj.search(
-            cr, uid, [('causale', 'in', causale_ids)])
+            cr, uid, [('causale_id', 'in', causale_ids)])
         vendita_ids = [] 
         for vb in vb_obj.browse(cr, uid, vb_ids, context):
             congruente = True

@@ -88,7 +88,7 @@ class vb_raggruppa_documenti(osv.osv_memory):
                         _('Attenzione!'),
                         _('Questa procedura è applicabile solo agli ordini \
 confermati!'))
-                if not wizard.nuova_causale in vb.causale.raggruppamento_ids:
+                if not wizard.nuova_causale in vb.causale_id.raggruppamento_ids:
                     raise osv.except_osv(
                         _('Attenzione!'),
                         _('La causale di uno dei movimento non permette il \
@@ -101,7 +101,7 @@ raggruppamento come %s!' % (wizard.nuova_causale.name)))
                     'partner_shipping_id': vbs[0].partner_shipping_id.id,
                     'pricelist_id': vbs[0].pricelist_id.id,
                     'modalita_pagamento_id': vbs[0].modalita_pagamento_id.id,
-                    'causale': wizard.nuova_causale.id,
+                    'causale_id': wizard.nuova_causale.id,
                     'goods_description_id': wizard.goods_description_id.id,
                     'carriage_condition_id': wizard.carriage_condition_id.id,
                     'transportation_reason_id': wizard.transportation_reason_id.id,
@@ -122,7 +122,7 @@ raggruppamento come %s!' % (wizard.nuova_causale.name)))
                         'partner_shipping_id': vb.partner_shipping_id.id,
                         'pricelist_id': vb.pricelist_id.id,
                         'modalita_pagamento_id': vb.modalita_pagamento_id.id,
-                        'causale': wizard.nuova_causale.id,
+                        'causale_id': wizard.nuova_causale.id,
                         'goods_description_id': wizard.goods_description_id.id,
                         'carriage_condition_id': wizard.carriage_condition_id.id,
                         'transportation_reason_id': wizard.transportation_reason_id.id,

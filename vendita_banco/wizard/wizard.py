@@ -73,11 +73,11 @@ class vb_modifica_causale(osv.osv_memory):
                     _('Attenzione!'),
                     _('Impossibile modificare la causale ad un ordine fatturato!'))
             # ----- recuperiamo il protocollo se non è una fattura e se non è spuntata la voce che evita il recupero del protocollo
-            if not vb.causale.no_recupera_protocollo_cambio_causale:
-                if vb.causale.protocollo != wizard.nuova_causale.protocollo:
-                    vb.causale.recupera_protocollo(vb.name, vb.data_ordine)
+            if not vb.causale_id.no_recupera_protocollo_cambio_causale:
+                if vb.causale_id.protocollo != wizard.nuova_causale.protocollo:
+                    vb.causale_id.recupera_protocollo(vb.name, vb.data_ordine)
             # ----- Generiamo un nuovo protocollo
-            if vb.causale.protocollo != wizard.nuova_causale.protocollo:
+            if vb.causale_id.protocollo != wizard.nuova_causale.protocollo:
                 nuovo_protocollo = wizard.nuova_causale.get_protocollo(
                     wizard.data)
             else:
@@ -85,7 +85,7 @@ class vb_modifica_causale(osv.osv_memory):
             values = {
                 'name': nuovo_protocollo,
                 'internal_number': nuovo_protocollo,
-                'causale': wizard.nuova_causale.id,
+                'causale_id': wizard.nuova_causale.id,
                 'goods_description_id': False,
                 'carriage_condition_id': False,
                 'transportation_reason_id': False,

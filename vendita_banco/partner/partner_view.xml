@@ -11,7 +11,7 @@
 			<field name="inherit_id" ref="base.view_partner_form"/>
 			<field name="arch" type="xml">
 				<field name="active" position="after">
-					<field name="causale" />
+					<field name="causale_id" />
 					<field name="tipo_trasporto_id" />
 					<field name="sconto_fisso" />
 				</field>

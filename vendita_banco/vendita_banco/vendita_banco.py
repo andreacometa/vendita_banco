@@ -64,7 +64,7 @@ class vendita_banco(osv.osv):
             else:
                 # if not vendita.causale.fattura and vendita.name:
                 if vendita.internal_number:
-                    vendita.causale.recupera_protocollo(
+                    vendita.causale_id.recupera_protocollo(
                         vendita.internal_number, vendita.data_ordine)
                 unlink_ids.append(vendita.id)
         return super(vendita_banco, self).unlink(cr, uid, unlink_ids, context)
@@ -81,9 +81,9 @@ class vendita_banco(osv.osv):
         for vb in self.browse(cr, uid, ids, context):
             res[vb.id] = {'totale': 0.0, 'imponibile': 0.0, }
             for line in vb.vendita_banco_dettaglio_ids:
-                res[vb.id]['totale'] += (line.importo * int(vb.causale.segno))
+                res[vb.id]['totale'] += (line.importo * int(vb.causale_id.segno))
                 res[vb.id]['imponibile'] += (
-                    line.imponibile * int(vb.causale.segno))
+                    line.imponibile * int(vb.causale_id.segno))
         return res
 
     # ----- restituisce true se la causale ha un report in modo da
@@ -92,7 +92,7 @@ class vendita_banco(osv.osv):
         res = {}
         vbs = self.browse(cr, uid, ids, context)
         for vb in vbs:
-            if vb.causale.report:
+            if vb.causale_id.report:
                 res[vb.id] = True
             else:
                 res[vb.id] = False
@@ -128,15 +128,15 @@ class vendita_banco(osv.osv):
             'product.pricelist',
             'Listino Prezzi',
             required=True),
-        'ddt': fields.related('causale', 'ddt', type='boolean',
+        'ddt': fields.related('causale_id', 'ddt', type='boolean',
                               relation='vendita.causali', readonly=True,
                               help="Se la casella è spuntata verrà generato e\
  stampato un DDT altrimenti verrà creato un altro documento"),
-        'fatturabile': fields.related('causale', 'fatturabile', type='boolean',
+        'fatturabile': fields.related('causale_id', 'fatturabile', type='boolean',
                                       relation='vendita.causali',
                                       readonly=True),
         'report': fields.function(_get_report, method=True, type='boolean'),
-        'causale': fields.many2one('vendita.causali', 'Causale',
+        'causale_id': fields.many2one('vendita.causali', 'Causale',
                                    required=True),
         'invoice_id': fields.many2one('account.invoice', 'Fattura',
                                       ondelete="set null"),
@@ -235,7 +235,7 @@ vendita con questa causale!'
             return {'value': {
                 'ddt': ddt,
                 'name': '',
-                'causale': causale,
+                'causale_id': causale,
                 'transportation_reason_id': (
                     causale_vals.transportation_reason_id and
                     causale_vals.transportation_reason_id.id or
@@ -258,12 +258,12 @@ vendita con questa causale!'
         causali_obj = self.pool.get('vendita.causali')
         pricelist = (part.property_product_pricelist and
                      part.property_product_pricelist.id or False)
-        causale_id = causale or part.causale and part.causale.id or False
+        causale_id = causale or part.causale_id and part.causale_id.id or False
         causale = causali_obj.browse(cr, uid, causale_id)
         val = {
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
-            'causale': causale_id,
+            'causale_id': causale_id,
             'ddt': (
                 causale_id and
                 causale.ddt or False),
@@ -303,10 +303,10 @@ vendita con questa causale!'
             if order_obj.internal_number:
                 res['name'] = order_obj.internal_number
             else:
-                res['name'] = order_obj.causale.get_protocollo(
+                res['name'] = order_obj.causale_id.get_protocollo(
                     order_obj.data_ordine)
                 res['internal_number'] = res['name']
-            if order_obj.causale.tipo in ['carico', 'scarico']:
+            if order_obj.causale_id.tipo in ['carico', 'scarico']:
                 # se non è un carico/scarico non fa nulla
                 if not order_obj.vendita_banco_dettaglio_ids:
                     raise osv.except_osv(
@@ -314,15 +314,15 @@ vendita con questa causale!'
                         _('Non esistono righe di vendita per questo ordine!'))
                     # return False
                 # ----- CREA UN MOVIMENTO DI MAGAZZINO PER OGNI RIGA DI VENDITA
-                location_sorgente = order_obj.causale.source_location_id.id
-                location_destinazione = order_obj.causale.location_id.id
+                location_sorgente = order_obj.causale_id.source_location_id.id
+                location_destinazione = order_obj.causale_id.location_id.id
                 # create a new picking
                 picking_data = {
                     'name': res['name'],
                     'origin': res['name'],
                     'type': (
-                        order_obj.causale.tipo in ['scarico'] and 'out' or
-                        order_obj.causale.tipo in ['carico'] and 'in' or
+                        order_obj.causale_id.tipo in ['scarico'] and 'out' or
+                        order_obj.causale_id.tipo in ['carico'] and 'in' or
                         'internal'),
                     'location_id': location_sorgente,
                     'location_dest_id': location_destinazione,
@@ -349,7 +349,7 @@ vendita con questa causale!'
                         self.pool.get('vendita_banco.dettaglio').write(
                             cr, uid, line.id, {'move_id': move_id})
             # ----- INSERISCE EVENTUALI LINEE DI SPESA
-            if not order_obj.causale.no_spesa_incasso:
+            if not order_obj.causale_id.no_spesa_incasso:
                 for line in order_obj.modalita_pagamento_id.line_ids:
                     if line.spesa_id:
                         vals = {
@@ -369,10 +369,10 @@ vendita con questa causale!'
             res['state'] = 'done'
             self.write(cr, uid, order_obj.id, res)
 
-            if order_obj.causale.fattura:
+            if order_obj.causale_id.fattura:
                 invoice_id = self.crea_fatture_raggruppate(
                     cr, uid, ids, order_obj.data_ordine,
-                    order_obj.causale.name, res['name'],
+                    order_obj.causale_id.name, res['name'],
                     order_obj.internal_number or False)
                 # ----- Validate the invoice
                 wf_service = netsvc.LocalService("workflow")
@@ -409,12 +409,12 @@ vendita con questa causale!'
             # account_invoice_id = self.pool.get('account.invoice').create(
             invoice_data = {
                 'name': (
-                    order_obj.causale.fattura and
-                    order_obj.causale.descrizione or
+                    order_obj.causale_id.fattura and
+                    order_obj.causale_id.descrizione or
                     order_obj.name),
                 'origin': order_obj.name,
                 'date_invoice': data_fattura,
-                # 'immediate': order_obj.causale.fattura,
+                # 'immediate': order_obj.causale_id.fattura,
                 'partner_id': order_obj.partner_id.id,
                 'account_id': (
                     order_obj.partner_id.property_account_receivable.id),
@@ -430,9 +430,9 @@ vendita con questa causale!'
                     order_obj.partner_id.property_account_position.id),
                 'payment_term': order_obj.modalita_pagamento_id.id,
                 'journal_id': (
-                    order_obj.causale and
-                    order_obj.causale.journal_id and
-                    order_obj.causale.journal_id.id or False),
+                    order_obj.causale_id and
+                    order_obj.causale_id.journal_id and
+                    order_obj.causale_id.journal_id.id or False),
                 'comment': order_obj.note,
                 'carriage_condition_id': (
                     order_obj.carriage_condition_id and
@@ -453,11 +453,11 @@ vendita con questa causale!'
             account_invoice_id = self.pool['account.invoice'].create(
                 cr, uid, invoice_data)
             # CREA UNA RIGA FITTIZIA COME TESTATA
-            if order_obj.causale.riga_raggruppa:
+            if order_obj.causale_id.riga_raggruppa:
                 invoice_fake_line_id = invoice_line_obj.create(
                     cr, uid, {
                         'name': 'Rif. Ns. %s Nr. %s del %s' % (
-                            order_obj.causale.descrizione_raggruppamento,
+                            order_obj.causale_id.descrizione_raggruppamento,
                             order_obj.name,
                             order_obj.data_ordine),
                         'invoice_id': account_invoice_id,
@@ -528,7 +528,7 @@ vendita con questa causale!'
         order = self.browse(cr, uid, ids[0])
         return self.crea_fatture_raggruppate(
             cr, uid, ids, data_fattura, order.name,
-            order.causale.fattura and order.internal_number or False,
+            order.causale_id.fattura and order.internal_number or False,
             context)
 
     def create_so_invoice(self, cr, uid, ids, context={}):
@@ -541,7 +541,7 @@ vendita con questa causale!'
                 raise osv.except_osv(
                     _('Attention!'),
                     _('All orders must be confirmed to proceed!'))
-            if order.causale.invoice_template_id is False:
+            if order.causale_id.invoice_template_id is False:
                 raise osv.except_osv(
                     _('Attention!'),
                     _('Orders with template %s has no invoicing template!' % (
@@ -553,7 +553,7 @@ vendita con questa causale!'
                 'partner_shipping_id': order.partner_shipping_id.id,
                 'pricelist_id': order.pricelist_id.id,
                 'modalita_pagamento_id': order.modalita_pagamento_id.id,
-                'causale': order.causale.invoice_template_id.id,
+                'causale_id': order.causale_id.invoice_template_id.id,
                 'goods_description_id': order.goods_description_id.id,
                 'carriage_condition_id': order.carriage_condition_id.id,
                 'transportation_reason_id': order.transportation_reason_id.id,
@@ -568,7 +568,7 @@ vendita con questa causale!'
             # ----- Crea la riga descrittiva di riferimento
             so_line_data = {
                 'name': 'Rif. Ns. %s Nr. %s del %s' % (
-                    order.causale.descrizione_raggruppamento, order.name,
+                    order.causale_id.descrizione_raggruppamento, order.name,
                     order.data_ordine),
                 'vendita_banco_id': new_order_id,
                 'product_id': False,
@@ -670,7 +670,7 @@ vendita con questa causale!'
     # ----- Funzione richiamata dal button Stampa BC o DDT
     def stampa(self, cr, uid, ids, context=None):
         order_obj = self.browse(cr, uid, ids[0])
-        if order_obj.causale.fattura:
+        if order_obj.causale_id.fattura:
             return order_obj.invoice_id.print_imm_diff_invoice(
                 [order_obj.invoice_id.id])
             #return {
@@ -685,7 +685,7 @@ vendita con questa causale!'
             #    'nodestroy': True,
             #}
         else:
-            report_name = order_obj.causale.report.report_name
+            report_name = order_obj.causale_id.report.report_name
             return {
                 # ----- Jasper Report
                 'type': 'ir.actions.report.xml',
@@ -730,7 +730,7 @@ class vendita_banco_dettaglio(osv.osv):
         'partner_id': fields.related(
             'vendita_banco_id', 'partner_id', string="Cliente",
             type="many2one", relation="res.partner", store=True),
-        'causale': fields.related(
+        'causale_id': fields.related(
             'vendita_banco_id', 'causale', string="Causale", type="many2one",
             relation="vendita.causali", store=True),
         'data_ordine': fields.related(

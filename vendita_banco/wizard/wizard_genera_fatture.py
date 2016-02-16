@@ -149,9 +149,9 @@ selezionato!'))
                     'date_invoice': data_fattura,
                     'partner_id': order_obj.partner_id.id,
                     'account_id': order_obj.partner_id.property_account_receivable.id,
-                    'journal_id': (order_obj.causale and
-                                   order_obj.causale.journal_id and
-                                   order_obj.causale.journal_id.id or
+                    'journal_id': (order_obj.causale_id and
+                                   order_obj.causale_id.journal_id and
+                                   order_obj.causale_id.journal_id.id or
                                    journal_id),
                     'currency_id': currency_id,
                     'address_invoice_id': addr['invoice'],
@@ -165,11 +165,11 @@ selezionato!'))
                 modalita = order_obj.modalita_pagamento_id.id
                 nriga = 0
             # dettaglio
-            if order_obj.causale.riga_raggruppa:
+            if order_obj.causale_id.riga_raggruppa:
                 nriga += 1
                 invoice_fake_line_id = invoice_line_obj.create(cr, uid, {
                     'name': 'Rif. Ns. %s Nr. %s del %s' % (
-                        order_obj.causale.descrizione_raggruppamento,
+                        order_obj.causale_id.descrizione_raggruppamento,
                         order_obj.name, order_obj.data_ordine),
                     'invoice_id': account_invoice_id,
                     'quantity': 0,
