@@ -659,7 +659,7 @@ vendita con questa causale!'
                 # move_obj.write(cr, uid, [line.move_id.id], {'state':'draft'})
                 # move_obj.unlink(cr, uid, [line.move_id.id])
                 if line.spesa_automatica:
-                    self.pool.get('vendita_banco.dettaglio').unlink(
+                    self.pool['vendita_banco.dettaglio'].unlink(
                         cr, uid, [line.id, ])
         # ----- Cambio lo stato
         res = {}

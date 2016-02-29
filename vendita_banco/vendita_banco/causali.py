@@ -131,9 +131,19 @@ da una location differente rispetto a quella standard"),
 
     def recupera_protocollo(self, cr, uid, ids, protocollo, data_protocollo):
         for c in self.browse(cr, uid, ids):
-            self.pool.get('ir.protocolli_da_recuperare').create(cr, uid, {
-                'sequence_id': c.protocollo.id, 'protocollo': protocollo,
-                'data': data_protocollo})
+            exists = self.search(cr, uid, [
+                ('name', '=', c.fattura and 'account.journal' or c.descrizione),
+                ('protocollo', '=', protocollo),
+                ('data', '=', data_protocollo)])
+            if exists:
+                continue
+            self.pool['ir.protocolli_da_recuperare'].create(
+                cr, uid, {
+                    'name': c.fattura and 'account.journal' or c.descrizione,
+                    'sequence_id': c.protocollo.id,
+                    'protocollo': protocollo,
+                    'data': data_protocollo,
+                })
         return True
 
     #  ----- imposta il flag fatturabile
