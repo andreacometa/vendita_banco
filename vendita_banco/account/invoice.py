@@ -46,6 +46,10 @@ class account_invoice(osv.osv):
             cr, uid, [('code', '=', '310100')])[0]
         for inv in self.browse(cr, uid, ids):
             if inv.type not in ('in_invoice', 'in_refund'):
+                if not inv.payment_term:
+                    raise osv.except_osv(
+                        _('Attenzione!'),
+                        _('È necessario un termine di pagamento'))
                 # ----- Aggiunge automaticamente le righe di spesa/e
                 for line in inv.payment_term.line_ids:
                     if not line.spesa_id:

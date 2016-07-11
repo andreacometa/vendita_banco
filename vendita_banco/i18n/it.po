@@ -977,3 +977,14 @@ msgstr "Confermato"
 msgid "Imponibile"
 msgstr "Imponibile"
 
+#. module: vendita_banco
+#: code:addons/vendita_banco/account/invoice.py:51
+#, python-format
+msgid "Error!"
+msgstr "Error!"
+
+#. module: vendita_banco
+#: code:addons/vendita_banco/account/invoice.py:51
+#, python-format
+msgid "Payment term needed"
+msgstr "È necessario un termine di pagamento"
