@@ -29,7 +29,9 @@
 			context="{'search_default_partner_id':[active_id], 'default_partner_id': active_id}"
 			src_model="res.partner"
 			view_type="form"
-			view_mode="tree,form"/>
+			view_mode="tree,form"
+			groups="vendita_banco.group_vendita_banco"
+		/>
 		
 		<!-- Mostra direttamente i dettagli delle vendite del partner -->
 		<act_window
@@ -39,7 +41,9 @@
 			context="{'search_default_partner_id':[active_id], 'default_partner_id': active_id}"
 			src_model="res.partner"
 			view_type="form"
-			view_mode="tree,form"/>
+			view_mode="tree,form"
+			groups="vendita_banco.group_vendita_banco"
+		/>
 
 	</data>
 </openerp>
