@@ -563,7 +563,7 @@ vendita con questa causale!'
             new_order_id = so_obj.create(cr, uid, so_data)
             # ----- Indica il nuovo ordine in quelli vecchi
             so_obj.write(cr, uid, order.id,
-                         {'order_group_id': new_order_id})
+                         {'vb_raggruppamento_id': new_order_id})
             # ----- Genera i dettagli del nuovo documento
             # ----- Crea la riga descrittiva di riferimento
             so_line_data = {
