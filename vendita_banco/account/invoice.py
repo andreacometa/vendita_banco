@@ -84,12 +84,12 @@ class account_invoice(osv.osv):
         return res
 
     def unlink(self, cr, uid, ids, context=None):
+        vb_model = self.pool['vendita_banco']
+        vb_ids = vb_model.search(
+            cr, uid, [('invoice_id', 'in', ids)])
         res = super(account_invoice, self).unlink(cr, uid, ids, context)
         # riporta lo stato a 'done'
         if res:
-            vb_model = self.pool['vendita_banco']
-            vb_ids = vb_model.search(
-                cr, uid, [('invoice_id', 'in', ids)])
             vb_model.write(cr, uid, vb_ids, {'state': 'done'})
         return res
 

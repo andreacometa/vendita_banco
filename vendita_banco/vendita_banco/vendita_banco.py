@@ -494,12 +494,12 @@ vendita con questa causale!'
                 vbanco_dett_obj.write(
                     cr, uid, [line.id], {'invoice_line_id': invoice_line_id})
             # modifica lo stato
-            vbanco_obj.write(cr, uid, [order_obj.id], {
-                'invoice_id': account_invoice_id, 'state': 'invoiced'})
+            #vbanco_obj.write(cr, uid, [order_obj.id], {
+            #    'invoice_id': account_invoice_id, 'state': 'invoiced'})
         # ----- Salva in vendita_banco la fattura appena creata e
         # modifica lo stato
-        # self.write(cr, uid, ids, {
-        #    'invoice_id': account_invoice_id, 'state': 'invoiced'})
+        self.write(cr, uid, ids, {'invoice_id': account_invoice_id,
+                                  'state': 'invoiced'})
         # ----- MOSTRA LA FATTURA APPENA CREATA
         # mod_obj = self.pool.get('ir.model.data')
         # res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
