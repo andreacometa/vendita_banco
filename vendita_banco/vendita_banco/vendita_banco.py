@@ -618,25 +618,27 @@ vendita con questa causale!'
             # ----- Controlla che non ci siano fatture generate da questi ord
             if ((order_obj.state in ['invoiced', 'validated']) and
                     (order_obj.invoice_id)):
+                message = 'Document has invoices, you should delete them!'
+                raise osv.except_osv(_('Attention!'), _(message))
                 # check for payments
-                if order_obj.invoice_id.payment_ids:
-                    message = 'Invoice has payments, you should delete them!'
-                    raise osv.except_osv(_('Attention!'), _(message))
+                #if order_obj.invoice_id.payment_ids:
+                #    message = 'Invoice has payments, you should delete them!'
+                #    raise osv.except_osv(_('Attention!'), _(message))
                 # reopen invoice
-                wf_service = netsvc.LocalService("workflow")
-                wf_service.trg_validate(uid, 'account.invoice',
-                                        order_obj.invoice_id.id,
-                                        'invoice_cancel', cr)
-                invoice_obj = self.pool['account.invoice']
-                self.pool['ir.protocolli_da_recuperare'].create(
-                    cr, uid, {
-                        'name': ' account.journal',
-                        'protocollo': order_obj.invoice_id.internal_number,
-                        'data': order_obj.invoice_id.date_invoice,
-                        'sequence_id': order_obj.invoice_id.journal_id.sequence_id.id, })
-                invoice_obj.write(cr, uid, [order_obj.invoice_id.id],
-                                  {'internal_number': False})
-                invoice_obj.unlink(cr, uid, [order_obj.invoice_id.id])
+                # wf_service = netsvc.LocalService("workflow")
+                # wf_service.trg_validate(uid, 'account.invoice',
+                #                         order_obj.invoice_id.id,
+                #                         'invoice_cancel', cr)
+                # invoice_obj = self.pool['account.invoice']
+                # self.pool['ir.protocolli_da_recuperare'].create(
+                #     cr, uid, {
+                #         'name': ' account.journal',
+                #         'protocollo': order_obj.invoice_id.internal_number,
+                #         'data': order_obj.invoice_id.date_invoice,
+                #         'sequence_id': order_obj.invoice_id.journal_id.sequence_id.id, })
+                # invoice_obj.write(cr, uid, [order_obj.invoice_id.id],
+                #                   {'internal_number': False})
+                # invoice_obj.unlink(cr, uid, [order_obj.invoice_id.id])
 
             # ----- Controlla che non ci siano ordini di raggruppamento
             # generati da questi ordini
