@@ -131,7 +131,7 @@ da una location differente rispetto a quella standard"),
 
     def recupera_protocollo(self, cr, uid, ids, protocollo, data_protocollo):
         for c in self.browse(cr, uid, ids):
-            exists = self.search(cr, uid, [
+            exists = self.pool['ir.protocolli_da_recuperare'].search(cr, uid, [
                 ('name', '=', c.fattura and 'account.journal' or c.descrizione),
                 ('protocollo', '=', protocollo),
                 ('data', '=', data_protocollo)])
