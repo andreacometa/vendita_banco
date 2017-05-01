@@ -63,7 +63,8 @@ class vendita_banco(osv.osv):
                     _('Impossibile eliminare una vendita validata!'))
             else:
                 # if not vendita.causale.fattura and vendita.name:
-                if vendita.internal_number:
+                if (vendita.internal_number and
+                        not vendita.causale.no_recupera_protocollo):
                     vendita.causale.recupera_protocollo(
                         vendita.internal_number, vendita.data_ordine)
                 unlink_ids.append(vendita.id)

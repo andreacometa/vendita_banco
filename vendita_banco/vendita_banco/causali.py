@@ -102,7 +102,10 @@ da una location differente rispetto a quella standard"),
         'transportation_reason_id': fields.many2one(
             'stock.picking.transportation_reason',
             'Causale Trasporto predefinita'),
-
+        'no_recupera_protocollo': fields.boolean(
+            'Non Recuperare Protocollo alla cancellazione',
+            help='Se spuntata, indica che, alla cancellazione, il protocollo\
+    deve essere perso'),
     }
 
     _defaults = {
@@ -111,6 +114,7 @@ da una location differente rispetto a quella standard"),
         'riga_raggruppa': False,
         'descrizione_raggruppamento': "Documento",
         'invoice_template_id': False,
+        'no_recupera_protocollo': False,
     }
 
     def get_protocollo(self, cr, uid, causale_id, date):

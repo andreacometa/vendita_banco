@@ -37,9 +37,10 @@
 						<field name="descrizione" colspan="2"/>
 						<field name="descrizione_raggruppamento" colspan="2"/>
 					</group>
-					<group colspan="4">
-						<field name="tipo" />
-						<field name="protocollo" />
+					<group colspan="4" col="6">
+						<field name="tipo" colspan="2"/>
+						<field name="protocollo" colspan="2"/>
+    					<field name="no_recupera_protocollo" colspan="2"/>
 					</group>
 					<notebook colspan="4">
 						<page string="Magazzino">
