@@ -112,6 +112,13 @@ class vendita_banco(osv.osv):
                 res[vb.id] = company_id
         return res
     """
+    def _get_order(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool['vendita_banco.dettaglio'].browse(
+                cr, uid, ids, context=context):
+            result[line.vendita_banco_id.id] = True
+        return result.keys()
+
     _columns = {
         'name': fields.char('Numero Documento', size=16),
         'internal_number': fields.char('Internal number', size=16),
@@ -129,10 +136,9 @@ class vendita_banco(osv.osv):
             'product.pricelist',
             'Listino Prezzi',
             required=True),
-        'ddt': fields.related('causale', 'ddt', type='boolean',
-                              relation='vendita.causali', readonly=True,
-                              help="Se la casella è spuntata verrà generato e\
- stampato un DDT altrimenti verrà creato un altro documento"),
+        'ddt': fields.related(
+            'causale', 'ddt', type='boolean', relation='vendita.causali',
+            readonly=True, help="Se la casella è spuntata verrà generato e stampato un DDT altrimenti verrà creato un altro documento"),
         'fatturabile': fields.related('causale', 'fatturabile', type='boolean',
                                       relation='vendita.causali',
                                       readonly=True),
@@ -165,14 +171,28 @@ class vendita_banco(osv.osv):
             ondelete='cascade', readonly=True,
             states={'draft': [('readonly', False)]}),
         'totale': fields.function(
-            _calcola_importi, method=True,
+            _calcola_importi, string='Totale', multi='sums',
             digits_compute=dp.get_precision('Account'),
-            string='Totale', type='float', store=True, multi='sums'),
+            store={
+                'vendita_banco': (lambda self, cr, uid, ids, c={}: ids, [
+                                  'vendita_banco_dettaglio_ids'], 10),
+                'vendita_banco.vendita_banco_dettaglio_ids': (
+                    _get_order, ['price_unit', 'tax_id', 'discount',
+                                 'product_qty'], 10),
+            },
+        ),
         'imponibile': fields.function(
-            _calcola_importi, method=True,
+            _calcola_importi, multi='sums',
             digits_compute=dp.get_precision('Account'),
-            string='Totale Imponibile', type='float', store=True,
-            multi='sums'),
+            string='Totale Imponibile',
+            store={
+                'vendita_banco': (lambda self, cr, uid, ids, c={}: ids, [
+                                  'vendita_banco_dettaglio_ids'], 10),
+                'vendita_banco.vendita_banco_dettaglio_ids': (
+                    _get_order, ['price_unit', 'tax_id', 'discount',
+                                 'product_qty'], 10),
+            },
+        ),
         'acconto': fields.float('Acconto',
                                 digits_compute=dp.get_precision('Account')),
         'state': fields.selection((
@@ -402,7 +422,6 @@ vendita con questa causale!'
         # -----
         # CREAZIONE
         # -----
-        #import pdb; pdb.set_trace()
         for order_obj in order_objs:
             # -----
             # CREAZIONE TESTATA FATTURA
@@ -749,13 +768,13 @@ class vendita_banco_dettaglio(osv.osv):
             'Sconto (%)', help="Indicare uno sconto in percentuale"),
         'tax_id': fields.many2one('account.tax', 'IVA'),
         'importo': fields.function(
-            _calcola_importi, method=True,
+            _calcola_importi, string='Importo', store=True, float='type',
             digits_compute=dp.get_precision('Vendita Banco Dettaglio'),
-            string='Importo', type='float', store=False, multi='sums'),
+        ),
         'imponibile': fields.function(
-            _calcola_importi, method=True,
+            _calcola_importi, string='Imponibile', store=True, type='float',
             digits_compute=dp.get_precision('Vendita Banco Dettaglio'),
-            string='Imponibile', type='float', store=False, multi='sums'),
+        ),
         'move_id': fields.many2one('stock.move', 'Movimento'),
         'invoice_line_id': fields.many2one(
             'account.invoice.line', 'Linea di fattura'),
