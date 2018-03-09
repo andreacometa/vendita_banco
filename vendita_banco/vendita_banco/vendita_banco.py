@@ -746,7 +746,7 @@ class vendita_banco_dettaglio(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Descrizione', size=64),
+        'name': fields.text('Descrizione'),
         'vendita_banco_id': fields.many2one('vendita_banco', 'Vendita',
                                             ondelete='cascade'),
         'partner_id': fields.related(
