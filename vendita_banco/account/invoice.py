@@ -58,13 +58,15 @@ class account_invoice(osv.osv):
                         'spesa': True,
                         'name': line.spesa_id.name,
                         'price_unit': line.spesa_id.price,
-                        'tax_id': line.spesa_id.tax_id and [(6, 0, [line.spesa_id.tax_id.id])] or False,
+                        'invoice_line_tax_id': line.spesa_id.tax_id and [
+                            (6, 0, [line.spesa_id.tax_id.id])] or False,
                         'quantity': 1,
                         'invoice_id': inv.id,
                         'account_id': account_id,
                         'spesa_automatica': True,
                         }
                     self.pool.get('account.invoice.line').create(cr, uid, vals)
+                inv.button_reset_taxes()
         return super(account_invoice, self).action_date_assign(cr, uid,
                                                                ids, args)
 
