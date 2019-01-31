@@ -464,6 +464,9 @@ vendita con questa causale!'
                         'quantity': 0,
                         'account_id': account_id,
                         'price_unit': 0.0,
+                        'invoice_line_tax_id': (
+                            order_obj.causale_id_id.dummy_tax_id and
+                            [(6, 0, [order_obj.causale_id.dummy_tax_id.id])] or False)
                     })
             # ----- CREA LE RIGHE REALI DEI PRODOTTI
             for line in order_obj.vendita_banco_dettaglio_ids:
@@ -575,7 +578,7 @@ vendita con questa causale!'
                 'product_uom': False,
                 'product_qty': 0.0,
                 'price_unit': 0.0,
-                'tax_id': False,
+                'tax_id': order.causale_id.dummy_tax_id and order.causale_id.dummy_tax_id.id or False,
             }
             so_lines_obj.create(cr, uid, so_line_data)
             for line in order.vendita_banco_dettaglio_ids:

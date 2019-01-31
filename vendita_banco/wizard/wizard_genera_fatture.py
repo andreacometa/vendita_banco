@@ -84,7 +84,7 @@ termini di pagamento")
 
         # se presente la causale
         if wizard_obj.causale_id:
-            search_arg.append(('causale', '=', wizard_obj.causale_id.id))
+            search_arg.append(('causale_id', '=', wizard_obj.causale_id.id))
 
         vendita_banco_ids = self.pool.get('vendita_banco').search(
             cr, uid, search_arg, order='partner_id,modalita_pagamento_id')
@@ -176,6 +176,9 @@ selezionato!'))
                     'account_id': account_id,
                     'price_unit': 0.0,
                     'sequence': nriga,
+                    'invoice_line_tax_id': (
+                        order_obj.causale_id.dummy_tax_id and
+                        [(6, 0, [order_obj.causale_id.dummy_tax_id.id])] or False)
                 })
             # ----- CREA LE RIGHE REALI DEI PRODOTTI
             for line in order_obj.vendita_banco_dettaglio_ids:

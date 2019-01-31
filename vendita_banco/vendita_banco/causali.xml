@@ -52,14 +52,20 @@
                             <field name="transportation_reason_id" colspan="4"/>
 						</page>
 						<page string="Contabilità">
+                                                    <group colspan="4" col="6">
 							<field name="fattura" on_change="onchange_fattura(fattura)"
-								attrs="{'readonly':[('tipo','=','carico')]}" colspan="4"/>
-							<field name="fatturabile" attrs="{'readonly':[('tipo','in',['carico', 'nessuno'])]}" colspan="4"/>
-							<field name="journal_id" colspan="4"/>
-							<field name="riga_raggruppa" colspan="4"/>
-                                <field name="invoice_template_id"
-                                    domain="[('fattura', '=', True)]"
-                                    attrs="{'invisible':[('fatturabile','=', False)]}" />
+								attrs="{'readonly':[('tipo','=','carico')]}" colspan="2"/>
+							<field name="fatturabile" colspan="2"
+                                                               attrs="{'readonly':[('tipo','in',['carico', 'nessuno'])]}" />
+							<field name="journal_id" colspan="2"/>
+                                                    </group>
+                                                    <group colspan="4" col="6">
+							<field name="riga_raggruppa" colspan="2"/>
+                                                        <field name="dummy_tax_id" colspan="2"/>
+                                                        <field name="invoice_template_id"
+                                                            domain="[('fattura', '=', True)]"
+                                                            attrs="{'invisible':[('fatturabile','=', False)]}" />
+                                                    </group>
 						</page>
 						<page string="Altro">
 							<field name="no_recupera_protocollo_cambio_causale" colspan="2"/>

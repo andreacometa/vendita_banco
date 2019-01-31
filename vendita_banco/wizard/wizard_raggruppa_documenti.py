@@ -136,14 +136,14 @@ raggruppamento come %s!' % (wizard.nuova_causale.name)))
                 # ----- Crea la riga descrittiva di riferimento
                 vb_line_struttura = {
                     'name': 'Rif. Ns. %s Nr. %s del %s' % (
-                        vb.causale.descrizione_raggruppamento, vb.name,
+                        vb.causale_id.descrizione_raggruppamento, vb.name,
                         vb.data_ordine),
                     'vendita_banco_id': nuovo_vb_id,
                     'product_id': False,
                     'product_uom': False,
                     'product_qty': 0.0,
                     'price_unit': 0.0,
-                    'tax_id': False,
+                    'tax_id': vb.causale_id.dummy_tax_id and vb.causale_id.dummy_tax_id.id or False,
                 }
                 vb_lines_obj.create(cr, uid, vb_line_struttura)
                 for line in vb.vendita_banco_dettaglio_ids:

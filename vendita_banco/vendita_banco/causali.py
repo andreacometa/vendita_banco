@@ -102,7 +102,7 @@ da una location differente rispetto a quella standard"),
         'transportation_reason_id': fields.many2one(
             'stock.picking.transportation_reason',
             'Causale Trasporto predefinita'),
-
+        'dummy_tax_id': fields.many2one('account.tax', "Iva fuzzy"),
     }
 
     _defaults = {
