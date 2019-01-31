@@ -171,11 +171,14 @@ selezionato!'))
                     'name': 'Rif. Ns. %s Nr. %s del %s' % (
                         order_obj.causale.descrizione_raggruppamento,
                         order_obj.name, order_obj.data_ordine),
-                    'invoice_id': account_invoice_id,
+                    'invoice_id': int(account_invoice_id),
                     'quantity': 0,
                     'account_id': account_id,
                     'price_unit': 0.0,
                     'sequence': nriga,
+                    'invoice_line_tax_id': (
+                        order_obj.causale.dummy_tax_id and
+                        [(6, 0, [order_obj.causale.dummy_tax_id.id])] or False)
                 })
             # ----- CREA LE RIGHE REALI DEI PRODOTTI
             for line in order_obj.vendita_banco_dettaglio_ids:
@@ -199,6 +202,7 @@ selezionato!'))
                     }
                 invoice_line_id = invoice_line_obj.create(
                     cr, uid, struttura_dati)
+                print invoice_line_id
                 self.pool.get('vendita_banco.dettaglio').write(
                     cr, uid, [line.id], {'invoice_line_id': invoice_line_id})
             # ----- Salva in vendita_banco la fattura appena creata

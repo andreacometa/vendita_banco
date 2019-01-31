@@ -58,6 +58,7 @@
 							<field name="fatturabile" attrs="{'readonly':[('tipo','in',['carico', 'nessuno'])]}" colspan="4"/>
 							<field name="journal_id" colspan="4"/>
 							<field name="riga_raggruppa" colspan="4"/>
+<field name="dummy_tax_id" colspan="2"/>
                                 <field name="invoice_template_id"
                                     domain="[('fattura', '=', True)]"
                                     attrs="{'invisible':[('fatturabile','=', False)]}" />

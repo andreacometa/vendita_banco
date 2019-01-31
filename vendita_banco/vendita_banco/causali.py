@@ -106,6 +106,7 @@ da una location differente rispetto a quella standard"),
             'Non Recuperare Protocollo alla cancellazione',
             help='Se spuntata, indica che, alla cancellazione, il protocollo\
     deve essere perso'),
+        'dummy_tax_id': fields.many2one('account.tax', "Iva fuzzy"),
     }
 
     _defaults = {

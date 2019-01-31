@@ -143,7 +143,7 @@ raggruppamento come %s!' % (wizard.nuova_causale.name)))
                     'product_uom': False,
                     'product_qty': 0.0,
                     'price_unit': 0.0,
-                    'tax_id': False,
+                    'tax_id': vb.causale.dummy_tax_id and vb.causale.dummy_tax_id.id or False,
                 }
                 vb_lines_obj.create(cr, uid, vb_line_struttura)
                 for line in vb.vendita_banco_dettaglio_ids:
